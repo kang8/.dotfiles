@@ -1,0 +1,14 @@
+Host github.com
+    HostName github.com
+    User git
+    ProxyCommand nc -v -x 127.0.0.1:1089 %h %p
+Host kang
+    HostName 121.36.19.76
+    User yikang
+Host 98d6929aefb9
+    HostName 39.101.64.141
+    User git
+    Port 8090
+Host dxc
+    HostName 8.130.48.158
+    User root

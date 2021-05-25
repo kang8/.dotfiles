@@ -1,0 +1,16 @@
+[user]
+	name = kang
+	email = 1115610574@qq.com
+[color]
+	ui = always
+[core]
+	editor = nvim
+    pager = delta
+	quotepath = false
+[help]
+	autocorrect = 11
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+    syntax-theme = base16-256
+    features = line-numbers
