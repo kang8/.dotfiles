@@ -31,7 +31,7 @@ alias ra="ranger"
 alias ncdu="ncdu --color dark"
 alias mux="tmuxinator"
 
-bindkey ',' autosuggest-accept
+bindkey '^ ' autosuggest-accept # contrl + space 填充历史命令
 
 export PATH=$PATH:/home/kang/.local/share/gem/ruby/2.7.0/bin
 export PATH=$PATH:/home/kang/go/bin
