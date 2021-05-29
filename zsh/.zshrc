@@ -10,6 +10,7 @@ plugins=(
     zsh-autosuggestions
     fzf
     systemd
+    docker
 )
 
 source $ZSH/oh-my-zsh.sh
