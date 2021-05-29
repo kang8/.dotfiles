@@ -1,0 +1,25 @@
+{
+    "font_size": 16,
+    "theme": "Adaptive.sublime-theme",
+    "margin": 0, // 行号边栏和文字的间距
+    "rulers": [80, 120], // 列显示垂直标尺
+    "draw_white_space": ["all"], // 显式空白字符
+    "save_on_focus_lost": true, // 自动保存
+    "drag_text": false, // 拖拽文本
+    "highlight_modified_tabs": true, // 高亮未保存文件
+    "show_encoding": true, // 显式编码格式
+    "default_line_ending": "unix",
+
+    // VIM config
+    "ignored_packages": [],
+    "vintage_start_in_command_mode": true, // 使用 normail 模式打开 sublime text
+    "vintage_ctrl_keys": true, // 使用 VI 模式的 ctrl 键
+
+    // tab
+    "tab_size": 4,
+    "translate_tabs_tospaces": true, // tab 转换成空格
+
+    // line
+    "line_numbers": true,
+    "highlight_line": true,
+}
