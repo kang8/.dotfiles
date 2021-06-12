@@ -43,4 +43,12 @@ export PATH=$PATH:/home/kang/go/bin
 export PATH=$PATH:/home/kang/.local/bin # python pip install library
 export EDITOR=nvim
 
+export JAVA_HOME=/usr/lib/jvm/default
+export ANDROID_HOME=/opt/android-sdk
+
 # setxkbmap -option ctrl:swapcaps
+
+# history
+export HISTIGNORE='pwd:exit:top:clear:history:ls:l:ll'
+export HISTSIZE=10000
+export SAVEHIST=100000

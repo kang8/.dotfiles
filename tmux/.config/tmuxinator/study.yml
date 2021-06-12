@@ -2,6 +2,6 @@ name: java
 root: ~/
 
 windows:
-  - htop: htop
+  - top: bashtop
   - study: ~/language/java/learning-java-se
   - empty: 
