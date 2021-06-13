@@ -25,6 +25,7 @@ alias ra="ranger"
 alias ncdu="ncdu --color dark"
 alias mux="tmuxinator"
 alias s=neofetch
+alias p=proxychains4
 
 # git
 alias ga='git add -A'

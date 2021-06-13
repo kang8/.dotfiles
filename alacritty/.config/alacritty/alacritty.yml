@@ -22,7 +22,7 @@ window:
   # Values for `decorations`:
   #     - full: Borders and title bar
   #     - none: Neither borders nor title bar
-  decorations: full
+  decorations: none
 
 # Font configuration
 font:
