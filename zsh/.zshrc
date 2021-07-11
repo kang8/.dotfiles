@@ -26,6 +26,7 @@ alias ncdu="ncdu --color dark"
 alias mux="tmuxinator"
 alias s=neofetch
 alias p=proxychains4
+alias cman="man -M /usr/share/man/zh_CN"
 
 # git
 alias ga='git add -A'
