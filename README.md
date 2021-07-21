@@ -11,5 +11,5 @@ $ ibus-daemon -drx
 ## 生成 SSH 密钥
 
 ```bash
-$ ssh-keygen -t rsa -b 4096 -C "1115610574@qq.com"
+$ ssh-keygen -t ed25519 -C "1115610574@qq.com"
 ```
