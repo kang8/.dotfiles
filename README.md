@@ -13,3 +13,16 @@ $ ibus-daemon -drx
 ```bash
 $ ssh-keygen -t ed25519 -C "1115610574@qq.com"
 ```
+
+## ZSH
+
+### Install oh-my-zsh
+```bash
+$ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+### ZSH 插件安装
+```bash
+$ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+$ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+```
