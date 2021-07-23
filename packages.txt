@@ -1,22 +1,42 @@
+-- basic --
+ack
 cloc
-colorls
+ctags
 fzf
 git
 git-delta
+gradle
 highilght
 htop
 httpie
-jdk11-openjdk
+maven
 mycli
 ncdu
 neofetch
 neovim
 nginx
+node
 nvm
+proxychains-ng
 ranger
+rsync
 stow
 tldr
 tmux
 tmuxinator
 tree
 zsh
+
+-- master --
+docker
+lazydocker
+
+-- arch --
+colorls
+openjdk11-src
+openjdk8-src
+yay
+
+-- desktop --
+alacritty
+sushi
