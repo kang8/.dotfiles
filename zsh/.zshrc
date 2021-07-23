@@ -59,3 +59,6 @@ export JAVA_HOME=/usr/lib/jvm/default
 export HISTIGNORE='pwd:exit:top:clear:history:ls:l:ll'
 export HISTSIZE=10000
 export SAVEHIST=100000
+# proxy
+export http_proxy=http://10.0.3.2:10809
+export https_proxy=http://10.0.3.2:10809
