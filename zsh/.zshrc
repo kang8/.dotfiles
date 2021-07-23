@@ -52,7 +52,6 @@ export PATH=$PATH:/home/kang/.local/bin # python pip install library
 export EDITOR=nvim
 
 export JAVA_HOME=/usr/lib/jvm/default
-export ANDROID_HOME=/opt/android-sdk
 
 # setxkbmap -option ctrl:swapcaps
 
