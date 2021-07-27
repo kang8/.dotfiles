@@ -1,0 +1,6 @@
+name: message
+root: ~/
+
+windows:
+  - service: ~/work/message-service
+  - wiki: ~/work/message-service.wiki
