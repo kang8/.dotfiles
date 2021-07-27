@@ -36,8 +36,6 @@ alias cman="man -M /usr/share/man/zh_CN"
 # git
 alias ga='git add -A'
 alias gs='git status -s'
-alias gc='git checkout'
-alias gr='git reset'
 alias gl="git log --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --graph"
 alias gla="git log --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --graph --all"
 alias gd='git diff'
