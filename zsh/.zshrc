@@ -26,7 +26,6 @@ source /usr/share/nvm/init-nvm.sh
 bindkey '^ ' autosuggest-accept # contrl + space 填充历史命令
 
 alias vim=nvim
-alias ls=colorls
 alias ra="ranger"
 alias ncdu="ncdu --color dark"
 alias mux="tmuxinator"
