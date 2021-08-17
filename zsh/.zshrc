@@ -17,6 +17,8 @@ plugins=(
     fzf
     systemd
     docker
+    mvn
+    gh
 )
 
 source $ZSH/oh-my-zsh.sh
