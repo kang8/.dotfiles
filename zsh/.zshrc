@@ -27,7 +27,7 @@ source /usr/share/nvm/init-nvm.sh
 # zsh-autosuggestions config
 bindkey '^ ' autosuggest-accept # contrl + space 填充历史命令
 
-alias ls="exa --icons"
+alias ls="exa --icons --git"
 alias vim=nvim
 alias ra="ranger"
 alias ncdu="ncdu --color dark"
