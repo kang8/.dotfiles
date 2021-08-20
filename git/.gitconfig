@@ -14,3 +14,6 @@
 [delta]
     syntax-theme = base16-256
     features = line-numbers
+[filter "api_key"]
+	smudge = sed \"s/api_key.*/api_key =/\"
+	clean = sed \"s/api_key.*/api_key =/\"
