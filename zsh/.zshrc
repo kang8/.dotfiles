@@ -55,10 +55,21 @@ export JAVA_HOME=/usr/lib/jvm/default
 
 # setxkbmap -option ctrl:swapcaps
 
+# set distribution
+distrubution=`cat /etc/*-release | grep "DISTRIB_ID=" | cut -d "=" -f2`
+
+if [[ -z $distrubution ]]; then
+    echo "Can't find Linux distrubution!!!"
+elif [[ $distrubution == "Arch" ]]; then
+    echo "It is Arch Linux"
+    export proxy_ip=127.0.0.1
+    export proxy_port=8889
+fi
+
 # history
 export HISTIGNORE='pwd:exit:top:clear:history:ls:l:ll'
 export HISTSIZE=10000
 export SAVEHIST=100000
 # proxy
-export http_proxy=http://10.0.3.2:10809
-export https_proxy=http://10.0.3.2:10809
+export http_proxy=http://${proxy_ip}:${proxy_port}
+export https_proxy=http://${proxy_ip}:${proxy_port}
