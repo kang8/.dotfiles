@@ -1,6 +1,7 @@
 [user]
 	name = kang
 	email = 1115610574@qq.com
+	signingkey =
 [color]
 	ui = always
 [core]
@@ -17,3 +18,10 @@
 [filter "api_key"]
 	smudge = sed \"s/api_key.*/api_key =/\"
 	clean = sed \"s/api_key.*/api_key =/\"
+[filter "signingkey"]
+    smudge = sed \"s/\tsigningkey.*/\tsigningkey =/\"
+    clean = sed \"s/\tsigningkey.*/\tsigningkey =/\"
+[commit]
+	gpgsign = true
+[gpg]
+	program = gpg
