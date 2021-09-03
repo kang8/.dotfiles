@@ -19,10 +19,10 @@ plugins=(
     docker
     mvn
     gh
+    sudo
 )
 
 source $ZSH/oh-my-zsh.sh
-source /usr/share/nvm/init-nvm.sh
 
 # zsh-autosuggestions config
 bindkey '^ ' autosuggest-accept # contrl + space 填充历史命令
@@ -55,21 +55,26 @@ export JAVA_HOME=/usr/lib/jvm/default
 
 # setxkbmap -option ctrl:swapcaps
 
-# set distribution
-distrubution=`cat /etc/*-release | grep "DISTRIB_ID=" | cut -d "=" -f2`
-
-if [[ -z $distrubution ]]; then
-    echo "Can't find Linux distrubution!!!"
-elif [[ $distrubution == "Arch" ]]; then
+# distribution setting
+# WSL2
+if [[ -n `cat /proc/version | grep -i wsl2` ]]; then
+    echo "It is WSL2"
+    export proxy_ip=`cat /etc/resolv.conf | grep nameserver | awk '{print $2}'`
+    export proxy_port=10809
+# Arch Linux
+elif [[ -n `cat /proc/version | grep -i arch` ]]; then
     echo "It is Arch Linux"
     export proxy_ip=127.0.0.1
     export proxy_port=8889
+    source /usr/share/nvm/init-nvm.sh
+else
+    echo "Can't find Linux distribution!!!"
 fi
 
 # history
 export HISTIGNORE='pwd:exit:top:clear:history:ls:l:ll'
 export HISTSIZE=10000
 export SAVEHIST=100000
-# proxy
+
 export http_proxy=http://${proxy_ip}:${proxy_port}
 export https_proxy=http://${proxy_ip}:${proxy_port}
