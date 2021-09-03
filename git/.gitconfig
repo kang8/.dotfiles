@@ -19,7 +19,6 @@
 	smudge = sed \"s/api_key.*/api_key =/\"
 	clean = sed \"s/api_key.*/api_key =/\"
 [filter "signingkey"]
-    smudge = sed \"s/\tsigningkey.*/\tsigningkey =/\"
     clean = sed \"s/\tsigningkey.*/\tsigningkey =/\"
 [commit]
 	gpgsign = true
