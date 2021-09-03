@@ -61,6 +61,9 @@ if [[ -n `cat /proc/version | grep -i wsl2` ]]; then
     echo "It is WSL2"
     export proxy_ip=`cat /etc/resolv.conf | grep nameserver | awk '{print $2}'`
     export proxy_port=10809
+
+    # WSL GPG setting
+    export GPG_TTY=$(tty)
 # Arch Linux
 elif [[ -n `cat /proc/version | grep -i arch` ]]; then
     echo "It is Arch Linux"
