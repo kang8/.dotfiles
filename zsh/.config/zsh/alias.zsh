@@ -12,8 +12,9 @@ alias cman="man -M /usr/share/man/zh_CN"
 alias ga='git add -A'
 alias gs='git status -s'
 alias gl="git log --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --graph"
-alias gla="git log --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --graph --all"
+alias gla="gl --all"
 alias gd='git diff'
 alias gda='git diff --cached'
 
+# custom
 alias cg="curl google.com"
