@@ -1,4 +1,3 @@
-. $ZDOTDIR/alias.zsh
 . $ZDOTDIR/env.zsh
 . $ZDOTDIR/distribution/setup.zsh
 
@@ -21,5 +20,6 @@ plugins=(
 
 . $ZSH/oh-my-zsh.sh
 . $ZDOTDIR/key-bindings.zsh
+. $ZDOTDIR/alias.zsh
 
 # setxkbmap -option ctrl:swapcaps
