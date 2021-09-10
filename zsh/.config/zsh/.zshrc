@@ -1,3 +1,7 @@
+. $ZDOTDIR/alias.zsh
+. $ZDOTDIR/env.zsh
+. $ZDOTDIR/distribution/setup.zsh
+
 export ZSH=~/.oh-my-zsh
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
@@ -17,8 +21,5 @@ plugins=(
 
 . $ZSH/oh-my-zsh.sh
 . $ZDOTDIR/key-bindings.zsh
-. $ZDOTDIR/alias.zsh
-. $ZDOTDIR/env.zsh
-. $ZDOTDIR/distribution/setup.zsh
 
 # setxkbmap -option ctrl:swapcaps
