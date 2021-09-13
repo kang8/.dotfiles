@@ -10,3 +10,11 @@ if [[ -d /home/linuxbrew/.linuxbrew ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     export FZF_BASE=/home/linuxbrew/.linuxbrew/Cellar/fzf/0.27.2/
 fi
+
+# Change ls colours
+LS_COLORS="ow=01;36;20" && export LS_COLORS
+
+# make cd use the ls colours
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+autoload -Uz compinit
+compinit
