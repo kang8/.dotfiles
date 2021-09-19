@@ -16,6 +16,8 @@ plugins=(
     mvn
     gh
     sudo
+    laravel
+    composer
 )
 
 . $ZSH/oh-my-zsh.sh
