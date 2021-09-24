@@ -10,6 +10,7 @@ gradle
 highilght
 htop
 httpie
+jq
 maven
 mycli
 ncdu
@@ -27,6 +28,14 @@ tmuxinator
 tree
 ueberzug
 zsh
+
+-- language --
+node
+python
+go
+php
+jdk
+gcc
 
 -- master --
 docker
