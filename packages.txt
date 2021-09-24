@@ -2,6 +2,7 @@
 ack
 cloc
 ctags
+exa
 fzf
 git
 git-delta
@@ -16,7 +17,6 @@ neofetch
 neovim
 nginx
 node
-nvm
 proxychains-ng
 ranger
 rsync
@@ -25,6 +25,7 @@ tldr
 tmux
 tmuxinator
 tree
+ueberzug
 zsh
 
 -- master --
