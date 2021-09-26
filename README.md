@@ -1,5 +1,9 @@
 # My dotfiles
 
+## Font, JetBrainMono Medium
+
+intall for [this](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/JetBrainsMono/Ligatures/Medium/complete/JetBrains%20Mono%20Medium%20Nerd%20Font%20Complete%20Mono.ttf).
+
 ## ibus-daemon
 
 refresh ibus-daemon

@@ -28,18 +28,18 @@ window:
 font:
   # Normal (roman) font face
   normal:
-    family: JetBrainsMonoMedium Nerd Font
+    family: JetBrainsMono Nerd Font Mono
 
   # Bold font face
   bold:
-    family: JetBrainsMonoMedium Nerd Font
+    family: JetBrainsMono Nerd Font Mono
 
   # Italic font face
   italic:
-    family: JetBrainsMonoMedium Nerd Font
+    family: JetBrainsMono Nerd Font Mono
   # Bold italic font face
   bold_italic:
-    family: JetBrainsMonoMedium Nerd Font
+    family: JetBrainsMono Nerd Font Mono
 
   # Point size
   size: 13.0
