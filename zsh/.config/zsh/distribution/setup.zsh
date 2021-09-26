@@ -1,6 +1,9 @@
 current_dir=`dirname $0`
 
-if [[ -n `cat /proc/version | grep -i wsl2` ]]; then
+if [[ -n `exec sw_vers` ]]; then
+    # echo "It is macOS"
+    . $current_dir/macos.zsh
+elif [[ -n `cat /proc/version | grep -i wsl2` ]]; then
     # echo "It is WSL2"
     . $current_dir/wsl2.zsh
 elif [[ -n `cat /proc/version | grep -i arch` ]]; then
