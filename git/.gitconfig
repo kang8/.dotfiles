@@ -24,3 +24,10 @@
 	gpgsign = true
 [gpg]
 	program = gpg
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[protocol]
+	version = 2
