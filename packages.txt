@@ -11,6 +11,7 @@ highilght
 htop
 httpie
 jq
+lazygit
 maven
 mycli
 ncdu
@@ -50,3 +51,8 @@ yay
 -- desktop --
 alacritty
 sushi
+
+-- homebrew macOS cask--
+utools
+v2rayu
+snipaste
