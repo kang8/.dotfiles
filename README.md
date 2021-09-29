@@ -1,5 +1,11 @@
 # My dotfiles
 
+## clone repo
+
+```bahs
+$ git clone --recurse-submodules https://github.com/kang8/.dotfiles.git
+```
+
 ## Font, JetBrainMono Medium
 
 intall for [this](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/JetBrainsMono/Ligatures/Medium/complete/JetBrains%20Mono%20Medium%20Nerd%20Font%20Complete%20Mono.ttf).
