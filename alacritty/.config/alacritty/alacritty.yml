@@ -14,15 +14,17 @@ window:
   # must be at least `2`, while using a value of `0` for columns and lines will
   # fall back to the window manager's recommended size.
   dimensions:
-    columns: 120
-    lines: 30
+    columns: 160
+    lines: 48
+
+  dynamic_title: true
 
   # Window decorations
   #
   # Values for `decorations`:
   #     - full: Borders and title bar
   #     - none: Neither borders nor title bar
-  decorations: full
+  decorations: none
 
 # Font configuration
 font:
@@ -37,6 +39,7 @@ font:
   # Italic font face
   italic:
     family: JetBrainsMono Nerd Font Mono
+
   # Bold italic font face
   bold_italic:
     family: JetBrainsMono Nerd Font Mono
@@ -45,37 +48,65 @@ font:
   size: 13.0
   
 
-colors:
-  primary:
-    background: '#333333'
-    foreground: '#ffffff'
+schemes:
+  gruvbox_light: &gruvbox_light
+    # Default colors
+    primary:
+      background: '0xf9f5d7' # hard contrast
+      # background: '0xfbf1c7' # normal
+      foreground: '0x3c3836'
+  
+    # Normal colors
+    normal:
+      black:   '0xfbf1c7'
+      red:     '0xcc241d'
+      green:   '0x98971a'
+      yellow:  '0xd79921'
+      blue:    '0x458588'
+      magenta: '0xb16286'
+      cyan:    '0x689d6a'
+      white:   '0x7c6f64'
+  
+    # Bright colors
+    bright:
+      black:   '0x928374'
+      red:     '0x9d0006'
+      green:   '0x79740e'
+      yellow:  '0xb57614'
+      blue:    '0x076678'
+      magenta: '0x8f3f71'
+      cyan:    '0x427b58'
+      white:   '0x3c3836'
+  gruvbox_dark: &gruvbox_dark
+    # Default colors
+    primary:
+      background: '0x1d2021' # hard contrast
+      # background: '0x282828' # normal contrast
+      foreground: '0xebdbb2'
 
-    bright_foreground: '#ffffff'
-    bright_background: '#555555'
+    # Normal colors
+    normal:
+      black:   '0x282828'
+      red:     '0xcc241d'
+      green:   '0x98971a'
+      yellow:  '0xd79921'
+      blue:    '0x458588'
+      magenta: '0xb16286'
+      cyan:    '0x689d6a'
+      white:   '0xa89984'
 
-  cursor:
-    text:    '#000000'
-    cursor:  '#d9d9d9'
+    # Bright colors
+    bright:
+      black:   '0x928374'
+      red:     '0xfb4934'
+      green:   '0xb8bb26'
+      yellow:  '0xfabd2f'
+      blue:    '0x83a598'
+      magenta: '0xd3869b'
+      cyan:    '0x8ec07c'
+      white:   '0xebdbb2'
 
-  normal:
-    black:   '#4d4d4d'
-    red:     '#bb0000'
-    green:   '#98f898'
-    yellow:  '#f0e68c'
-    blue:    '#96853f'
-    magenta: '#ffdead'
-    cyan:    '#ffa0a0'
-    white:   '#f5deb3'
-
-  bright:
-    black:   '#555555'
-    red:     '#ff5555'
-    green:   '#55ff55'
-    yellow:  '#ffff55'
-    blue:    '#87ceeb'
-    magenta: '#ff55ff'
-    cyan:    '#ffd700'
-    white:   '#ffffff'
+colors: *gruvbox_dark
 
 # Background opacity
 #
@@ -86,7 +117,7 @@ background_opacity: 0.9
 selection:
   # This string contains all characters that are used as separators for
   # "semantic words" in Alacritty.
-  semantic_escape_chars: ",│`|:\"' ()[]{}<>\t@="
+  semantic_escape_chars: ",│`|:\"' ()[]{}<>\t="
 
   # When set to `true`, selected text will be copied to the primary clipboard.
   save_to_clipboard: true
