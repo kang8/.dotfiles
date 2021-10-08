@@ -1,3 +1,4 @@
+. $ZDOTDIR/proxy.zsh
 . $ZDOTDIR/env.zsh
 . $ZDOTDIR/distribution/setup.zsh
 
