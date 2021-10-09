@@ -14,5 +14,11 @@ else
 fi
 
 # HTTP proxy setting
-export http_proxy=http://${proxy_ip}:${proxy_port}
-export https_proxy=http://${proxy_ip}:${proxy_port}
+if is_access_google; then
+    unset http_proxy
+    unset https_proxy
+else
+    export http_proxy=http://${proxy_ip}:${proxy_port}
+    export https_proxy=http://${proxy_ip}:${proxy_port}
+    export use_proxy=true
+fi
