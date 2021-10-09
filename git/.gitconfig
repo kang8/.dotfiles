@@ -31,3 +31,5 @@
 	smudge = git-lfs smudge -- %f
 [protocol]
 	version = 2
+[includeIf "gitdir:~/Projects/"]
+    path = ~/Projects/.gitconfig
