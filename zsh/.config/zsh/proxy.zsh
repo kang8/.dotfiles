@@ -15,7 +15,6 @@ if [[ -n "`curl --connect-timeout 0.1 -Is google.com`" ]]; then
     access_google=true
 else
     # echo "can't get forigin website"
-    access_google=false
 fi
 
 function is_access_google()
