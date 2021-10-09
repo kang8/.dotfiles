@@ -1,6 +1,6 @@
 # proxy
 export proxy_ip=`cat /etc/resolv.conf | grep nameserver | awk '{print $2}'`
-export proxy_port=10809
+export proxy_http_port=10809
 
 # WSL GPG setting
 export GPG_TTY=$(tty)
