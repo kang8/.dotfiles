@@ -1,6 +1,7 @@
 . $ZDOTDIR/proxy.zsh
 . $ZDOTDIR/env.zsh
 . $ZDOTDIR/distribution/setup.zsh
+. $ZDOTDIR/ssh-proxy.zsh
 
 export ZSH=~/.oh-my-zsh
 export LC_ALL=en_US.UTF-8
