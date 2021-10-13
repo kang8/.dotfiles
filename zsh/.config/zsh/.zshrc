@@ -3,11 +3,8 @@
 . $ZDOTDIR/distribution/setup.zsh
 . $ZDOTDIR/ssh-proxy.zsh
 
-export ZSH=~/.oh-my-zsh
-export LC_ALL=en_US.UTF-8
-
 ZSH_THEME="powerlevel10k/powerlevel10k"
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
 plugins=(
     git
@@ -17,8 +14,6 @@ plugins=(
     systemd
     docker
     docker-compose
-    mvn
-    gh
     sudo
     laravel
     composer
