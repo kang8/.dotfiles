@@ -2,7 +2,7 @@ export EDITOR=nvim
 export JAVA_HOME=/usr/lib/jvm/default
 export MANPAGER='nvim +Man!'
 export LC_ALL=en_US.UTF-8
-export ZSH=~/.oh-my-zsh
+export ZSH=~/.config/zsh/.oh-my-zsh
 
 # PATH
 export PATH=$PATH:/home/kang/.local/share/gem/ruby/2.7.0/bin
