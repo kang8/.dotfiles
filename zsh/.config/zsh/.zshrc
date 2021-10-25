@@ -17,6 +17,7 @@ plugins=(
     sudo
     laravel
     composer
+    gpg-agent
 )
 
 . $ZSH/oh-my-zsh.sh
