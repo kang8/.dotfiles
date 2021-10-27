@@ -21,3 +21,15 @@ function is_access_google()
 {
     [[ "$access_google" == "true" ]]
 }
+
+function echo_proxy() {
+    echo "use_proxy: $use_proxy"
+    echo "http_proxy: $http_proxy"
+    echo "https_proxy: $https_proxy"
+}
+
+function unset_proxy() {
+    unset use_proxy
+    unset http_proxy
+    unset https_proxy
+}
