@@ -30,4 +30,4 @@
 [protocol]
 	version = 2
 [includeIf "gitdir:~/Projects/"]
-    path = ~/Projects/.gitconfig
+    path = ~/.gitconfig-work
