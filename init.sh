@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-echo "hello world"
-
 # 检查系统的版本
 
 # 先检查程序是否安装
@@ -10,11 +8,26 @@ echo "hello world"
 # stow
 echo "stow beging!!!"
 for i in `ls -d */`; do
-    echo "stow $i"
+    echo "  stow $i"
     stow $i
 done
 
-# check ssh key
+# ssh key
+is_missing_ssh=false
+for i in $HOME/.ssh/id_ed25519{,.pub}; do
+    if [[ ! -f $i ]]; then
+        echo "$i is missing!"
+        is_missing_ssh=true
+    fi
+done
+
+if [[ $is_missing_ssh == "true" ]]; then
+    read -rp "Can't found ssh key, Do your want to generate a new SSH key? [y|N] " is_generate
+    if [[ -n $is_generate && ($is_generate == "Y" || $is_generate == 'y') ]]; then
+        read -rp "Please input SSH key common: " ssh_common
+        echo -ne "\n\n\n" | ssh-keygen -t ed25519 -C "$ssh_common"
+    fi
+fi
 
 # ZSH
 ZSH="${HOME}/.config/zsh/.oh-my-zsh"
@@ -46,3 +59,7 @@ else
     echo "Install zsh theme: powerlevel10k..."
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH}/custom/themes/powerlevel10k
 fi
+
+# tmux
+
+# gpg
