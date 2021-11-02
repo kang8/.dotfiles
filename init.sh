@@ -4,12 +4,15 @@
 
 # 先检查程序是否安装
 
-# TODO: stow exclude
 # stow
 echo "stow beging!!!"
+
+stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/')
+
 for i in `ls -d */`; do
-    echo "  stow $i"
-    stow $i
+    printf "%s\n" "${stow_exclude[@]}" | grep -x -q "$i" ||
+        echo "  stow $i" &&
+        stow $i
 done
 
 # ssh key
