@@ -5,7 +5,9 @@ set -Eeuo pipefail
 
 # 先检查程序是否安装
 
+########
 # stow
+########
 echo "stow beging!!!"
 
 stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/')
@@ -16,7 +18,11 @@ for i in `ls -d */`; do
         stow $i
 done
 
+source ~/.zshrc
+
+########
 # ssh key
+########
 is_missing_ssh=false
 for i in $HOME/.ssh/id_ed25519{,.pub}; do
     if [[ ! -f $i ]]; then
@@ -33,7 +39,11 @@ if [[ $is_missing_ssh == "true" ]]; then
     fi
 fi
 
+# TODO: test `ssh -T git@github.com` if not througt to set ssh key to github.
+
+########
 # ZSH
+########
 ZSH="${HOME}/.config/zsh/.oh-my-zsh"
 
 if [[ -d ${ZSH} ]]; then
@@ -64,7 +74,9 @@ else
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH}/custom/themes/powerlevel10k
 fi
 
+########
 # tmux
+########
 echo "tmux beging!!!"
 if [[ -d ~/.tmux ]]; then
     echo "oh-my-tmux is already installed."
@@ -87,4 +99,27 @@ fi
 # set oh-my-tmux remote repo
 (cd ~/.tmux && 
     git remote add ohmytmux git@github.com:gpakosz/.tmux.git &> /dev/null)
+
+########
 # gpg
+########
+echo "gpg beging!!!"
+if [[ -d ~/.config/kang-gpg ]]; then
+    echo "~/.conf/kang-gpg is already installed."
+else
+    git clone git@github.com:kang8/gpg-key-ring.git ~/.config/kang-gpg
+
+    # TODO: check `gpg -K` is contain? -> if
+    (cd kang-gpg && gpg --import sign-sub.gpg)
+    # TODO: trust private key
+fi
+
+########
+# neovim
+########
+echo "neovim beging!!!"
+if [[ -d ~/.config/nvim ]];then
+    echo "~/.config/nvim is already installed."
+else
+    git clone git@github.com:kang8/.vimrc.git ~/.config/nvim
+fi
