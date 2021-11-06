@@ -56,7 +56,7 @@ else
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH}/custom/plugins/zsh-autosuggestions
 fi
 
-if [[ -d${ZSH}/custom/themes/powerlevel10k  ]]; then
+if [[ -d ${ZSH}/custom/themes/powerlevel10k  ]]; then
     echo "powerlevel10k is already installed."
 else
     echo "Install zsh theme: powerlevel10k..."
