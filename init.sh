@@ -111,7 +111,8 @@ else
 
     # TODO: check `gpg -K` is contain? -> if
     (cd kang-gpg && gpg --import sign-sub.gpg)
-    # TODO: trust private key
+
+    echo -ne "trust\n5\ny\nq\n" | gpg --expert --edit-key 9B18672C5BAD8159F5A76234CA67CB5DBBA86E4D
 fi
 
 ########
