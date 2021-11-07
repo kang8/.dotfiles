@@ -84,7 +84,7 @@ else
     git clone https://github.com/kang8/.tmux.git ~/.tmux
 fi
 
-if [[ -f ~/.tmux/.tmux.conf ]]; then
+if [[ -f ~/.tmux.conf ]]; then
     echo "~/.tmux/.tmux.conf is already link."
 else
     ln -sf ~/.tmux/.tmux.conf ~/
@@ -93,7 +93,7 @@ fi
 if [[ -f ~/.tmux/.tmux.conf.local ]]; then
     echo "~/.tmux/.tmux.conf.local is already link."
 else
-    ln -sf ~/.tmux/.tmux.conf.local ~/
+    ln -sf ~/.tmux.conf.local ~/
 fi
 
 # set oh-my-tmux remote repo
