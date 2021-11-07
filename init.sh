@@ -18,7 +18,7 @@ for i in `ls -d */`; do
         stow $i
 done
 
-source ~/.zshrc
+zsh ~/.zshrc
 
 ########
 # ssh key
