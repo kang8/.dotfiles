@@ -98,7 +98,7 @@ fi
 
 # set oh-my-tmux remote repo
 (cd ~/.tmux && 
-    git remote add ohmytmux git@github.com:gpakosz/.tmux.git &> /dev/null)
+    git remote add ohmytmux git@github.com:gpakosz/.tmux.git &> /dev/null || true)
 
 ########
 # gpg
