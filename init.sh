@@ -10,7 +10,7 @@ set -Eeuo pipefail
 ########
 echo "stow beging!!!"
 
-stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/')
+stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/' 'gnupg/')
 
 for i in `ls -d */`; do
     printf "%s\n" "${stow_exclude[@]}" | grep -x -q "$i" ||
@@ -101,21 +101,6 @@ fi
     git remote add ohmytmux git@github.com:gpakosz/.tmux.git &> /dev/null || true)
 
 ########
-# gpg
-########
-echo "gpg beging!!!"
-if [[ -d ~/.config/kang-gpg ]]; then
-    echo "~/.conf/kang-gpg is already installed."
-else
-    git clone git@github.com:kang8/gpg-key-ring.git ~/.config/kang-gpg
-
-    # TODO: check `gpg -K` is contain? -> if
-    (cd kang-gpg && gpg --import sign-sub.gpg)
-
-    echo -ne "trust\n5\ny\nq\n" | gpg --expert --edit-key 9B18672C5BAD8159F5A76234CA67CB5DBBA86E4D
-fi
-
-########
 # neovim
 ########
 echo "neovim beging!!!"
@@ -124,3 +109,26 @@ if [[ -d ~/.config/nvim ]];then
 else
     git clone git@github.com:kang8/.vimrc.git ~/.config/nvim
 fi
+
+########
+# gpg
+########
+echo "gpg beging!!!"
+
+# create ~/.gnupg
+gpg -k &> /dev/null
+stow gnupg
+
+if [[ -d ~/.config/kang-gpg ]]; then
+    echo "~/.config/kang-gpg is already installed."
+else
+    git clone git@github.com:kang8/gpg-key-ring.git ~/.config/kang-gpg
+fi
+
+gpg -K
+if [[ -z `gpg -K` ]]; then
+    (cd ~/.config/kang-gpg && gpg --import sign-sub.gpg)
+
+    gpg --expert --edit-key 9B18672C5BAD8159F5A76234CA67CB5DBBA86E4D
+fi
+
