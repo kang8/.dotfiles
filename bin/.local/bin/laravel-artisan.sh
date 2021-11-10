@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
-line=`php artisan list --raw | fzf`
+list=`php artisan list --raw` || echo "Could not open input file: artisan" >&2 && exit
+line=`printf "$list" | fzf`
 
 command=`echo $line | cut -d ' ' -f 1`
 is_create=`echo $line | cut -d ' ' -f 2`
