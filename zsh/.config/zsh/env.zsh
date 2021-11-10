@@ -5,9 +5,8 @@ export LC_ALL=en_US.UTF-8
 export ZSH=~/.config/zsh/.oh-my-zsh
 
 # PATH
-export PATH=$PATH:/home/kang/.local/share/gem/ruby/2.7.0/bin
-export PATH=$PATH:/home/kang/go/bin
-export PATH=$PATH:/home/kang/.local/bin # python pip install library
+export PATH=$PATH:~/.local/bin # customize binary file and python binary file
+export PATH=$PATH:~/go/bin # go binary file
 
 # history
 HISTFILE=~/.zsh_history
