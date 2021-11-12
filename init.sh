@@ -5,6 +5,10 @@ set -Eeuo pipefail
 
 # 先检查程序是否安装
 
+# setup
+mkdir ~/.config/lazygit
+mkdir ~/.local/bin
+
 ########
 # stow
 ########
@@ -14,8 +18,7 @@ stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/' 'gnupg/')
 
 for i in `ls -d */`; do
     printf "%s\n" "${stow_exclude[@]}" | grep -x -q "$i" ||
-        echo "  stow $i" &&
-        stow $i
+        ( echo "  stow $i" && stow $i )
 done
 
 zsh ~/.zshrc
@@ -115,9 +118,8 @@ fi
 ########
 echo "gpg beging!!!"
 
-# create ~/.gnupg
-gpg -k &> /dev/null
-stow gnupg
+# create ~/.gnupg/
+gpg -k
 
 if [[ -d ~/.config/kang-gpg ]]; then
     echo "~/.config/kang-gpg is already installed."
@@ -125,7 +127,8 @@ else
     git clone git@github.com:kang8/gpg-key-ring.git ~/.config/kang-gpg
 fi
 
-gpg -K
+stow gnupg
+
 if [[ -z `gpg -K` ]]; then
     (cd ~/.config/kang-gpg && gpg --import sign-sub.gpg)
 
@@ -135,4 +138,3 @@ if [[ -z `gpg -K` ]]; then
     interact
     ")
 fi
-
