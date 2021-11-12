@@ -129,6 +129,10 @@ gpg -K
 if [[ -z `gpg -K` ]]; then
     (cd ~/.config/kang-gpg && gpg --import sign-sub.gpg)
 
-    gpg --expert --edit-key 9B18672C5BAD8159F5A76234CA67CB5DBBA86E4D
+    expect <(printf "\
+    spawn gpg --expert --edit-key 9B18672C5BAD8159F5A76234CA67CB5DBBA86E4D
+    send \"trust\r5\ry\rq\r\"
+    interact
+    ")
 fi
 
