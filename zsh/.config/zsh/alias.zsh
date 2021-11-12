@@ -7,6 +7,7 @@ alias mux="tmuxinator"
 alias s=neofetch
 alias p=proxychains4
 alias cman="man -M /usr/share/man/zh_CN"
+alias lg="lazygit --use-config-file=${HOME}/.config/lazygit/config.yml"
 
 # git
 alias ga='git add -A'

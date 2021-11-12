@@ -1,0 +1,8 @@
+gui:
+  # language: 'zh'
+  showFileTree: false
+  theme:
+    selectedLineBgColor:
+      - underline
+git:
+  branchLogCmd: "git log --graph --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" {{branchName}} --"
