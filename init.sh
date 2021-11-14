@@ -6,8 +6,8 @@ set -Eeuo pipefail
 # 先检查程序是否安装
 
 # setup
-mkdir ~/.config/lazygit
-mkdir ~/.local/bin
+mkdir -p ~/.config/lazygit || true
+mkdir -p ~/.local/bin || true
 
 ########
 # stow
