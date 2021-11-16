@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-list=`php artisan list --raw` || echo "Could not open input file: artisan" >&2 && exit
+list=`php artisan list --raw || ( >&2 echo "Could not open input file: artisan" && exit 1 )`
 line=`printf "$list" | fzf`
 
 command=`echo $line | cut -d ' ' -f 1`
