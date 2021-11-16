@@ -2,3 +2,4 @@ __pycache__/
 .zcompdump*
 .DS_Store
 .oh-my-zsh
+.env

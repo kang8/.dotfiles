@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# 检查系统的版本
-
-# 先检查程序是否安装
-
 # setup
 mkdir -p ~/.config/lazygit || true
 mkdir -p ~/.local/bin || true
+cp .env.example .env
 
 ########
 # stow

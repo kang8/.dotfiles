@@ -13,12 +13,15 @@ else
     echo "Can't find Linux distribution!!!"
 fi
 
+# If computer used to work, do not to set proxy
+if [ $is_work ]; then
+    return
+fi
+
 # HTTP proxy setting
 if is_access_google; then
     unset http_proxy
     unset https_proxy
 else
-    export http_proxy=http://${proxy_ip}:${proxy_http_port}
-    export https_proxy=http://${proxy_ip}:${proxy_http_port}
-    export use_proxy=true
+    set_proxy
 fi

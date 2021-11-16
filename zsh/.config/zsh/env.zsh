@@ -18,3 +18,8 @@ SAVEHIST=100000
 setopt append_history
 setopt hist_ignore_dups
 setopt hist_ignore_space
+
+# customize variable
+if [[ -n `grep WORK=true ~/.dotfiles/.env` ]]; then
+    export is_work=true
+fi

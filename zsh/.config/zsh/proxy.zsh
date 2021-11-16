@@ -16,6 +16,12 @@ function unset_proxy() {
     unset https_proxy
 }
 
+function set_proxy() {
+    export http_proxy=http://${proxy_ip}:${proxy_http_port}
+    export https_proxy=http://${proxy_ip}:${proxy_http_port}
+    export use_proxy=true
+}
+
 if [ -n "${use_proxy}" ] && [[ "${use_proxy}" == "true" ]];then
     function is_access_google()
     {
