@@ -1,6 +1,6 @@
 rm -rf ~/.ssh/config
 
-if ! is_access_google;then
+if [[ ! is_access_google && ! $is_work ]];then
     if [ -n "${proxy_socks5_port}" ];then
 cat << EOF > ~/.ssh/config
 Host gist.github.com github.com
