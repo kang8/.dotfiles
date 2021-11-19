@@ -18,7 +18,7 @@ function unset_proxy() {
 
 function set_proxy() {
     export http_proxy=http://${proxy_ip}:${proxy_http_port}
-    export https_proxy=http://${proxy_ip}:${proxy_http_port}
+    export https_proxy=$http_proxy
     export use_proxy=true
 }
 
