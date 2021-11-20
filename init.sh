@@ -81,7 +81,7 @@ echo "tmux beging!!!"
 if [[ -d ~/.tmux ]]; then
     echo "oh-my-tmux is already installed."
 else
-    git clone https://github.com/kang8/.tmux.git ~/.tmux
+    git clone --depth=1 git@github.com:kang8/.tmux.git ~/.tmux
 fi
 
 if [[ -f ~/.tmux.conf ]]; then
@@ -96,9 +96,9 @@ else
     ln -sf ~/.tmux/.tmux.conf.local ~/
 fi
 
-# set oh-my-tmux remote repo
+# set oh-my-tmux remote upstream repo
 (cd ~/.tmux && 
-    git remote add ohmytmux git@github.com:gpakosz/.tmux.git &> /dev/null || true)
+    git remote add ohmytmux https://github.com/gpakosz/.tmux.git &> /dev/null || true)
 
 ########
 # neovim
@@ -107,7 +107,7 @@ echo "neovim beging!!!"
 if [[ -d ~/.config/nvim ]];then
     echo "~/.config/nvim is already installed."
 else
-    git clone git@github.com:kang8/.vimrc.git ~/.config/nvim
+    git clone --depth=1 git@github.com:kang8/.vimrc.git ~/.config/nvim
 fi
 
 ########
@@ -121,7 +121,7 @@ gpg -k
 if [[ -d ~/.config/kang-gpg ]]; then
     echo "~/.config/kang-gpg is already installed."
 else
-    git clone git@github.com:kang8/gpg-key-ring.git ~/.config/kang-gpg
+    git clone --depth=1 git@github.com:kang8/gpg-key-ring.git ~/.config/kang-gpg
 fi
 
 stow gnupg
@@ -135,3 +135,7 @@ if [[ -z `gpg -K` ]]; then
     interact
     ")
 fi
+
+# setdown
+
+( cd ~/.dotfiles && git remote set-url origin git@github.com:kang8/.dotfiles.git )

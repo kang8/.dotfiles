@@ -3,7 +3,7 @@
 ## clone this repo
 
 ```bahs
-$ git clone --recurse-submodules https://github.com/kang8/.dotfiles.git
+$ git clone --recurse-submodules --depth=1 https://github.com/kang8/.dotfiles.git
 ```
 
 ## Install Font
