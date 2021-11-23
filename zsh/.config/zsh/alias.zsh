@@ -19,5 +19,6 @@ alias gda='git diff --cached'
 
 # custom
 alias cg="curl google.com"
-alias cdtmp="cd `mktemp -d /tmp/artin-XXXXXX`"
+alias ct="cd `mktemp -d /tmp/artin-XXXXXX`"
+alias vt="ct && vim"
 alias la="laravel-artisan.sh"
