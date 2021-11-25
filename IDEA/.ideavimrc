@@ -8,19 +8,17 @@ set smartcase
 set showmode
 set number
 set relativenumber
-set scrolloff=5
 
-" Quit normal mode
-" (保存关闭)
-" nnoremap <Leader>q  :q<CR>
-" nnoremap <Leader>Q  :qa!<CR>
+""" Idea specific settings ------------------
+set ideajoin
+set idearefactormode=keep
 
 " 快速进入vim模式
-inoremap jj <Esc>
 inoremap kk <Esc>A
 
 " 清除高亮搜索
 nnoremap <Leader>k :nohlsearch<CR>
+nnoremap <Leader>n :action SelectInProjectView<CR>
 
 " 在normal模式保持英文状态
 set keep-english-in-normal
