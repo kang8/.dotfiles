@@ -67,6 +67,13 @@ else
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH}/custom/plugins/zsh-autosuggestions
 fi
 
+if [[ -d ${ZSH}/custom/plugins/fzf-tab ]] ; then
+    echo "fzf-tab is already installed."
+else
+    echo "Install zsh plug: fzf-tab..."
+    git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git ${ZSH}/custom/plugins/fzf-tab
+fi
+
 if [[ -d ${ZSH}/custom/themes/powerlevel10k  ]]; then
     echo "powerlevel10k is already installed."
 else

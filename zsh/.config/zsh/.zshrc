@@ -18,6 +18,7 @@ plugins=(
     laravel
     composer
     gpg-agent
+    fzf-tab
 )
 
 . $ZSH/oh-my-zsh.sh
