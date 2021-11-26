@@ -1,5 +1,6 @@
 brew "ack"
 brew "awscli"
+brew "bat"
 brew "cloc"
 brew "composer"
 brew "ctags"
