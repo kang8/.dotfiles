@@ -15,7 +15,7 @@ EOF
 fi
 
 cat << EOF >> ~/.ssh/config
-Host kang
-    HostName 121.36.19.76
-    User yikang
+Host zhang
+    HostName 47.101.197.97
+    User root
 EOF
