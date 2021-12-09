@@ -13,8 +13,8 @@ else
     echo "Can't find Linux distribution!!!"
 fi
 
-# If computer used to work, do not to set proxy
-if [ $is_work ]; then
+# If computer used to work or global proxy, do not to set proxy
+if [[ $is_work || $is_global_proxy ]]; then
     return
 fi
 
