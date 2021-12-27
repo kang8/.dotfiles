@@ -47,6 +47,7 @@ brew "tmuxinator"
 brew "tree"
 brew "watch"
 brew "yarn"
+brew "yq"
 
 cask "alacritty"
 cask "another-redis-desktop-manager"
