@@ -1,0 +1,4 @@
+[
+    { "keys": ["alt+1"], "command": "toggle_side_bar" }, // 显示文件夹
+    { "keys": ["ctrl+alt+l"], "command": "alignment" }, // 格式化(!未验证)
+]
