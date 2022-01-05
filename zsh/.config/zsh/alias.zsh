@@ -12,6 +12,7 @@ alias lg="lazygit --use-config-file=${HOME}/.config/lazygit/config.yml"
 # git
 alias ga='git add -A'
 alias gs='git status -s'
+alias gsa='git status'
 alias gl="git log --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --graph"
 alias gla="gl --all"
 alias gd='git diff'
