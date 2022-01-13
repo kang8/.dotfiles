@@ -52,7 +52,6 @@ brew "yq"
 
 cask "alacritty"
 cask "another-redis-desktop-manager"
-cask "cheatsheet"
 cask "dash"
 cask "datagrip"
 cask "docker"
