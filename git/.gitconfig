@@ -8,6 +8,7 @@
 	editor = nvim
     pager = delta
 	quotepath = false
+	excludesfile = ~/.gitignore-global
 [help]
 	autocorrect = 11
 [interactive]
