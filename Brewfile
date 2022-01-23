@@ -1,4 +1,5 @@
 brew "ack"
+brew "asciinema"
 brew "awscli"
 brew "bat"
 brew "cloc"
