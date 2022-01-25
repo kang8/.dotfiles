@@ -7,6 +7,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
 plugins=(
+    vi-mode
     git
     zsh-syntax-highlighting
     zsh-autosuggestions
@@ -22,6 +23,7 @@ plugins=(
 )
 
 . $ZSH/oh-my-zsh.sh
+. $ZDOTDIR/vim_mode.zsh
 . $ZDOTDIR/key-bindings.zsh
 . $ZDOTDIR/alias.zsh
 
