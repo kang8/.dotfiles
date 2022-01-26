@@ -1,4 +1,8 @@
-# vim cursor
+# vim mode
+
+# set input to normal time, it is 0.01 second
+export KEYTIMEOUT=1
+
 cursor_mode() {
     # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
     cursor_block='\e[2 q'
