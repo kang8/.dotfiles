@@ -17,6 +17,7 @@ alias gl="git log --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%
 alias gla="gl --all"
 alias gd='git diff'
 alias gda='git diff --cached'
+alias gp-set-upstream='gpsup'
 
 # custom
 alias cg="curl google.com"
