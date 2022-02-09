@@ -26,5 +26,6 @@ plugins=(
 . $ZDOTDIR/vim_mode.zsh
 . $ZDOTDIR/key-bindings.zsh
 . $ZDOTDIR/alias.zsh
+eval "$(thefuck --alias)"
 
 # setxkbmap -option ctrl:swapcaps
