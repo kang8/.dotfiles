@@ -1,7 +1,8 @@
 # zsh-autosuggestions config
-bindkey '^ ' autosuggest-accept # contrl + space 填充历史命令
-bindkey -s '^o' 'ranger^M' # contrl + o
-bindkey -s '^t' 'tmux a^M' # contrl + o
+bindkey '^ ' autosuggest-accept # control + space 填充历史命令
+bindkey -s '^o' 'ranger^M'
+bindkey -s '^t' 'tmux a^M'
+bindkey -s '^f' 'fork^M'
 
 bindkey '\C-x\C-e' edit-command-line
 bindkey -M vicmd 'm' edit-command-line
