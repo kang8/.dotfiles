@@ -9,15 +9,13 @@ set showmode
 set number
 set relativenumber
 
-""" Idea specific settings ------------------
+""" IDEA specific settings ------------------
 set ideajoin
 set idearefactormode=keep
 
-" 快速进入vim模式
+" key mapping
 inoremap kk <Esc>A
-
-" 清除高亮搜索
-nnoremap <Leader>k :nohlsearch<CR>
+nnoremap <Leader>k :nohlsearch<CR> " 清除高亮搜索
 nnoremap <Leader>n :action SelectInProjectView<CR>
 
 " 在normal模式保持英文状态
@@ -27,6 +25,7 @@ set keep-english-in-normal
 "set keep-english-in-normal-and-restore-in-insert
 
 " Configuring conflicting keys from https://github.com/JetBrains/ideavim/blob/master/doc/sethandler.md
+" insert mode some keys use emacs mode
 sethandler <C-E> i:ide
 sethandler <C-A> i:ide
 sethandler <C-F> i:ide
