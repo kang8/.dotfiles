@@ -1,7 +1,6 @@
 # software
 alias ls="exa --icons --git"
 alias vim=nvim
-alias ra="ranger"
 alias ncdu="ncdu --color dark"
 alias mux="tmuxinator"
 alias s=neofetch
@@ -12,19 +11,19 @@ alias lg="lazygit --use-config-file=${HOME}/.config/lazygit/config.yml"
 # git
 alias ga='git add -A'
 alias gs='git status -s'
-alias gsa='git status'
 alias gl="git log --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --graph"
 alias gla="gl --all"
 alias gd='git diff'
 alias gda='git diff --cached'
-alias gp-set-upstream='gpsup'
 
 # custom
-alias cg="curl google.com"
 alias ct="cd `mktemp -d /tmp/artin-XXXXXX`"
 alias vt="ct && vim temp"
 alias la="laravel-artisan.sh"
 
 ## language
+
 # php
 alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
+alias cpc='composer phpcs'
+alias cps='composer phpstan'
