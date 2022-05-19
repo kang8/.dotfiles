@@ -1,5 +1,9 @@
 let mapleader=' '
 
+""" Plugins  --------------------------------
+set NERDTree
+
+
 set scrolloff=3
 set hlsearch
 set incsearch
@@ -8,6 +12,8 @@ set smartcase
 set showmode
 set number
 set relativenumber
+set clipboard=unnamed,unnamedplus
+set clipboard+=ideaput
 
 """ IDEA specific settings ------------------
 set ideajoin
@@ -16,7 +22,7 @@ set idearefactormode=keep
 " key mapping
 inoremap kk <Esc>A
 nnoremap <Leader>k :nohlsearch<CR> " 清除高亮搜索
-nnoremap <Leader>n :action SelectInProjectView<CR>
+nnoremap <Leader>n :NERDTreeFind<CR>
 
 " 在normal模式保持英文状态
 set keep-english-in-normal
@@ -30,3 +36,4 @@ sethandler <C-E> i:ide
 sethandler <C-A> i:ide
 sethandler <C-F> i:ide
 sethandler <C-B> i:ide
+sethandler <C-D> i:ide
