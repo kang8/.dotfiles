@@ -1,2 +1,5 @@
 # OS generated files
 .DS_Store
+# IDE or editor generated directory
+/.idea
+/.vscode
