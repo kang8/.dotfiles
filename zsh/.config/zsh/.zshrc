@@ -20,6 +20,7 @@ plugins=(
     composer
     gpg-agent
     fzf-tab
+    rust
 )
 
 . $ZSH/oh-my-zsh.sh
