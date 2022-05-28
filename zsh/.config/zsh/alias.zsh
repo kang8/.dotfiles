@@ -1,5 +1,6 @@
 # software
 alias ls="exa --icons --git"
+alias grep="rg"
 alias vim=nvim
 alias ncdu="ncdu --color dark"
 alias mux="tmuxinator"
