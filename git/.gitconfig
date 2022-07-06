@@ -34,3 +34,5 @@
     path = ~/.gitconfig-work
 [diff]
 	renames = true
+[push]
+	autoSetupRemote = true
