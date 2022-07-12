@@ -21,6 +21,9 @@ plugins=(
     gpg-agent
     fzf-tab
     rust
+    gh
+    ripgrep
+    systemadmin
 )
 
 . $ZSH/oh-my-zsh.sh
