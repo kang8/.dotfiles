@@ -21,6 +21,7 @@
 	clean = sed \"s/api_key.*/api_key =/\"
 [commit]
 	gpgsign = true
+	verbose = true
 [gpg]
 	program = gpg
 [filter "lfs"]
