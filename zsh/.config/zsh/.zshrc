@@ -24,6 +24,7 @@ plugins=(
     gh
     ripgrep
     systemadmin
+    npm
 )
 
 . $ZSH/oh-my-zsh.sh
