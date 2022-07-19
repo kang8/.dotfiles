@@ -1,5 +1,4 @@
 gui:
-  # language: 'zh'
   showFileTree: false
   theme:
     selectedLineBgColor:
