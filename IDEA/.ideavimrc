@@ -21,8 +21,11 @@ set idearefactormode=keep
 
 " key mapping
 inoremap kk <Esc>A
-nnoremap <Leader>k :nohlsearch<CR> " 清除高亮搜索
+nnoremap <Leader>k :nohlsearch<CR>
 nnoremap <Leader>n :NERDTreeFind<CR>
+nnoremap <Leader>b :action GitToolBox.BlameDetails<CR>
+xnoremap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserAction<CR>
+nnoremap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserAction<CR>
 
 " 在normal模式保持英文状态
 set keep-english-in-normal
