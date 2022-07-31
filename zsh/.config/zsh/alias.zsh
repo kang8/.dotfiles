@@ -2,10 +2,8 @@
 alias ls="exa --icons --git"
 alias grep="rg"
 alias vim=nvim
-alias ncdu="ncdu --color dark"
 alias mux="tmuxinator"
 alias s=neofetch
-alias p=proxychains4
 alias cman="man -M /usr/share/man/zh_CN"
 alias lg="lazygit --use-config-file=${HOME}/.config/lazygit/config.yml"
 
