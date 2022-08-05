@@ -16,6 +16,7 @@ alias gd='git diff'
 alias gda='git diff --cached'
 alias gcod='git checkout --detach'
 alias gct='git checkout -b temp' # create temp branch
+alias gcmessage='git show -s --pretty=%B' # just show commmit message
 
 # custom
 alias ct="cd `mktemp -d /tmp/artin-XXXXXX`"
