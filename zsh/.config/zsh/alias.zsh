@@ -17,7 +17,7 @@ alias gd='git diff'
 alias gda='git diff --cached'
 alias gcod='git checkout --detach'
 alias gct='git checkout -b temp' # create temp branch
-alias gcmessage='git show -s --pretty=%B' # just show commmit message
+alias gcmessage='git show -s --pretty=%B' # just show commit message
 
 # custom
 alias ct="cd `mktemp -d /tmp/artin-XXXXXX`"
@@ -28,5 +28,3 @@ alias la="laravel-artisan.sh"
 
 # php
 alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
-alias cpc='composer phpcs'
-alias cps='composer phpstan'
