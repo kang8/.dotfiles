@@ -20,7 +20,6 @@ set ideajoin
 set idearefactormode=keep
 
 " key mapping
-inoremap kk <Esc>A
 nnoremap <Leader>k :nohlsearch<CR>
 nnoremap <Leader>n :NERDTreeFind<CR>
 nnoremap <Leader>b :action GitToolBox.BlameDetails<CR>
