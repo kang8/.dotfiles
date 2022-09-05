@@ -74,6 +74,13 @@ else
     git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git ${ZSH}/custom/plugins/fzf-tab
 fi
 
+if [[ -d ${ZSH}/custom/plugins/z.lua ]] ; then
+    echo "z.lua is already installed."
+else
+    echo "Install zsh plug: z.lua..."
+    git clone --depth=1 https://github.com/skywind3000/z.lua.git ${ZSH}/custom/plugins/z.lua
+fi
+
 if [[ -d ${ZSH}/custom/themes/powerlevel10k  ]]; then
     echo "powerlevel10k is already installed."
 else
