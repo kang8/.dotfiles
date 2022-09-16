@@ -3,6 +3,9 @@ export MANPAGER='nvim +Man!'
 export LC_ALL=en_US.UTF-8
 export ZSH=~/.config/zsh/.oh-my-zsh
 
+# fzf
+export FZF_DEFAULT_OPTS='--color "light"'
+
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
 export PATH=$PATH:~/go/bin # go binary file
