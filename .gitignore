@@ -4,3 +4,5 @@ __pycache__/
 .oh-my-zsh
 .env
 Brewfile.lock.json
+
+kitty/.config/kitty/kitty.conf.bak
