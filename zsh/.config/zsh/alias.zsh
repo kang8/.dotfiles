@@ -9,14 +9,10 @@ else
 fi
 
 # vim
-if command -v nvim &> /dev/null; then
-    alias vim='nvim'
-fi
+command -v nvim &> /dev/null && alias vim='nvim'
 
 # grep
-if command -v rg &> /dev/null; then
-    alias grep='rg'
-fi
+command -v rg &> /dev/null && alias grep='rg'
 
 # neofetch
 type s > /dev/null || alias s='neofetch'
