@@ -13,9 +13,13 @@
 	autocorrect = 11
 [interactive]
 	diffFilter = delta --color-only
+[add.interactive]
+    useBuiltin = false
 [delta]
-    syntax-theme = base16-256
-    features = line-numbers
+    line-numbers = true
+    light = true
+    navigate = true
+    hyperlinks = true
 [filter "api_key"]
 	smudge = sed \"s/api_key.*/api_key =/\"
 	clean = sed \"s/api_key.*/api_key =/\"
@@ -35,5 +39,6 @@
     path = ~/.gitconfig-work
 [diff]
 	renames = true
+    colorMoved = default
 [push]
 	autoSetupRemote = true
