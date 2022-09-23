@@ -44,3 +44,5 @@
 	autoSetupRemote = true
 [alias]
 	cleanup = !git branch --merged | grep -v '\\*\\|master\\|develop' | xargs git branch -d
+[gc]
+	auto = 0
