@@ -6,6 +6,13 @@ export ZSH=~/.config/zsh/.oh-my-zsh
 # fzf
 export FZF_DEFAULT_OPTS='--color "light"'
 
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+# pnpm code completion
+[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
+
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
 export PATH=$PATH:~/go/bin # go binary file
