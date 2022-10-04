@@ -13,6 +13,7 @@ command -v nvim &> /dev/null && alias vim='nvim'
 
 # grep
 command -v rg &> /dev/null && alias grep='rg'
+alias rga='rg --no-ignore --hidden'
 
 # neofetch
 type s > /dev/null || alias s='neofetch'
