@@ -13,6 +13,9 @@ export PATH="$PNPM_HOME:$PATH"
 # pnpm code completion
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
+# opam configuration
+[[ ! -r ~/.opam/opam-init/init.zsh ]] || source ~/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
 export PATH=$PATH:~/go/bin # go binary file
