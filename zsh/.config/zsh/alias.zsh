@@ -42,3 +42,10 @@ alias vt="ct && vim temp"
 alias la="laravel-artisan.sh"
 alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
 
+function phpstan {
+    if [[ -f ./vendor/bin/phpstan ]] {
+        ./vendor/bin/phpstan $@
+    } else {
+        /opt/homebrew/bin/phpstan $@
+    }
+}
