@@ -11,8 +11,7 @@ fi
 # vim
 command -v nvim &> /dev/null && alias vim='nvim'
 
-# grep
-command -v rg &> /dev/null && alias grep='rg'
+# rg
 alias rga='rg --no-ignore --hidden'
 
 # neofetch
