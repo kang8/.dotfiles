@@ -16,6 +16,9 @@ export PATH="$PNPM_HOME:$PATH"
 # opam configuration
 [[ ! -r ~/.opam/opam-init/init.zsh ]] || source ~/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
 
+# llvm
+[[ -d /opt/homebrew/opt/llvm/bin ]] && export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
 export PATH=$PATH:~/go/bin # go binary file
