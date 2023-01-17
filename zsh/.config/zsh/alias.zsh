@@ -37,6 +37,9 @@ fi
 alias ct="cd `mktemp -d /tmp/artin-XXXXXX`"
 alias vt="ct && vim temp"
 
+# tldr fuzzy find and preview, learning for https://www.youtube.com/watch?v=4EE7qlTaO7c
+alias tldrf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-window=right,70% | xargs tldr'
+
 # php
 alias la="laravel-artisan.sh"
 alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
