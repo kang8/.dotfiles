@@ -1,1 +1,9 @@
 .pre-commit-config.yaml
+
+### Copy from ./.gitignore-global
+
+# OS generated files
+.DS_Store
+# IDE or editor generated directory
+/.idea
+/.vscode
