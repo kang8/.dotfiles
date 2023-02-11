@@ -15,6 +15,9 @@ export FZF_ALT_C_OPTS="
     --preview 'tree -C {}'
     --bind 'ctrl-/:change-preview-window(hidden|)'"
 
+# ripgrep
+export RIPGREP_CONFIG_PATH=$HOME/.config/ripgrep/.ripgreprc
+
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
