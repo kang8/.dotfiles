@@ -6,6 +6,14 @@ export ZSH=~/.config/zsh/.oh-my-zsh
 # fzf
 export FZF_DEFAULT_OPTS='--color "light"'
 
+export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude ".git"'
+export FZF_CTRL_T_OPTS="
+  --preview 'bat -n --color=always {}'
+  --bind 'ctrl-/:change-preview-window(hidden|)'"
+
+export FZF_ALT_C_OPTS="
+    --preview 'tree -C {}'
+    --bind 'ctrl-/:change-preview-window(hidden|)'"
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
