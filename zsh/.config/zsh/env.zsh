@@ -15,6 +15,9 @@ export FZF_ALT_C_OPTS="
     --preview 'tree -C {}'
     --bind 'ctrl-/:change-preview-window(hidden|)'"
 
+# lazygit
+export LG_CONFIG_FILE="${HOME}/.config/lazygit/config.yml"
+
 # ripgrep
 export RIPGREP_CONFIG_PATH=$HOME/.config/ripgrep/.ripgreprc
 

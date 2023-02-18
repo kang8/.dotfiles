@@ -1,7 +1,39 @@
 gui:
-  showFileTree: false
+  windowSize: 'normal' # one of 'normal' | 'half' | 'full' default is 'normal'
+  scrollHeight: 10 # how many lines you scroll by
+  sidePanelWidth: 0.3 # number from 0 to 1
+  mainPanelSplitMode: 'vertical' # one of 'horizontal' | 'flexible' | 'vertical'
   theme:
     selectedLineBgColor:
       - underline
+  showFileTree: false # for rendering changes files in a tree format
+  showListFooter: false # for seeing the '5 of 20' message in list panels
+  showRandomTip: true
+  showBottomLine: false # for hiding the bottom information line (unless it has important information to tell you)
+  showCommandLog: false
+  showIcons: true
+  splitDiff: 'auto' # one of 'auto' | 'always'
+  skipRewordInEditorWarning: false # for skipping the confirmation before launching the reword editor
 git:
-  branchLogCmd: "git log --graph --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" {{branchName}} --"
+  branchLogCmd: 'git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty="%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" {{branchName}} --'
+os:
+  editCommand: 'nvim' # see 'Configuring File Editing' section
+  editCommandTemplate: '{{editor}} +{{line}} -- {{filename}}'
+notARepository: 'quit' # one of: 'prompt' | 'create' | 'skip' | 'quit'
+promptToReturnFromSubprocess: false # display confirmation when subprocess terminates
+keybinding:
+  universal:
+    quit: 'Q'
+    return: 'q' # return to previous menu, will quit if there's nowhere to return
+    quitWithoutChangingDirectory: 'Q'
+customCommands:
+  - key: 'c'
+    command: "git diff {{.SelectedFile.Name}} | delta --paging always"
+    context: 'files'
+    description: 'Show change(diff) in local'
+    subprocess: true
+  - key: 'C'
+    command: "git diff --cached {{.SelectedFile.Name}} | delta --paging always"
+    context: 'files'
+    description: 'Show change(diff) in work tree'
+    subprocess: true

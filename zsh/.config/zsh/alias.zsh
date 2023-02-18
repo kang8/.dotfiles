@@ -18,7 +18,7 @@ alias rga='rg --no-ignore --hidden'
 type s > /dev/null || alias s='neofetch'
 
 # lazygit set custom config file
-type lg > /dev/null || alias lg='lazygit --use-config-file=${HOME}/.config/lazygit/config.yml'
+type lg > /dev/null || alias lg='lazygit'
 
 # git
 if command -v git &> /dev/null; then
