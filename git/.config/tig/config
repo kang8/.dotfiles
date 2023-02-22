@@ -241,12 +241,18 @@ bind stage  2   stage-update-part   # Stage/unstage part of chunk
 bind stage  !   status-revert       # Revert current diff (c)hunk
 bind stage  \   stage-split-chunk   # Split current diff (c)hunk
 bind stage  @   :/^@@           # Jump to next (c)hunk
+bind stage  p   :/^@@           # Jump to next (c)hunk
+bind stage  f   :/^diff --git   # Jump to next file
 bind stage  [   :toggle diff-context -1 # Decrease the diff context
 bind stage  ]   :toggle diff-context +1 # Increase the diff context
 bind diff   @   :/^@@           # Jump to next (c)hunk
+bind diff   p   :/^@@           # Jump to next (c)hunk
+bind diff   f   :/^diff --git   # Jump to next file
 bind diff   [   :toggle diff-context -1 # Decrease the diff context
 bind diff   ]   :toggle diff-context +1 # Increase the diff context
 bind pager  @   :/^@@           # Jump to next (c)hunk
+bind pager  p   :/^@@           # Jump to next (c)hunk
+bind pager  f   :/^diff --git   # Jump to next file
 bind main   H   :goto HEAD      # Jump to HEAD commit
 bind main   G   :toggle commit-title-graph # Toggle revision graph visualization
 bind main   F   :toggle commit-title-refs  # Toggle reference display (tags/branches)
