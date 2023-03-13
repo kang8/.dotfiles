@@ -26,6 +26,7 @@ plugins=(
     systemadmin
     npm
     z.lua
+    macos
 )
 
 . $ZSH/oh-my-zsh.sh
