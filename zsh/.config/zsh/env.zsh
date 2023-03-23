@@ -39,16 +39,16 @@ export PATH=$PATH:~/go/bin # go binary file
 
 # history
 export HISTFILE="$HOME/.zsh_history"
-export HISTSIZE=1000000000
-export SAVEHIST=1000000000
-export HISTFILESIZE=1000000000
+export HISTSIZE=100000
+export SAVEHIST=100000
+
+export HISTORY_IGNORE="(ll|l|ls|cd|cd -|exit|* --help|z)" # Make some commands not show up in history
 
 # man zshoptions or man zshparam
 setopt SHARE_HISTORY
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
-setopt HIST_SAVE_NO_DUPS
 setopt HIST_REDUCE_BLANKS
 setopt PUSHD_IGNORE_DUPS
 
