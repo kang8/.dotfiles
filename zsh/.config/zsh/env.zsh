@@ -41,6 +41,7 @@ export PATH=$PATH:~/go/bin # go binary file
 export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=100000
 export SAVEHIST=100000
+export HISTFILESIZE=-1
 
 export HISTORY_IGNORE="(ll|l|ls|cd|cd -|exit|* --help|z)" # Make some commands not show up in history
 
