@@ -31,6 +31,7 @@ plugins=(
 
 . $ZSH/oh-my-zsh.sh
 . $ZDOTDIR/vim-mode.zsh
+. $ZDOTDIR/vim-switch.zsh
 . $ZDOTDIR/key-bindings.zsh
 . $ZDOTDIR/alias.zsh
 eval "$(thefuck --alias)"
