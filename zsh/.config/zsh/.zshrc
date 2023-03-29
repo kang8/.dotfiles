@@ -1,6 +1,5 @@
 . $ZDOTDIR/env.zsh
 . $ZDOTDIR/distribution/setup.zsh
-. $ZDOTDIR/ssh-proxy.zsh
 . $ZDOTDIR/proxy.zsh
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
