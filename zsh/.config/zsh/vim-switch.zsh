@@ -2,9 +2,10 @@ alias nvim-lazy="NVIM_APPNAME=LazyVim nvim"    # git clone --depth 1 git@github.
 alias nvim-kick="NVIM_APPNAME=kickstart nvim"  # git clone --depth 1 git@github.com:nvim-lua/kickstart.nvim.git ~/.config/kickstart
 alias nvim-chad="NVIM_APPNAME=NvChad nvim"     # git clone --depth 1 git@github.com:NvChad/NvChad.git ~/.config/NvChad
 alias nvim-astro="NVIM_APPNAME=AstroNvim nvim" # git clone --depth 1 git@github.com:AstroNvim/AstroNvim.git ~/.config/AstroNvim
+alias nvim-dots="NVIM_APPNAME=nvimdots nvim"   # git clone --depth 1 git@github.com:ayamir/nvimdots.git ~/.config/nvimdots
 
 function nvims() {
-  items=("default" "kickstart" "LazyVim" "NvChad" "AstroNvim")
+  items=("default" "kickstart" "LazyVim" "NvChad" "AstroNvim" "nvimdots")
   config=$(printf "%s\n" "${items[@]}" | fzf --prompt=" Neovim Config  " --height=~50% --layout=reverse --border --exit-0)
   if [[ -z $config ]]; then
     echo "Nothing selected"
