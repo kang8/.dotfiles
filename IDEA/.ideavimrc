@@ -24,7 +24,7 @@ set ideajoin
 set idearefactormode=keep
 
 " key mapping
-nnoremap <Leader>k :nohlsearch<CR>
+nnoremap <C-l> :nohlsearch<CR>
 nnoremap <Leader>n :NERDTreeFind<CR>
 nnoremap <Leader>b :action GitToolBox.BlameDetails<CR>
 xnoremap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserAction<CR>
