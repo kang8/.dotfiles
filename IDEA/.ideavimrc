@@ -2,6 +2,10 @@ let mapleader=' '
 
 """ Plugins  --------------------------------
 set NERDTree
+set easymotion " IdeaVim-EasyMotion
+map <Leader> <Plug>(easymotion-prefix)
+set quickscope " IIdeaVim-QuickscopedeaVim-Quickscope
+set matchit
 
 
 set scrolloff=3
