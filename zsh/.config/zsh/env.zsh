@@ -54,6 +54,4 @@ setopt HIST_REDUCE_BLANKS
 setopt PUSHD_IGNORE_DUPS
 
 # customize variable
-if [[ -n `grep WORK=true ~/.dotfiles/.env` ]]; then
-    export is_work=true
-fi
+[[ -e ~/.dotfiles/.env ]] && . ~/.dotfiles/.env
