@@ -116,7 +116,7 @@ set show-notes          = yes       # When non-bool passed as `--show-notes=...`
 #set diff-context       = 3     # Number of lines to show around diff changes (diff)
 #set diff-options       = -C        # User-defined options for `tig show` (git-diff)
 #set diff-highlight     = true      # String (or bool): Path to diff-highlight script,
-                        #                   defaults to `diff-highlight`.
+#                   defaults to `diff-highlight`.
 #set blame-options      = -C -C -C  # User-defined options for `tig blame` (git-blame)
 #set log-options        = --pretty=raw  # User-defined options for `tig log` (git-log)
 #set main-options       = -n 1000   # User-defined options for `tig` (git-log)
@@ -299,6 +299,7 @@ bind search <C-C>   view-close
 
 # Option manipulation
 bind generic    o   options         # Open the options menu
+#
 # Bindings for toggling settings
 bind generic    I   :toggle sort-order  # Toggle ascending/descending sort order
 bind generic    i   :toggle sort-field  # Toggle field to sort by
@@ -306,7 +307,8 @@ bind generic    <Hash>  :toggle line-number # Toggle line numbers
 bind generic    D   :toggle date        # Toggle date display
 bind generic    A   :toggle author      # Toggle author display
 # bind generic  ??? :toggle commit-title-display
-                        # Toggle commit title display
+
+# Toggle commit title display
 bind generic    ~   :toggle line-graphics   # Toggle (line) graphics mode
 bind generic    F   :toggle file-name   # Toggle file name display
 # bind generic  ??? :toggle show-changes    # Toggle local changes display in the main view
@@ -315,11 +317,13 @@ bind generic    W   :toggle ignore-space    # Toggle ignoring whitespace in diff
 # bind generic  ??? :toggle commit-order    # Toggle commit ordering
 bind generic    X   :toggle id      # Toggle commit ID display
 bind generic    $   :toggle commit-title-overflow
-                        # Toggle highlighting of commit title overflow
+
+# Toggle highlighting of commit title overflow
 # bind generic  ??? :toggle file-size   # Toggle file size format
 # bind generic  ??? :toggle status      # Toggle status display
 # bind generic  ??? :toggle status-show-untracked-dirs
-                        # Toggle display of file in untracked directories
+
+# Toggle display of file in untracked directories
 # bind generic  ??? :toggle vertical-split  # Toggle vertical split
 # bind generic  ??? :toggle word-diff   # Toggle word diff
 bind generic    %   :toggle file-filter # Toggle filtering by pathspecs in file-args
@@ -331,6 +335,12 @@ bind generic    :   prompt          # Open the prompt
 bind generic    <C-L>   screen-redraw       # Redraw the screen
 bind generic    z   stop-loading        # Stop all loading views
 bind generic    v   show-version        # Show Tig version
+
+# Custom
+bind generic    T   !@sh -c "git show -s --format=%s %(commit) | pbcopy" # commit title
+bind generic    Y   !@sh -c "echo %(commit) | pbcopy"                    # commit hash
+bind generic    B   !@sh -c "git show -s --format=%B %(commit) | pbcopy" # commit title and body
+
 
 # Colors
 # ------
