@@ -32,6 +32,8 @@ export PATH="$PNPM_HOME:$PATH"
 
 # llvm
 [[ -d /opt/homebrew/opt/llvm/bin ]] && export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+# python
+[[ -d /opt/homebrew/opt/python/libexec/bin ]] && export PATH="/opt/homebrew/opt/python/libexec/bin:$PATH"
 
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
