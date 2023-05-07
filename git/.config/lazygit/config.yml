@@ -17,8 +17,8 @@ gui:
 git:
   branchLogCmd: 'git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty="%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" {{branchName}} --'
 os:
-  editCommand: 'nvim' # see 'Configuring File Editing' section
-  editCommandTemplate: '{{editor}} +{{line}} -- {{filename}}'
+  edit: 'nvim {{filename}}'
+  editAtLine: 'nvim +{{line}} -- {{filename}}'
 notARepository: 'quit' # one of: 'prompt' | 'create' | 'skip' | 'quit'
 promptToReturnFromSubprocess: false # display confirmation when subprocess terminates
 keybinding:
