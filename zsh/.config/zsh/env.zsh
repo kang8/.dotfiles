@@ -15,6 +15,9 @@ export FZF_ALT_C_OPTS="
     --preview 'tree -C {}'
     --bind 'ctrl-/:change-preview-window(hidden|)'"
 
+# bat
+export BAT_THEME="Coldark-Cold"
+
 # lazygit
 export LG_CONFIG_FILE="${HOME}/.config/lazygit/config.yml"
 
