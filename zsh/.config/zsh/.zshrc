@@ -26,6 +26,7 @@ plugins=(
     npm
     z.lua
     macos
+    deno
 )
 
 . $ZSH/oh-my-zsh.sh
