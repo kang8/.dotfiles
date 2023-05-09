@@ -27,6 +27,8 @@ set idearefactormode=keep
 nnoremap <C-l> :nohlsearch<CR>
 nnoremap <Leader>e :NERDTree<CR>
 nnoremap <Leader>n :NERDTreeFind<CR>
+map <C-j> <Action>(GotoNextError)
+map <C-k> <Action>(GotoPreviousError)
 nnoremap <Leader>b :action GitToolBox.BlameDetails<CR>
 xnoremap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserAction<CR>
 nnoremap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserAction<CR>
