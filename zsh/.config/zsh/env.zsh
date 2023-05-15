@@ -60,3 +60,7 @@ setopt PUSHD_IGNORE_DUPS
 
 # customize variable
 [[ -e ~/.dotfiles/.env ]] && . ~/.dotfiles/.env
+
+# atuin setup
+export ATUIN_NOBIND="true"
+eval "$(atuin init zsh)"
