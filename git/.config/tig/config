@@ -210,7 +210,7 @@ bind generic    s   view-status
 bind generic    S   view-status     # Compat binding to avoid going crazy!
 bind generic    c   view-stage
 bind generic    y   view-stash
-bind generic    g   view-grep
+# bind generic    g   view-grep
 
 # View manipulation
 bind generic    <Enter> enter           # Enter and open selected entry
@@ -340,6 +340,9 @@ bind generic    v   show-version        # Show Tig version
 bind generic    T   !@sh -c "git show -s --format=%s %(commit) | pbcopy" # commit title
 bind generic    Y   !@sh -c "echo %(commit) | pbcopy"                    # commit hash
 bind generic    B   !@sh -c "git show -s --format=%B %(commit) | pbcopy" # commit title and body
+bind generic    g   move-first-line
+bind generic    G   move-last-line
+bind main       G   move-last-line
 
 
 # Colors
