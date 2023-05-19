@@ -1,8 +1,3 @@
-# proxy
-export proxy_ip=127.0.0.1
-export proxy_http_port=1087
-export proxy_socks5_port=1080
-
 # export custom variable
 export is_mac=true
 
@@ -16,3 +11,15 @@ function manp {
         print 'What manual page do you want?' >&2
     fi
 }
+
+# use GUN software
+# Add the `g` prefix when search manual: use `man ggrep` instand of `man grep`
+
+# brew install grep
+[[ -d /opt/homebrew/opt/grep/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/grep/libexec/gnubin:$PATH"
+
+# brew install findutils, will install `find`, `xargs`, `locate`
+[[ -d /opt/homebrew/opt/findutils/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/findutils/libexec/gnubin:$PATH"
+
+# brew install coreutils, will install `find`, `xargs`, `locate`
+[[ -d /opt/homebrew/opt/coreutils/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
