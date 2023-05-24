@@ -22,7 +22,6 @@ plugins=(
     rust
     gh
     ripgrep
-    systemadmin
     npm
     z.lua
     macos
