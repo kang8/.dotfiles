@@ -33,6 +33,11 @@ if command -v git &> /dev/null; then
     alias gcmessage='git show -s --pretty=%B' # just show commit message
 fi
 
+# tig
+if command -v tig &> /dev/null; then
+    alias tiga='tig --all'
+fi
+
 # custom
 alias ct="cd `mktemp -d /tmp/artin-XXXXXX`"
 alias vt="ct && vim temp"
