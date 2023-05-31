@@ -21,5 +21,8 @@ function manp {
 # brew install findutils, will install `find`, `xargs`, `locate`
 [[ -d /opt/homebrew/opt/findutils/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/findutils/libexec/gnubin:$PATH"
 
-# brew install coreutils, will install `find`, `xargs`, `locate`
+# brew install coreutils, will install `dd`, `ls`, 'mv' and so on...
 [[ -d /opt/homebrew/opt/coreutils/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+
+# brew install coreutils, will install `sed`
+[[ -d /opt/homebrew/opt/gnu-sed/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
