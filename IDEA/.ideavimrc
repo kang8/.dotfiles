@@ -31,7 +31,6 @@ map <C-j> <Action>(GotoNextError)
 map <C-k> <Action>(GotoPreviousError)
 map <C-c> <Action>(CloseAllEditorsButActive)
 map <C-S-r> <Action>(FileStructurePopup)
-nnoremap <Leader>b :action GitToolBox.BlameDetails<CR>
 xnoremap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserAction<CR>
 nnoremap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserAction<CR>
 nnoremap \w :action EditorToggleUseSoftWraps<CR>
