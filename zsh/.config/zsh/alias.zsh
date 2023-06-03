@@ -11,6 +11,9 @@ fi
 # vim
 command -v nvim &> /dev/null && alias vim='nvim'
 
+# kitty ssh
+command -v kitty &> /dev/null && alias ssh='kitty +kitten ssh'
+
 # rg
 alias rga='rg --no-ignore --hidden'
 
