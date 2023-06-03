@@ -302,6 +302,7 @@ handle_mime() {
                 local highlight_format='ansi'
             fi
             env COLORTERM=8bit bat --color=always --style="numbers,changes" \
+                --terminal-width="${PV_WIDTH}" \
                 -- "${FILE_PATH}" && exit 5
             exit 2;;
 
