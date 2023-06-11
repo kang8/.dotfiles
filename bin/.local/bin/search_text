@@ -11,6 +11,12 @@ IFS=: read -ra selected < <(
       --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
       --bind "ctrl-f:unbind(change,ctrl-f)+change-prompt(fzf> )+enable-search+clear-query+rebind(ctrl-r)" \
       --bind "ctrl-r:unbind(ctrl-r)+change-prompt(ripgrep> )+disable-search+reload($RG_PREFIX {q} || true)+rebind(change,ctrl-f)" \
+      --bind "alt-k:preview-up,alt-p:preview-up" \
+      --bind "alt-j:preview-down,alt-n:preview-down" \
+      --bind "alt-u:preview-half-page-up" \
+      --bind "alt-d:preview-half-page-down" \
+      --bind "?:toggle-preview" \
+      --bind "alt-w:toggle-preview-wrap" \
       --prompt 'Ripgrep> ' \
       --delimiter : \
       --preview 'bat --color=always {1} --highlight-line {2}' \
