@@ -64,3 +64,6 @@ setopt PUSHD_IGNORE_DUPS
 # atuin setup
 export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
+
+# navi
+export NAVI_CONFIG="$HOME/.config/navi/config.yaml"
