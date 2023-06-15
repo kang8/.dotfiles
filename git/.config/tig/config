@@ -126,7 +126,7 @@ set mailmap         = yes       # Use .mailmap to show canonical name and email 
 set start-on-head       = no        # Start with cursor on HEAD commit?
 set refresh-mode        = auto      # Enum: manual, auto, after-command, periodic
 set refresh-interval        = 10        # Interval in seconds between refreshes
-set ignore-case         = no        # Enum: no, yes, smart-case
+set ignore-case         = yes        # Enum: no, yes, smart-case
                         # Ignore case when searching?
 set wrap-search         = yes       # Wrap around to top/bottom of view when searching?
 set focus-child         = yes       # Move focus to child view when opened?
