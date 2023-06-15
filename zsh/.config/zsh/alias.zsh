@@ -3,10 +3,15 @@ if command -v exa &> /dev/null; then
     alias ls='exa --icons --git --group-directories-first'
     alias l='ls --all'
     alias ll='ls --all --long --group'
+    alias lt='ls --tree'
+    alias lta='ls --all --tree'
 else
     alias l='ls -a'
     alias ll='ls -alGh'
 fi
+
+# bash
+alias bash 'bash --norc'
 
 # vim
 command -v nvim &> /dev/null && alias vim='nvim'
