@@ -35,7 +35,9 @@ if command -v git &> /dev/null; then
     alias gl="git log --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --graph"
     alias gla="gl --all"
     alias gd='git diff'
+    alias gds='git -c delta.side-by-side=true diff'
     alias gda='git diff --cached'
+    alias gdas='git -c delta.side-by-side=true diff --cached'
     alias gcod='git checkout --detach'
     alias gct='git checkout -b temp' # create temp branch
     alias gcmessage='git show -s --pretty=%B' # just show commit message
