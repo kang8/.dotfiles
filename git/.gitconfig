@@ -43,6 +43,8 @@
 	version = 2
 [includeIf "gitdir:~/Projects/"]
     path = ~/.gitconfig-work
+[includeIf "gitdir:~/git-email/"]
+    path = ~/git-email/.gitconfig
 [diff]
 	renames = true
     colorMoved = default
@@ -56,3 +58,8 @@
 	auto = 0
 [rebase]
 	autoSquash = true
+[sendemail]
+    smtpserver = smtp.gmail.com
+    smtpuser = yi1115610574@gmail.com
+    smtpencryption = tls
+    smtpserverport = 587
