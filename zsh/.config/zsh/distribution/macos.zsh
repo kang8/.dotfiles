@@ -1,6 +1,9 @@
 # export custom variable
 export is_mac=true
 
+export proxy_ip=127.0.0.1
+export proxy_http_port=1087
+
 function manp {
     local page
     if (( $# > 0 )); then
