@@ -2,9 +2,6 @@
 . $ZDOTDIR/distribution/setup.zsh
 . $ZDOTDIR/proxy.zsh
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
-[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
-
 plugins=(
     vi-mode
     git
@@ -34,4 +31,5 @@ plugins=(
 . $ZDOTDIR/key-bindings.zsh
 . $ZDOTDIR/alias.zsh
 
+eval "$(starship init zsh)"
 # setxkbmap -option ctrl:swapcaps
