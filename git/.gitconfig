@@ -63,3 +63,5 @@
     smtpuser = yi1115610574@gmail.com
     smtpencryption = tls
     smtpserverport = 587
+[format]
+    pretty = fuller
