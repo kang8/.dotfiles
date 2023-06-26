@@ -65,3 +65,5 @@
     smtpserverport = 587
 [format]
     pretty = fuller
+[log]
+	date = iso
