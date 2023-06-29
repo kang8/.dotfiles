@@ -49,7 +49,7 @@
 	renames = true
     colorMoved = default
 [merge]
-    conflictstyle = diff3
+    conflictstyle = zdiff3
 [push]
 	autoSetupRemote = true
 [alias]
