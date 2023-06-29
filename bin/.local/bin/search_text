@@ -17,6 +17,7 @@ IFS=: read -ra selected < <(
       --bind "alt-d:preview-half-page-down" \
       --bind "?:toggle-preview" \
       --bind "alt-w:toggle-preview-wrap" \
+      --tiebreak "begin" \
       --prompt 'Ripgrep> ' \
       --delimiter : \
       --preview 'bat --color=always {1} --highlight-line {2}' \
