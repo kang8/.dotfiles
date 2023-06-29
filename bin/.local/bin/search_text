@@ -15,7 +15,7 @@ IFS=: read -ra selected < <(
       --bind "alt-j:preview-down,alt-n:preview-down" \
       --bind "alt-u:preview-half-page-up" \
       --bind "alt-d:preview-half-page-down" \
-      --bind "?:toggle-preview" \
+      --bind "ctrl-/:toggle-preview" \
       --bind "alt-w:toggle-preview-wrap" \
       --tiebreak "begin" \
       --prompt 'Ripgrep> ' \
