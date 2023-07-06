@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Switch between Ripgrep launcher mode (CTRL-R) and fzf filtering mode (CTRL-F)
+# Switch between Ripgrep launcher mode (CTRL-R) and fzf filtering mode (CTRL-S)
 RG_PREFIX="rg --column --line-number --no-heading --color=always --hidden "
 INITIAL_QUERY="${*:-}"
 IFS=: read -ra selected < <(
@@ -9,8 +9,8 @@ IFS=: read -ra selected < <(
       --color "hl:-1:underline,hl+:-1:underline:reverse" \
       --disabled --query "$INITIAL_QUERY" \
       --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
-      --bind "ctrl-f:unbind(change,ctrl-f)+change-prompt(fzf> )+enable-search+clear-query+rebind(ctrl-r)" \
-      --bind "ctrl-r:unbind(ctrl-r)+change-prompt(ripgrep> )+disable-search+reload($RG_PREFIX {q} || true)+rebind(change,ctrl-f)" \
+      --bind "ctrl-s:unbind(change,ctrl-s)+change-prompt(fzf> )+enable-search+clear-query+rebind(ctrl-r)" \
+      --bind "ctrl-r:unbind(ctrl-r)+change-prompt(ripgrep> )+disable-search+reload($RG_PREFIX {q} || true)+rebind(change,ctrl-s)" \
       --bind "alt-k:preview-up,alt-p:preview-up" \
       --bind "alt-j:preview-down,alt-n:preview-down" \
       --bind "alt-u:preview-half-page-up" \
