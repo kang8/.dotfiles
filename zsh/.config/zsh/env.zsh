@@ -41,6 +41,7 @@ export PATH="$PNPM_HOME:$PATH"
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
 export PATH=$PATH:~/go/bin # go binary file
+[[ -d ~/.local/share/bob/nvim-bin ]] && export PATH=$PATH:~/.local/share/bob/nvim-bin # bob, a neovim version manager
 
 # history
 export HISTFILE="$HOME/.zsh_history"
