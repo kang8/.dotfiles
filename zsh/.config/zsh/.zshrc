@@ -12,7 +12,6 @@ plugins=(
     docker
     docker-compose
     sudo
-    laravel
     composer
     gpg-agent
     fzf-tab
