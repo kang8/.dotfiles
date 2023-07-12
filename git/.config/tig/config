@@ -337,9 +337,9 @@ bind generic    z   stop-loading        # Stop all loading views
 bind generic    v   show-version        # Show Tig version
 
 # Custom
-bind generic    T   !@sh -c "git show -s --format=%s %(commit) | pbcopy"            # commit title
-bind generic    Y   !@bash -c "echo -n $(git rev-parse --short %(commit)) | pbcopy" # commit hash
-bind generic    B   !@sh -c "git show -s --format=%B %(commit) | pbcopy"            # commit title and body
+bind generic    T   @zsh -c "source $ZSH/lib/clipboard.zsh; git show -s --format=%s %(commit) | clipcopy"          # commit title
+bind generic    Y   @zsh -c "source $ZSH/lib/clipboard.zsh; echo -n $(git rev-parse --short %(commit)) | clipcopy" # commit hash
+bind generic    B   @zsh -c "source $ZSH/lib/clipboard.zsh; git show -s --format=%B %(commit) | clipcopy"          # commit title and body
 bind generic    g   move-first-line
 bind generic    G   move-last-line
 bind main       G   move-last-line
