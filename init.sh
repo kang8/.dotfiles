@@ -89,32 +89,6 @@ else
 fi
 
 ########
-# tmux
-########
-echo "tmux beging!!!"
-if [[ -d ~/.tmux ]]; then
-    echo "oh-my-tmux is already installed."
-else
-    git clone --depth=1 git@github.com:kang8/.tmux.git ~/.tmux
-fi
-
-if [[ -f ~/.tmux.conf ]]; then
-    echo "~/.tmux.conf is already link."
-else
-    ln -sf ~/.tmux/.tmux.conf ~/
-fi
-
-if [[ -f ~/.tmux.conf.local ]]; then
-    echo "~/.tmux.conf.local is already link."
-else
-    ln -sf ~/.tmux/.tmux.conf.local ~/
-fi
-
-# set oh-my-tmux remote upstream repo
-(cd ~/.tmux && 
-    git remote add ohmytmux https://github.com/gpakosz/.tmux.git &> /dev/null || true)
-
-########
 # neovim
 ########
 echo "neovim beging!!!"

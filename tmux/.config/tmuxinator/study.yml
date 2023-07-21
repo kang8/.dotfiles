@@ -1,6 +1,0 @@
-name: java
-root: ~/
-
-windows:
-  - study: ~/language/java/learning-java-se
-  - empty: 

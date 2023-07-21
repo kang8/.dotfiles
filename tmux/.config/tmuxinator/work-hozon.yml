@@ -1,7 +1,0 @@
-name: message
-root: ~/
-
-windows:
-  - wsl: ~/
-  - windows: /mnt/g/hozon/message-service
-  - wsl-work: ~/work/

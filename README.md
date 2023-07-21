@@ -15,14 +15,11 @@ It will setup:
 
 * [git](https://github.com/kang8/.dotfiles/blob/master/git/.gitconfig)
 * [zsh](https://github.com/kang8/.dotfiles/blob/master/zsh/.config/zsh/.zshrc)
-* [tmux](https://github.com/kang8/.dotfiles/blob/master/init.sh#L84-L108)
 * [neovim](https://github.com/kang8/.dotfiles/blob/master/init.sh#L110-L118)
 * [gpg](gpg)
 * [ssh](https://github.com/kang8/.dotfiles/blob/master/zsh/.config/zsh/ssh-proxy.zsh)
 * [IDEAVIM](https://github.com/kang8/.dotfiles/blob/master/IDEA/.ideavimrc)
-* [alacritty](tmuxinator)
 * [ranger](https://github.com/kang8/.dotfiles/tree/master/ranger/.config/ranger)
-* [tmuxinator](https://github.com/kang8/.dotfiles/tree/master/tmux/.config/tmuxinator)
 
 It will install:
 * https://github.com/ohmyzsh/ohmyzsh
