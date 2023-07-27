@@ -6,7 +6,14 @@
 	ui = auto
 [core]
 	editor = nvim
-    pager = delta
+    pager = "{                                \
+        COLUMNS=$(tput cols);                 \
+        if [ $COLUMNS -ge 160 ]; then         \
+            delta --side-by-side -w $COLUMNS; \
+        else                                  \
+            delta;                            \
+        fi                                    \
+    }"
 	quotepath = false
 	excludesfile = ~/.gitignore-global
 [help]
