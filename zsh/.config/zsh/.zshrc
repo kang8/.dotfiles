@@ -22,6 +22,7 @@ plugins=(
     z.lua
     macos
     deno
+    zsh-autopair
 )
 
 . $ZSH/oh-my-zsh.sh

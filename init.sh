@@ -81,6 +81,13 @@ else
     git clone --depth=1 https://github.com/skywind3000/z.lua.git ${ZSH}/custom/plugins/z.lua
 fi
 
+if [[ -d ${ZSH}/custom/plugins/zsh-autopair ]] ; then
+    echo "zsh-autopair is already installed."
+else
+    echo "Install zsh plug: zsh-autopair..."
+    git clone --depth=1 https://github.com/hlissner/zsh-autopair ${ZSH}/custom/plugins/zsh-autopair
+fi
+
 ########
 # neovim
 ########
