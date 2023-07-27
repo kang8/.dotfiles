@@ -81,13 +81,6 @@ else
     git clone --depth=1 https://github.com/skywind3000/z.lua.git ${ZSH}/custom/plugins/z.lua
 fi
 
-if [[ -d ${ZSH}/custom/themes/powerlevel10k  ]]; then
-    echo "powerlevel10k is already installed."
-else
-    echo "Install zsh theme: powerlevel10k..."
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH}/custom/themes/powerlevel10k
-fi
-
 ########
 # neovim
 ########

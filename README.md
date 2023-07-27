@@ -26,7 +26,6 @@ It will install:
 * https://github.com/zsh-users/zsh-syntax-highlighting
 * https://github.com/zsh-users/zsh-autosuggestions
 * https://github.com/Aloxaf/fzf-tab
-* https://github.com/romkatv/powerlevel10k
 
 Need manual setup:
 
