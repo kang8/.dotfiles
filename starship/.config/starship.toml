@@ -2,7 +2,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = false
-right_format = "${time}"
+right_format = "${custom.ranger} ${time}"
 
 [character]
 success_symbol = '\$'
@@ -15,12 +15,6 @@ threshold = 20
 [directory]
 truncate_to_repo = false
 fish_style_pwd_dir_length = 1
-
-[container]
-disabled = true
-
-[helm]
-disabled = true
 
 [git_branch]
 symbol = ''
@@ -43,3 +37,20 @@ staged = "+${count} "
 renamed = '»${count} '
 deleted = '-${count} '
 style = 'yellow'
+
+[custom.ranger]
+command = 'echo $RANGER_LEVEL' # shows output of command
+when = ''' [[ -n $RANGER_LEVEL ]] '''
+format = ' [$output]($style)'
+
+############
+# Disabled #
+############
+[container]
+disabled = true
+
+[helm]
+disabled = true
+
+[lua]
+disabled = true
