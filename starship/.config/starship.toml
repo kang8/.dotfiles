@@ -2,7 +2,11 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = false
-right_format = "${custom.ranger} ${time}"
+right_format = """
+${custom.v2raya}\
+${custom.ranger}\
+${time}
+"""
 
 [character]
 success_symbol = '\$'
@@ -41,7 +45,12 @@ style = 'yellow'
 [custom.ranger]
 command = 'echo $RANGER_LEVEL' # shows output of command
 when = ''' [[ -n $RANGER_LEVEL ]] '''
-format = ' [$output]($style)'
+format = '[ $output]($style) '
+style = 'yellow'
+
+[custom.v2raya]
+when = ''' lsof -nP -iTCP:$V2RAYA_ADDRESS | grep LISTEN '''
+format = '[󰰫$output]($style) '
 
 ############
 # Disabled #

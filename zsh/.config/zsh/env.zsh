@@ -69,3 +69,6 @@ eval "$(atuin init zsh)"
 
 # navi
 export NAVI_CONFIG="$HOME/.config/navi/config.yaml"
+
+# V2rays
+export V2RAYA_ADDRESS=2017
