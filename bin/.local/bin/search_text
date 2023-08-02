@@ -6,6 +6,7 @@ INITIAL_QUERY="${*:-}"
 IFS=: read -ra selected < <(
   FZF_DEFAULT_COMMAND="$RG_PREFIX $(printf %q "$INITIAL_QUERY")" \
   fzf --ansi \
+      --cycle \
       --color "hl:-1:underline,hl+:-1:underline:reverse" \
       --disabled --query "$INITIAL_QUERY" \
       --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
