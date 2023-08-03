@@ -55,7 +55,6 @@
 [diff]
 	renames = true
     colorMoved = default
-	external = difft
 [merge]
     conflictstyle = zdiff3
 [push]
