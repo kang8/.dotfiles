@@ -74,3 +74,5 @@
     pretty = fuller
 [log]
 	date = iso
+[blame]
+    date = format:%Y-%m-%d
