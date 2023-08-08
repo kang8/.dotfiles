@@ -34,10 +34,10 @@ if command -v git &> /dev/null; then
     alias gs='git status -s'
     alias gl="git log --pretty=\"%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --graph"
     alias gla="gl --all"
-    alias gd='GIT_EXTERNAL_DIFF=difft DFT_DISPLAY=inline git diff'
-    alias gds='GIT_EXTERNAL_DIFF=difft git diff'
-    alias gda='GIT_EXTERNAL_DIFF=difft DFT_DISPLAY=inline git diff --cached'
-    alias gdas='GIT_EXTERNAL_DIFF=difft git diff --cached'
+    alias gd='GIT_EXTERNAL_DIFF=difft git diff'
+    alias gds='GIT_EXTERNAL_DIFF=difft DFT_DISPLAY=inline git diff'
+    alias gda='GIT_EXTERNAL_DIFF=difft git diff --cached'
+    alias gdas='GIT_EXTERNAL_DIFF=difft DFT_DISPLAY=inline git diff --cached'
     alias gcod='git checkout --detach'
     alias gct='git checkout -b temp' # create temp branch
     alias gcmessage='git show -s --pretty=%B' # just show commit message
