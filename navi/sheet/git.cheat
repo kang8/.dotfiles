@@ -17,3 +17,8 @@ git log --follow <file_name>
 
 # Show raw information by `git show`
 git show --format=raw <commit_sha>
+
+# Do not track <file_name> anymore
+git update-index --assume-unchanged <file_name>
+
+$ file_name: fd --type file --hidden
