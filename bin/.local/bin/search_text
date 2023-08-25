@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Switch between Ripgrep launcher mode (CTRL-R) and fzf filtering mode (CTRL-S)
-RG_PREFIX="rg --column --line-number --no-heading --color=always --hidden "
+RG_PREFIX="rg --column --line-number --no-heading --color=always --hidden --fixed-strings"
 INITIAL_QUERY="${*:-}"
 IFS=: read -ra selected < <(
   FZF_DEFAULT_COMMAND="$RG_PREFIX $(printf %q "$INITIAL_QUERY")" \
