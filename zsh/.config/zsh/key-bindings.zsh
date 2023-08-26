@@ -6,6 +6,7 @@ bindkey '^r' _atuin_search_widget
 bindkey -s '^o' 'ranger^M'
 bindkey -s '^k' 'fork^M'
 bindkey -s '^[[102;6u' 'search_text^M' # <C-S-f>
+bindkey -s '^[[109;6u' 'search_man^M'  # <C-S-m>
 bindkey -s '^s' 'navi^M'
 
 bindkey '\C-x\C-e' edit-command-line

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+apropos -s "1" "$1" | \
+    cut -f1 -d '(' | \
+    awk '{ print length, $0 }' | \
+    sort -n | \
+    uniq | \
+    cut -d ' ' -f2-

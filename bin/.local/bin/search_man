@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+MAN_PREFIX="$HOME/.local/bin/get_mans"
+
+# may be can use a unknow manual as default manual
+echo 'Search manual' |
+  fzf --ansi \
+      --cycle \
+      --prompt 'Man> ' \
+      --bind "change:reload:sleep 0.1; $MAN_PREFIX {q} || true" \
+      --bind 'enter:become(man {})' \
+      --bind "ctrl-k:preview-up,alt-p:preview-up" \
+      --bind "ctrl-j:preview-down,alt-n:preview-down" \
+      --bind "ctrl-u:preview-half-page-up" \
+      --bind "ctrl-d:preview-half-page-down" \
+      --bind "ctrl-t:preview-top" \
+      --bind "ctrl-g:preview-bottom" \
+      --bind "ctrl-/:toggle-preview" \
+      --preview 'MANPAGER=''; man {}' \
+      --preview-window 'right,60%'
