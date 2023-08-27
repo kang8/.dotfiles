@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# Switch between Manual launcher mode (CTRL-R) and fzf filtering mode (CTRL-S)
+rm -f /tmp/man-fzf-{m,f}
 
 MAN_PREFIX="$HOME/.local/bin/get_mans"
 
@@ -6,9 +9,9 @@ MAN_PREFIX="$HOME/.local/bin/get_mans"
 echo 'Search manual' |
   fzf --ansi \
       --cycle \
-      --prompt 'Man> ' \
       --bind "change:reload:sleep 0.1; $MAN_PREFIX {q} || true" \
-      --bind 'enter:become(man {})' \
+      --bind "ctrl-s:unbind(change,ctrl-s)+change-prompt(Fzf> )+enable-search+rebind(ctrl-r)+transform-query(echo {q} > /tmp/man-fzf-m; cat /tmp/man-fzf-f)" \
+      --bind "ctrl-r:unbind(ctrl-r)+change-prompt(Man> )+disable-search+reload($RG_PREFIX {q} || true)+rebind(change,ctrl-s)+transform-query(echo {q} > /tmp/man-fzf-f; cat /tmp/man-fzf-m)" \
       --bind "ctrl-k:preview-up,alt-p:preview-up" \
       --bind "ctrl-j:preview-down,alt-n:preview-down" \
       --bind "ctrl-u:preview-half-page-up" \
@@ -16,5 +19,7 @@ echo 'Search manual' |
       --bind "ctrl-t:preview-top" \
       --bind "ctrl-g:preview-bottom" \
       --bind "ctrl-/:toggle-preview" \
+      --prompt 'Man> ' \
       --preview 'MANPAGER=''; man {}' \
-      --preview-window 'right,60%'
+      --preview-window 'right,60%' \
+      --bind 'enter:become(man {})' \
