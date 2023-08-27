@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 
 # Switch between Ripgrep launcher mode (CTRL-R) and fzf filtering mode (CTRL-S)
-RG_PREFIX="rg --column --line-number --no-heading --color=always --hidden --fixed-strings"
+rm -f /tmp/rg-fzf-{r,f}
+
+RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case --hidden --fixed-strings"
 INITIAL_QUERY="${*:-}"
-IFS=: read -ra selected < <(
-  FZF_DEFAULT_COMMAND="$RG_PREFIX $(printf %q "$INITIAL_QUERY")" \
-  fzf --ansi \
-      --cycle \
-      --color "hl:-1:underline,hl+:-1:underline:reverse" \
-      --disabled --query "$INITIAL_QUERY" \
-      --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
-      --bind "ctrl-s:unbind(change,ctrl-s)+change-prompt(fzf> )+enable-search+clear-query+rebind(ctrl-r)" \
-      --bind "ctrl-r:unbind(ctrl-r)+change-prompt(ripgrep> )+disable-search+reload($RG_PREFIX {q} || true)+rebind(change,ctrl-s)" \
-      --bind "alt-k:preview-up,alt-p:preview-up" \
-      --bind "alt-j:preview-down,alt-n:preview-down" \
-      --bind "alt-u:preview-half-page-up" \
-      --bind "alt-d:preview-half-page-down" \
-      --bind "ctrl-/:toggle-preview" \
-      --bind "alt-w:toggle-preview-wrap" \
-      --tiebreak "begin" \
-      --prompt 'Ripgrep> ' \
-      --delimiter : \
-      --preview 'bat --color=always {1} --highlight-line {2}' \
-      --preview-window 'up,60%,border-bottom,+{2}+3/3,~3'
-)
-[ -n "${selected[0]}" ] && nvim "${selected[0]}" "+${selected[1]}"
+: | fzf --ansi \
+    --cycle \
+    --disabled --query "$INITIAL_QUERY" \
+    --bind "start:reload($RG_PREFIX {q})+unbind(ctrl-r)" \
+    --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
+    --bind "ctrl-s:unbind(change,ctrl-s)+change-prompt(Fzf> )+enable-search+rebind(ctrl-r)+transform-query(echo {q} > /tmp/rg-fzf-r; cat /tmp/rg-fzf-f)" \
+    --bind "ctrl-r:unbind(ctrl-r)+change-prompt(Ripgrep> )+disable-search+reload($RG_PREFIX {q} || true)+rebind(change,ctrl-s)+transform-query(echo {q} > /tmp/rg-fzf-f; cat /tmp/rg-fzf-r)" \
+    --bind "alt-k:preview-up,alt-p:preview-up" \
+    --bind "alt-j:preview-down,alt-n:preview-down" \
+    --bind "alt-u:preview-half-page-up" \
+    --bind "alt-d:preview-half-page-down" \
+    --bind "alt-w:toggle-preview-wrap" \
+    --bind "ctrl-/:toggle-preview" \
+    --color "hl:-1:underline,hl+:-1:underline:reverse" \
+    --prompt 'Ripgrep> ' \
+    --delimiter : \
+    --tiebreak "begin" \
+    --preview 'bat --color=always {1} --highlight-line {2}' \
+    --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+    --bind 'enter:become(nvim {1} +{2})'
