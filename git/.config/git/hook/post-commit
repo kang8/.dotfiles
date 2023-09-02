@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [[ `uname` == 'Darwin' ]]; then
+    open raycast://extensions/raycast/raycast/confetti
+
+    open /Applications/kitty.app
+fi
+
+
+if [ -x ./.git/hooks/post-commit ]; then
+    ./.git/hooks/post-commit "$@"
+fi

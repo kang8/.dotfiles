@@ -16,6 +16,7 @@
     }"
 	quotepath = false
 	excludesfile = ~/.gitignore-global
+    hooksPath = ~/.config/git/hook
 [help]
 	autocorrect = 11
 [interactive]
