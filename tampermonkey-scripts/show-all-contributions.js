@@ -12,7 +12,7 @@
 // @grant             none
 // @run-at            document-end
 // @license           MIT
-// @homepage          https://github.com/kang8/.dotfiles/tree/master/tampermonkey-scripts
+// @homepage          https://github.com/kang8/.dotfiles/tree/master/tampermonkey-scripts#show-all-contributions-by-year-in-github-profile
 // @icon              https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
 // ==/UserScript==
 
