@@ -22,9 +22,9 @@ is_full_screen=$(osascript -e 'tell application "System Events"' \
 
 if $is_full_screen; then
     open -g raycast://extensions/raycast/window-management/toggle-fullscreen
-    osascript -e 'delay 0.45'
+    osascript -e 'delay 0.65'
     open -g raycast://extensions/raycast/window-management/next-display
-    osascript -e 'delay 0.45'
+    osascript -e 'delay 0.65'
     open -g raycast://extensions/raycast/window-management/toggle-fullscreen
 else
     open -g raycast://extensions/raycast/window-management/next-display
