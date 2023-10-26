@@ -11,7 +11,7 @@ gui:
   showRandomTip: true
   showBottomLine: false # for hiding the bottom information line (unless it has important information to tell you)
   showCommandLog: false
-  showIcons: true
+  nerdFontsVersion: "3"
   splitDiff: 'auto' # one of 'auto' | 'always'
   skipRewordInEditorWarning: false # for skipping the confirmation before launching the reword editor
 git:
