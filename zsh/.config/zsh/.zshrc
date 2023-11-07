@@ -5,6 +5,7 @@
 plugins=(
     vi-mode
     git
+    git-auto-fetch
     zsh-syntax-highlighting
     zsh-autosuggestions
     fzf
