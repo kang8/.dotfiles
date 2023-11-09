@@ -18,6 +18,9 @@ git log --follow <file_name>
 # Show raw information by `git show`
 git show --format=raw <commit_sha>
 
+# Diff with current origin branch
+git diff HEAD origin/$(git rev-parse --abbrev-ref HEAD)
+
 # Do not track <file_name> anymore
 git update-index --assume-unchanged <file_name>
 
