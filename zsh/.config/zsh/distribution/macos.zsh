@@ -29,3 +29,6 @@ function manp {
 
 # brew install coreutils, will install `sed`
 [[ -d /opt/homebrew/opt/gnu-sed/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+
+# brew install diffutils, will install `diff`
+[[ -d /opt/homebrew/opt/diffutils/bin ]] && export PATH="/opt/homebrew/opt/diffutils/bin:$PATH"
