@@ -60,6 +60,9 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 setopt PUSHD_IGNORE_DUPS
 
+setopt nocaseglob # ignore case
+setopt correct # correct spelling mistakes
+
 # customize variable
 [[ -e ~/.dotfiles/.env ]] && . ~/.dotfiles/.env
 
