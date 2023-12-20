@@ -25,3 +25,8 @@ git diff HEAD origin/$(git rev-parse --abbrev-ref HEAD)
 git update-index --assume-unchanged <file_name>
 
 $ file_name: fd --type file --hidden
+
+# Push all tags
+git push <remote> --tags
+
+$ remote: git remote | fzf
