@@ -30,3 +30,6 @@ $ file_name: fd --type file --hidden
 git push <remote> --tags
 
 $ remote: git remote | fzf
+
+# Check trailing whitespace on working directory and stage
+(git diff --cached --check || git diff --check) && git diff --check
