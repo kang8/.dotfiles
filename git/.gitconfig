@@ -77,3 +77,5 @@
 	date = iso
 [blame]
     date = format:%Y-%m-%d
+[rerere]
+	enabled = true
