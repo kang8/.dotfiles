@@ -33,3 +33,6 @@ $ remote: git remote | fzf
 
 # Check trailing whitespace on working directory and stage
 (git diff --cached --check || git diff --check) && git diff --check
+
+# Get short commit
+git rev-parse --short <commit>
