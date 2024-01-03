@@ -1,5 +1,5 @@
 [user]
-	name = Kang Yi
-	email = kang.yi@rightcapital.com
+    name = Kang Yi
+    email = kang.yi@rightcapital.com
 [core]
-	excludesfile = ~/.gitignore-work
+    excludesfile = ~/.gitignore-work

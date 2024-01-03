@@ -1,11 +1,11 @@
 [user]
-	name = kang
-	email = yi1115610574@gmail.com
-	signingkey = 716B162E703DA80C
+    name = kang
+    email = yi1115610574@gmail.com
+    signingkey = 716B162E703DA80C
 [color]
-	ui = auto
+    ui = auto
 [core]
-	editor = nvim
+    editor = nvim
     pager = "{                                \
         COLUMNS=$(tput cols);                 \
         if [ $COLUMNS -ge 160 ]; then         \
@@ -14,13 +14,13 @@
             delta;                            \
         fi                                    \
     }"
-	quotepath = false
-	excludesfile = ~/.gitignore-global
-	hooksPath = ~/.config/git/hooks
+    quotepath = false
+    excludesfile = ~/.gitignore-global
+    hooksPath = ~/.config/git/hooks
 [help]
-	autocorrect = 11
+    autocorrect = 11
 [interactive]
-	diffFilter = delta --color-only
+    diffFilter = delta --color-only
 [add.interactive]
     useBuiltin = false
 [delta]
@@ -35,37 +35,37 @@
     hyperlinks-file-link-format
     ; wrap-max-lines = 10
 [filter "api_key"]
-	smudge = sed \"s/api_key.*/api_key =/\"
-	clean = sed \"s/api_key.*/api_key =/\"
+    smudge = sed \"s/api_key.*/api_key =/\"
+    clean = sed \"s/api_key.*/api_key =/\"
 [commit]
-	gpgsign = true
-	verbose = true
+    gpgsign = true
+    verbose = true
 [gpg]
-	program = gpg
+    program = gpg
 [filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
 [protocol]
-	version = 2
+    version = 2
 [includeIf "gitdir:~/Projects/"]
     path = ~/.gitconfig-work
 [includeIf "gitdir:~/git-email/"]
     path = ~/git-email/.gitconfig
 [diff]
-	renames = true
+    renames = true
     colorMoved = default
 [merge]
     conflictstyle = zdiff3
 [push]
-	autoSetupRemote = true
+    autoSetupRemote = true
 [alias]
-	cleanup = !git branch --merged | grep -v '\\*\\|master\\|develop' | xargs git branch -d
+    cleanup = !git branch --merged | grep -v '\\*\\|master\\|develop' | xargs git branch -d
 [gc]
-	auto = 0
+    auto = 0
 [rebase]
-	autoSquash = true
+    autoSquash = true
 [sendemail]
     smtpserver = smtp.gmail.com
     smtpuser = yi1115610574@gmail.com
@@ -74,8 +74,8 @@
 [format]
     pretty = fuller
 [log]
-	date = iso
+    date = iso
 [blame]
     date = format:%Y-%m-%d
 [rerere]
-	enabled = true
+    enabled = true
