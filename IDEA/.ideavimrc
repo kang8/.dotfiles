@@ -35,6 +35,7 @@ xnoremap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserActi
 nnoremap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserAction<CR>
 nnoremap \w :action EditorToggleUseSoftWraps<CR>
 nnoremap <C-w>_ :action MaximizeEditorInSplit<CR>
+inoremap <C-k> :action ParameterInfo<CR>
 
 " 在normal模式保持英文状态
 set keep-english-in-normal
