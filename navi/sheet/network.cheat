@@ -1,4 +1,4 @@
-% common
+% network
 
 # check what processes are listening (only for macOS)
 lsof -iTCP -sTCP:LISTEN -P -n
