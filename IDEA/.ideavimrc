@@ -6,6 +6,7 @@ set easymotion " IdeaVim-EasyMotion
 map <Leader> <Plug>(easymotion-prefix)
 set quickscope " IIdeaVim-QuickscopedeaVim-Quickscope
 set matchit
+set highlightedyank
 
 
 set scrolloff=3
