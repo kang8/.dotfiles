@@ -35,6 +35,8 @@ set number
 set relativenumber
 set clipboard=unnamed,unnamedplus
 set clipboard+=ideaput
+set visualbell
+set noerrorbells
 
 """ IDEA specific settings ------------------
 set ideajoin
