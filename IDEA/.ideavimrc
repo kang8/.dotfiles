@@ -23,6 +23,7 @@ set clipboard+=ideaput
 """ IDEA specific settings ------------------
 set ideajoin
 set idearefactormode=keep
+set ideastatusicon=gray
 
 " key mapping
 nmap <C-l>     :nohlsearch<CR>
