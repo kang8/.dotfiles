@@ -250,6 +250,8 @@ bind diff   p   :/^@@           # Jump to next (c)hunk
 bind diff   f   :/^diff --git   # Jump to next file
 bind diff   [   :toggle diff-context -1 # Decrease the diff context
 bind diff   ]   :toggle diff-context +1 # Increase the diff context
+bind diff   D   >sh -c "git show %(commit) -- %(file) | delta --paging always"
+bind diff   S   >sh -c "git show %(commit) -- %(file) | delta --paging always --side-by-side"
 bind pager  @   :/^@@           # Jump to next (c)hunk
 bind pager  p   :/^@@           # Jump to next (c)hunk
 bind pager  f   :/^diff --git   # Jump to next file
