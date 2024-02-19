@@ -1,0 +1,4 @@
+% common
+
+# count number of files in each directory
+du -a | cut -d/ -f2 | sort | uniq -c | sort
