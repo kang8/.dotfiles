@@ -13,13 +13,13 @@ set highlightedyank
 set multiple-cursors
 " - start:      `<C-n>`   start multicursor and add a virtual cursor + visual selection on the match
 "     + next:   `<C-n>`   add a new virtual cursor + visual selection on the next match
-"     + skip:   `<C-x>`   skip the next match
+"     + skip:   `<C-s>`   skip the next match
 "     + prev:   `<C-p>`   remove current virtual cursor + visual selection and go back on previous match
 " - select all: `<S-C-n>` start muticursor and directly select all matches
 nmap <C-n> <Plug>NextWholeOccurrence
 xmap <C-n> <Plug>NextWholeOccurrence
-nmap <C-x> <Plug>SkipOccurrence
-xmap <C-x> <Plug>SkipOccurrence
+nmap <C-s> <Plug>SkipOccurrence
+xmap <C-s> <Plug>SkipOccurrence
 nmap <C-p> <Plug>RemoveOccurrence
 xmap <C-p> <Plug>RemoveOccurrence
 nmap <S-C-n> <Plug>AllWholeOccurrences
