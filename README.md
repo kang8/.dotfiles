@@ -35,3 +35,12 @@ stow sublime-text
 stow wakatime
 stow gnupg
 ```
+
+## 3. Cron job
+
+```bash
+# Manual set crontab path:
+crontab ~/.dotfiles/crontab
+# Check setup
+crontab -l
+```
