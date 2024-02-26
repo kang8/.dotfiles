@@ -4,3 +4,10 @@ repos:
     hooks:
      - id: doctoc
        args: [--update-only]
+  - repo: local
+    hooks:
+      - id: format
+        name: format
+        language: system
+        entry: make
+        args: [format]
