@@ -1,6 +1,6 @@
 # ls
-if command -v exa &> /dev/null; then
-    alias ls='exa --icons --git --group-directories-first --sort=oldest'
+if command -v eza &> /dev/null; then
+    alias ls='eza --icons --git --group-directories-first --sort=oldest'
     alias l='ls --all'
     alias ll='ls --all --long --group --time-style=iso'
     alias lt='ls --tree'
