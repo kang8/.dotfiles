@@ -24,6 +24,7 @@ plugins=(
     macos
     deno
     zsh-autopair
+    ssh-agent
 )
 
 . $ZSH/oh-my-zsh.sh
