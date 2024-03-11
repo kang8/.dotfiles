@@ -18,7 +18,7 @@
     excludesfile = ~/.gitignore-global
     hooksPath = ~/.config/git/hooks
 [help]
-    autocorrect = 11
+    autocorrect = immediate
 [interactive]
     diffFilter = delta --color-only
 [add.interactive]
@@ -56,16 +56,20 @@
 [diff]
     renames = true
     colorMoved = default
+    algorithm = histogram
+    submodule = log
 [merge]
     conflictstyle = zdiff3
 [push]
     autoSetupRemote = true
+    default = current
 [alias]
     cleanup = !git branch --merged | grep -v '\\*\\|master\\|develop\\|main' | xargs git branch -d
 [gc]
     auto = 0
 [rebase]
     autoSquash = true
+    autostash = true
 [sendemail]
     smtpserver = smtp.gmail.com
     smtpuser = yi1115610574@gmail.com
@@ -79,3 +83,13 @@
     date = format:%Y-%m-%d
 [rerere]
     enabled = true
+[url "git@github.com:"]
+    insteadOf = https://github.com/ # maybe to 'pushInsteadOf'
+[transfer]
+    fsckObjects = true
+[fetch]
+    fsckObjects = true
+[receive]
+    fsckObjects = true
+[status]
+    submoduleSummary = true
