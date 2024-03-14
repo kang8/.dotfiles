@@ -25,6 +25,7 @@ plugins=(
     deno
     zsh-autopair
     ssh-agent
+    python
 )
 
 . $ZSH/oh-my-zsh.sh
