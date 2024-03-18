@@ -39,6 +39,7 @@ export PATH="$PNPM_HOME:$PATH"
 [[ -d /opt/homebrew/opt/python/libexec/bin ]] && export PATH="/opt/homebrew/opt/python/libexec/bin:$PATH"
 export PYTHON_AUTO_VRUN=true
 export PYTHON_VENV_NAME=venv
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
