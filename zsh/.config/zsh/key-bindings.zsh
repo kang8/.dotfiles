@@ -1,7 +1,10 @@
-# zsh-autosuggestions config
-bindkey '^ ' autosuggest-accept # control + space 填充历史命令
+bindkey '^ ' autosuggest-accept # control + space
 bindkey '^f' forward-char
+bindkey '^[f' forward-word # <alt-f>
 bindkey '^b' backward-char
+bindkey '^[b' backward-word
+bindkey '^u' backward-kill-line
+bindkey '^y' yank
 bindkey '^r' _atuin_search_widget
 bindkey -s '^o' 'ranger^M'
 bindkey -s '^k' 'fork^M'
