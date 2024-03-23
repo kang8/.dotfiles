@@ -26,6 +26,7 @@ plugins=(
     zsh-autopair
     ssh-agent
     python
+    command-not-found
 )
 
 . $ZSH/oh-my-zsh.sh
