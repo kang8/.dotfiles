@@ -16,6 +16,7 @@ gui:
   skipRewordInEditorWarning: false # for skipping the confirmation before launching the reword editor
 git:
   branchLogCmd: 'git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty="%C(yellow)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" {{branchName}} --'
+  overrideGpg: true
 os:
   edit: 'git diff --name-only --diff-filter=U --relative | grep --quiet --line-regexp {{filename}} && nvim -c "DiffviewOpen -- {{filename}}" || nvim {{filename}}'
   editAtLine: 'git diff --name-only --diff-filter=U --relative | grep --quiet --line-regexp {{filename}} && nvim +{{line}} -c "DiffviewOpen -- {{filename}}" || nvim +{{line}} {{filename}}'
