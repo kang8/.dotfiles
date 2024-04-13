@@ -1,4 +1,4 @@
 0  9 * * 2 cd ~/.config/nvim && git fetch && git rebase origin/master && nvim --headless "+Lazy! restore" +qa
-0  9 * * * cd ~/.dotfiles && /opt/homebrew/bin/brew bundle dump --force && make format
+0  9 * * * cd ~/.dotfiles && /opt/homebrew/bin/brew bundle dump --no-restart --force && make format
 5  9 * * * cd ~/Library/Rime && git pull
 0 10 * * * /opt/homebrew/bin/brew update && /opt/homebrew/bin/brew upgrade
