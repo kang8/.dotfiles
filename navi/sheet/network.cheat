@@ -5,3 +5,6 @@ lsof -iTCP -sTCP:LISTEN -P -n
 
 # get Local IP Address (only for macOS)
 ifconfig -a | grep "inet "
+
+# Speed test (only for macOS)
+networkQuality -v
