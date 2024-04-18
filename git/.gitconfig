@@ -64,7 +64,7 @@
     autoSetupRemote = true
     default = current
 [alias]
-    cleanup = !git branch --merged | grep -v '\\*\\|master\\|develop\\|main' | xargs git branch -d
+    cleanup = !zsh -c --interactive 'gbda' # use onmyzsh function
 [gc]
     auto = 0
 [rebase]
