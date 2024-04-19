@@ -36,10 +36,10 @@ behind = '⇣${count} '
 diverged = '⇡${ahead_count}⇣${behind_count} '
 untracked = '?${count} '
 stashed = "*${count} "
-modified = "!${count} "
-staged = "+${count} "
+modified = "[!${count}](red) "
+staged = "[+${count}](green) "
 renamed = '»${count} '
-deleted = '-${count} '
+deleted = '[-${count}](red) '
 style = 'yellow'
 
 [custom.ranger]
