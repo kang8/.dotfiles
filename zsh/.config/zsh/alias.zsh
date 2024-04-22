@@ -46,7 +46,7 @@ if command -v git &> /dev/null; then
     unalias gco
     function gco() {
         if [ $# -eq 0 ]; then # if not set parameter
-            git checkout $(git branch | fzf)
+            git checkout $(git branch --sort=-committerdate | fzf)
         else
             git checkout "$@"
         fi
