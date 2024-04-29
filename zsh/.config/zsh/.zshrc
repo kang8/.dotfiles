@@ -27,6 +27,7 @@ plugins=(
     ssh-agent
     python
     command-not-found
+    terraform
 )
 
 . $ZSH/oh-my-zsh.sh
