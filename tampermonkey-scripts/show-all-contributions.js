@@ -2,7 +2,7 @@
 // @name              Show all contributions by year in the GitHub profile
 // @name:zh-CN        在 GitHub profile 页面以年份展示用户所有的贡献
 // @namespace         https://github.com/kang8
-// @version           0.0.3
+// @version           0.0.4
 // @updateURL         https://raw.githubusercontent.com/kang8/.dotfiles/master/tampermonkey-scripts/show-all-contributions.js
 // @downloadURL       https://raw.githubusercontent.com/kang8/.dotfiles/master/tampermonkey-scripts/show-all-contributions.js
 // @description       Show all contributions by year since the user was created in the GitHub profile page
@@ -16,8 +16,12 @@
 // @icon              https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
 // ==/UserScript==
 
-;(function () {
+;(async function () {
   'use strict'
+
+  // Wait for 1.5 seconds for the DOM to load.
+  await new Promise(resolve => setTimeout(resolve, 1500));
+
   const pathArr = location.pathname.split('/')
 
   /**
