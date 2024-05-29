@@ -51,6 +51,14 @@ if command -v git &> /dev/null; then
             git checkout "$@"
         fi
     }
+
+    function gcoa() {
+        if [ $# -eq 0 ]; then # if not set parameter
+            git checkout $(git branch --all --sort=-committerdate | fzf | sed 's|remotes/origin/||')
+        else
+            git checkout "$@"
+        fi
+    }
 fi
 
 # tig
