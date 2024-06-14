@@ -46,15 +46,29 @@ if command -v git &> /dev/null; then
     unalias gco
     function gco() {
         if [ $# -eq 0 ]; then # if not set parameter
-            git checkout $(git branch --sort=-committerdate | fzf)
+            git branch --sort=-committerdate | fzf --cycle | xargs git checkout
         else
             git checkout "$@"
         fi
     }
 
+    _dedup() {
+        # dedup unordered inputs, preserving order
+        # whereas uniq expects the input to be sorted for deduping
+        # eg:
+        # ❯ echo "b\na\nb\na" | uniq | sort | paste -s -d, -
+        # a,a,b,b
+        # ❯ echo "b\na\nb\na" | _dedup | paste -s -d, -
+        # b,a
+        #
+        # see https://unix.stackexchange.com/a/194790/2680
+        cat -n | sort -k2 -k1n  | uniq -f1 | sort -nk1,1 | cut -f2-
+    }
+
     function gcoa() {
         if [ $# -eq 0 ]; then # if not set parameter
-            git checkout $(git branch --all --sort=-committerdate | fzf | sed 's|remotes/origin/||')
+            local current_branch=$(git rev-parse --abbrev-ref HEAD)
+            git branch --all --sort=-committerdate | grep -Ev "remotes/origin/(HEAD|$current_branch)" |  _dedup | fzf --cycle | sed 's|remotes/origin/||' | xargs git checkout
         else
             git checkout "$@"
         fi
