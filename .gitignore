@@ -6,3 +6,6 @@ __pycache__/
 Brewfile.lock.json
 
 kitty/.config/kitty/kitty.conf.bak
+
+# Emacs packages
+emacs/.emacs.d/elpa/
