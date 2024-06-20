@@ -8,3 +8,5 @@
 # ignore-identifiers for typo-lsp. see https://github.com/crate-ci/typos#false-positives
 _typos.toml
 
+# Emacs
+\#*
