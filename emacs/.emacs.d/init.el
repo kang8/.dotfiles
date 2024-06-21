@@ -21,3 +21,8 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
+
+; line number
+(global-display-line-numbers-mode t)
+(setq display-line-numbers-type 'relative)
+

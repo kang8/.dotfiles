@@ -9,3 +9,4 @@ kitty/.config/kitty/kitty.conf.bak
 
 # Emacs packages
 emacs/.emacs.d/elpa/
+emacs/.emacs.d/auto-save-list/
