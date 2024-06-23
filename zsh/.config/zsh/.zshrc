@@ -28,6 +28,7 @@ plugins=(
     python
     command-not-found
     terraform
+    poetry-env
 )
 
 . $ZSH/oh-my-zsh.sh
