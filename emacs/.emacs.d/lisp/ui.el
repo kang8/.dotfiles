@@ -4,3 +4,6 @@
 
 ; Disable menu bar
 (menu-bar-mode -1)
+
+; Set theme
+(load-theme 'tsdh-light t)
