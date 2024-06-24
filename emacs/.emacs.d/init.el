@@ -2,3 +2,4 @@
 (load "package")
 (load "init-scheme")
 (load "ui")
+(load "programming")
