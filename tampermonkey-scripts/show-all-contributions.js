@@ -77,7 +77,7 @@
  * @param {number} currentYear
  */
 function insertAndOrderToDetails(graph, details, currentYear) {
-  let contributionsCalendarAllYear = Array.from(details.querySelectorAll('div.js-calendar-graph'))
+  const contributionsCalendarAllYear = Array.from(details.querySelectorAll('div.js-calendar-graph'))
 
   if (contributionsCalendarAllYear.length === 0) {
     details.append(graph)
