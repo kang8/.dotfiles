@@ -36,3 +36,6 @@ $ remote: git remote | fzf
 
 # Get short commit
 git rev-parse --short <commit>
+
+# Pretty-print the contents of object
+git cat-file -p <object>
