@@ -88,6 +88,13 @@ else
     git clone --depth=1 https://github.com/hlissner/zsh-autopair ${ZSH}/custom/plugins/zsh-autopair
 fi
 
+if [[ -d ${ZSH}/custom/plugins/you-should-use ]] ; then
+    echo "you-should-use is already installed."
+else
+    echo "Install zsh plug: you-should-use..."
+    git clone --depth=1 https://github.com/MichaelAquilina/zsh-you-should-use.git $ZSH_CUSTOM/plugins/you-should-use
+fi
+
 ########
 # neovim
 ########

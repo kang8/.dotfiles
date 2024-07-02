@@ -29,6 +29,7 @@ plugins=(
     command-not-found
     terraform
     poetry-env
+    you-should-use
 )
 
 . $ZSH/oh-my-zsh.sh
