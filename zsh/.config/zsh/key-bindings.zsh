@@ -11,6 +11,7 @@ bindkey -s '^k' 'fork^M'
 bindkey -s '^[[102;6u' 'fzf_rg^M' # <C-S-f>
 bindkey -s '^[[109;6u' 'fzf_man^M'  # <C-S-m>
 bindkey -s '^s' 'navi^M'
+bindkey -s '^[[98;9u' '$(git branch --show-current)^I' # <cmd-b>
 
 bindkey '\C-x\C-e' edit-command-line
 bindkey -M vicmd 'm' edit-command-line
