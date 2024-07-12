@@ -30,6 +30,7 @@ plugins=(
     terraform
     poetry-env
     you-should-use
+    kubectl
 )
 
 . $ZSH/oh-my-zsh.sh
