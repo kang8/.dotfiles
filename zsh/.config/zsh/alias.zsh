@@ -80,6 +80,11 @@ if command -v tig &> /dev/null; then
     alias tiga='tig --all'
 fi
 
+# awrit
+if command -v awrit &> /dev/null; then
+    alias web='awrit'
+fi
+
 # custom
 alias ct="cd `mktemp -d /tmp/artin-XXXXXX`"
 alias vt="ct && vim temp"
