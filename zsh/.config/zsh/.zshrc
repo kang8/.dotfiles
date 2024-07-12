@@ -7,6 +7,7 @@ plugins=(
     git
     git-auto-fetch
     zsh-syntax-highlighting
+    F-Sy-H
     zsh-autosuggestions
     fzf
     systemd

@@ -95,6 +95,13 @@ else
     git clone --depth=1 https://github.com/MichaelAquilina/zsh-you-should-use.git $ZSH_CUSTOM/plugins/you-should-use
 fi
 
+if [[ -d ${ZSH}/custom/plugins/F-Sy-H ]] ; then
+    echo "F-Sy-H is already installed."
+else
+    echo "Install zsh plug: F-Sy-H..."
+    git clone --depth=1 https://github.com/z-shell/F-Sy-H.git $ZSH_CUSTOM/plugins/F-Sy-H
+fi
+
 ########
 # neovim
 ########
