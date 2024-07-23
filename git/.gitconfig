@@ -34,9 +34,6 @@
     # unset hyperlinks-file-link-format, I do not like this feature
     hyperlinks-file-link-format
     ; wrap-max-lines = 10
-[filter "api_key"]
-    smudge = sed \"s/api_key.*/api_key =/\"
-    clean = sed \"s/api_key.*/api_key =/\"
 [commit]
     gpgsign = true
     verbose = true
