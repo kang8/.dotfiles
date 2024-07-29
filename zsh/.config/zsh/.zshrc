@@ -19,7 +19,6 @@ plugins=(
     fzf-tab
     rust
     gh
-    ripgrep
     npm
     z.lua
     macos
