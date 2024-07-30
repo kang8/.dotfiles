@@ -32,3 +32,6 @@ function manp {
 
 # brew install diffutils, will install `diff`
 [[ -d /opt/homebrew/opt/diffutils/bin ]] && export PATH="/opt/homebrew/opt/diffutils/bin:$PATH"
+
+# brew install gnu-tar, will install `tar`
+[[ -d /opt/homebrew/opt/gnu-tar/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH"
