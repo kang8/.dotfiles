@@ -91,3 +91,5 @@
     fsckObjects = true
 [status]
     submoduleSummary = true
+[advice]
+    detachedHead = false
