@@ -29,6 +29,7 @@ plugins=(
     command-not-found
     terraform
     poetry-env
+    poetry
     you-should-use
     kubectl
 )
