@@ -17,6 +17,6 @@ if [[ -z ${1} ]] # if do not input any word
 then
     open https://docs.sqlfluff.com
 else
-    open https://docs.sqlfluff.com/en/stable/rules.html#rule-${1}
+    open https://docs.sqlfluff.com/en/stable/reference/rules.html#rule-${1}
 fi
 
