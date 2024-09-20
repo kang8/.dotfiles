@@ -1,0 +1,4 @@
+% shell
+
+# Show $PATH with oneline format
+echo $PATH | tr ':' '\n'
