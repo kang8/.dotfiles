@@ -63,6 +63,7 @@
 [alias]
     cleanup = !zsh -c --interactive 'gbda' # use onmyzsh function
     history = !git log --graph --decorate --oneline $(git rev-list --walk-reflogs --all) # All history include orphan commit
+    fixup = "!git log -n 15 --pretty=format:'%h %cs |%aL| %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
 [gc]
     auto = 0
 [rebase]
