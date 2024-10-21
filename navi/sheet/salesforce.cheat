@@ -1,0 +1,6 @@
+% salesforce
+
+# Get org access token
+sf org display --verbose -o <org_alias> --json | jq -r '.result.accessToken'
+
+$ org_alias: sf org list --json | jq -r '.result.nonScratchOrgs.[].alias'
