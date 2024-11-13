@@ -32,6 +32,7 @@ plugins=(
     poetry
     you-should-use
     kubectl
+    direnv
 )
 
 . $ZSH/oh-my-zsh.sh
