@@ -6,7 +6,22 @@
 git clone --recurse-submodules --depth=1 https://github.com/kang8/.dotfiles.git
 ```
 
-## 2. Run init.sh, follow the prompts to complete the setup.
+
+
+## 2. Install Homebrew first, and use `brew bundle` to install all dependencies from the [Brewfile](./Brewfile)
+
+
+```bash
+# From: https://brew.sh/
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Setup brew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+brew bundle
+```
+
+## 3. Run init.sh, follow the prompts to complete the setup.
 
 ```bash
 ./init.sh
@@ -36,7 +51,7 @@ stow wakatime
 stow gnupg
 ```
 
-## 3. Cron job
+## 4. Cron job
 
 ```bash
 # Manual set crontab path:
