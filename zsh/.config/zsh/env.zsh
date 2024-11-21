@@ -69,10 +69,6 @@ setopt correct # correct spelling mistakes
 # customize variable
 [[ -e ~/.dotfiles/.env ]] && . ~/.dotfiles/.env
 
-# atuin setup
-export ATUIN_NOBIND="true"
-eval "$(atuin init zsh)"
-
 # navi
 export NAVI_CONFIG="$HOME/.config/navi/config.yaml"
 

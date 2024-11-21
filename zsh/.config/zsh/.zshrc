@@ -3,6 +3,7 @@
 . $ZDOTDIR/proxy.zsh
 
 plugins=(
+    brew
     vi-mode
     git
     git-auto-fetch
@@ -33,6 +34,7 @@ plugins=(
     you-should-use
     kubectl
     direnv
+    starship
 )
 
 . $ZSH/oh-my-zsh.sh
@@ -41,5 +43,7 @@ plugins=(
 . $ZDOTDIR/key-bindings.zsh
 . $ZDOTDIR/alias.zsh
 
-eval "$(starship init zsh)"
-# setxkbmap -option ctrl:swapcaps
+# TODO: send a PR to support  atuin
+# atuin setup
+export ATUIN_NOBIND="true"
+eval "$(atuin init zsh)"
