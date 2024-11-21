@@ -56,6 +56,11 @@ nmap <Leader>o :action uk.co.ben_gibson.git.link.ui.actions.menu.BrowserAction<C
 nmap \w        :action EditorToggleUseSoftWraps<CR>
 nmap <C-w>_    :action MaximizeEditorInSplit<CR>
 imap <C-k>     :action ParameterInfo<CR>
+map <D-p>      :action GotoFile<CR>
+map <C-S-f>    :action FindInPath<CR>
+map <D-S-p>    :action SearchEverywhere<CR>
+map <D-]>      :action NextTab<CR>
+map <D-[>      :action PreviousTab<CR>
 
 " 在normal模式保持英文状态
 set keep-english-in-normal
