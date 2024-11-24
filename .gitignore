@@ -11,3 +11,4 @@ kitty/.config/kitty/kitty.conf.bak
 emacs/.emacs.d/elpa/
 emacs/.emacs.d/auto-save-list/
 navi/.config/navi/navi.log
+git/.config/glab-cli/config.yml
