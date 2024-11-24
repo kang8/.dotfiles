@@ -1,4 +1,3 @@
-brew "ack"
 brew "ast-grep"
 brew "atuin"
 brew "awscli"
