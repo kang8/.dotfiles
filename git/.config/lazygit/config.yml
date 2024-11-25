@@ -15,7 +15,7 @@ gui:
   showRandomTip: true
   showBottomLine: false # for hiding the bottom information line (unless it has important information to tell you)
   showCommandLog: false
-  nerdFontsVersion: "3"
+  nerdFontsVersion: '3'
   splitDiff: 'auto' # one of 'auto' | 'always'
   skipRewordInEditorWarning: false # for skipping the confirmation before launching the reword editor
 git:
@@ -36,12 +36,12 @@ keybinding:
     quitWithoutChangingDirectory: 'Q'
 customCommands:
   - key: 'c'
-    command: "git diff {{.SelectedFile.Name}} | delta --paging always"
+    command: 'git diff {{.SelectedFile.Name}} | delta --paging always'
     context: 'files'
     description: 'Show change(diff) in local'
     subprocess: true
   - key: 'C'
-    command: "git diff --cached {{.SelectedFile.Name}} | delta --paging always"
+    command: 'git diff --cached {{.SelectedFile.Name}} | delta --paging always'
     context: 'files'
     description: 'Show change(diff) in work tree'
     subprocess: true

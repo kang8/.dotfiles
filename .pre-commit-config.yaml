@@ -2,8 +2,8 @@ repos:
   - repo: https://github.com/thlorenz/doctoc
     rev: v2.2.0
     hooks:
-     - id: doctoc
-       args: [--update-only]
+      - id: doctoc
+        args: [--update-only]
   - repo: local
     hooks:
       - id: format

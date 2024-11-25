@@ -11,12 +11,11 @@
 
 ### Show all contributions by year in GitHub profile
 
-
 ![show-all-contributions-by-year.gif](https://github.com/kang8/.dotfiles/assets/36906329/b52f0413-bec6-40e3-b7f7-fb2c7da8e5a7)
 
 #### Features
 
-* Show ALL contributions by year in GitHub profile
+- Show ALL contributions by year in GitHub profile
 
 #### Possible subsequent improvements
 
