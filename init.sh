@@ -9,7 +9,7 @@ cp .env.example .env
 ########
 # stow
 ########
-echo "stow beging!!!"
+echo "stow begging!!!"
 
 stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/' 'gnupg/')
 
@@ -39,7 +39,7 @@ if [[ $is_missing_ssh == "true" ]]; then
     fi
 fi
 
-# TODO: test `ssh -T git@github.com` if not througt to set ssh key to github.
+# TODO: test `ssh -T git@github.com` if not through to set ssh key to github.
 
 ########
 # ZSH
@@ -105,7 +105,7 @@ fi
 ########
 # neovim
 ########
-echo "neovim beging!!!"
+echo "neovim begging!!!"
 if [[ -d ~/.config/nvim ]];then
     echo "~/.config/nvim is already installed."
 else
@@ -115,7 +115,7 @@ fi
 ########
 # gpg
 ########
-echo "gpg beging!!!"
+echo "gpg begging!!!"
 
 # create ~/.gnupg/
 gpg -k
