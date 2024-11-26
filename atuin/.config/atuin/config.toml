@@ -1,0 +1,35 @@
+## which search mode to use
+## possible values: prefix, fulltext, fuzzy, skim
+search_mode = "skim"
+
+## what to do when the escape key is pressed when searching
+## possible values: return-original, return-query
+exit_mode = "return-query"
+
+## Configure whether or not to show the help row, which includes the current Atuin
+## version (and whether an update is available), a keymap hint, and the total
+## amount of commands in your history.
+show_help = false
+
+## Configure whether or not to show tabs for search and inspect
+show_tabs = false
+
+## Defaults to true. If enabled, upon hitting enter Atuin will immediately execute the command. Press tab to return to the shell and edit.
+# This applies for new installs. Old installs will keep the old behaviour unless configured otherwise.
+enter_accept = false
+
+[keys]
+# Defaults to true. If disabled, using the up/down key won't exit the TUI when scrolled past the first/last entry.
+scroll_exits = false
+
+[sync]
+# Enable sync v2 by default
+# This ensures that sync v2 is enabled for new installs only
+# In a later release it will become the default across the board
+records = true
+
+[search]
+## The list of enabled filter modes, in order of priority.
+## The "workspace" mode is skipped when not in a workspace or workspaces = false.
+## Default filter mode can be overridden with the filter_mode setting.
+filters = [ "global", "directory" ]

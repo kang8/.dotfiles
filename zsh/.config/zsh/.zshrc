@@ -47,3 +47,6 @@ plugins=(
 # atuin setup
 export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
+# TODO: use HEAD first as the filter mode(new feature) not released
+# Ref: https://github.com/atuinsh/atuin/pull/2430
+export PATH=~/github/atuin/target/debug:$PATH
