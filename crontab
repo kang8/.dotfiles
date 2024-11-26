@@ -3,4 +3,4 @@
 5 11 * * * cd ~/Library/Rime && git pull
 0 10 * * * /opt/homebrew/bin/brew update && /opt/homebrew/bin/brew upgrade
 
-5 10 * * * cleanup-merged-branches.sh
+5 10 * * * ~/.local/bin/cleanup-merged-branches.sh
