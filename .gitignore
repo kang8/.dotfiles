@@ -12,3 +12,4 @@ emacs/.emacs.d/elpa/
 emacs/.emacs.d/auto-save-list/
 navi/.config/navi/navi.log
 git/.config/glab-cli/config.yml
+k9s/.config/k9s/clusters/

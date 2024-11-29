@@ -83,3 +83,6 @@ export YSU_MODE=ALL
 
 # Added by OrbStack: command-line tools and integration
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+
+# k9s
+export K9S_CONFIG_DIR=$HOME/.config/k9s
