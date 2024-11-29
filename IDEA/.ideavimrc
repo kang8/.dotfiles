@@ -44,6 +44,7 @@ set idearefactormode=keep
 set ideastatusicon=gray
 
 " key mapping
+" Must be open 'IdeaVim: Track Action Ids'
 nmap <C-l>     :nohlsearch<CR>
 nmap <Leader>e :NERDTree<CR>
 nmap <Leader>n :NERDTreeFind<CR>
@@ -61,6 +62,8 @@ map <C-S-f>    :action FindInPath<CR>
 map <D-S-p>    :action SearchEverywhere<CR>
 map <D-]>      :action NextTab<CR>
 map <D-[>      :action PreviousTab<CR>
+map <F2>       :action RenameElement<CR>
+map <D-g>      :action Annotate<CR>
 
 " 在normal模式保持英文状态
 set keep-english-in-normal
