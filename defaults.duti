@@ -1,0 +1,13 @@
+# default applications for specific file types
+# Use `osascript -e 'get id of app "zed"'` to search bundle_id
+
+# bundle_id                     uti | url_scheme | extension | MIME_type        role
+
+dev.zed.Zed                     public.plain-text                               all
+dev.zed.Zed                     .md                                             all
+dev.zed.Zed                     .xml                                            all
+dev.zed.Zed                     .json                                           all
+dev.zed.Zed                     .tf                                             all
+dev.zed.Zed                     .sh                                             all
+dev.zed.Zed                     .ts                                             all
+dev.zed.Zed                     .mjs                                            all
