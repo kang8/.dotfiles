@@ -89,3 +89,6 @@ source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
 # k9s
 export K9S_CONFIG_DIR=$HOME/.config/k9s
+
+# JetBrains Toolbox
+export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
