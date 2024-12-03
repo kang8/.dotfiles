@@ -39,3 +39,6 @@ git rev-parse --short <commit>
 
 # Pretty-print the contents of object
 git cat-file -p <object>
+
+# Delete current origin remote branch
+git push --delete origin $(git rev-parse --abbrev-ref HEAD)
