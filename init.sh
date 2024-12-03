@@ -11,7 +11,7 @@ cp .env.example .env
 ########
 echo "stow begging!!!"
 
-stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/' 'gnupg/')
+stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/' 'gnupg/' 'raycast-script/')
 
 for i in `ls -d */`; do
     printf "%s\n" "${stow_exclude[@]}" | grep -x -q "$i" ||
