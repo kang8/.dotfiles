@@ -1,7 +1,7 @@
 gui:
-  windowSize: 'half' # one of 'normal' | 'half' | 'full' default is 'normal'
+  windowSize: 'normal' # one of 'normal' | 'half' | 'full' default is 'normal'
   scrollHeight: 10 # how many lines you scroll by
-  sidePanelWidth: 0.3 # number from 0 to 1
+  sidePanelWidth: 0.2 # number from 0 to 1
   mainPanelSplitMode: 'vertical' # one of 'horizontal' | 'flexible' | 'vertical'
   theme:
     selectedLineBgColor:
