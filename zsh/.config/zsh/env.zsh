@@ -92,3 +92,6 @@ export K9S_CONFIG_DIR=$HOME/.config/k9s
 
 # JetBrains Toolbox
 export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+
+# Windsurf
+export PATH=$PATH:$HOME/.codeium/windsurf/bin
