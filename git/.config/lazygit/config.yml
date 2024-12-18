@@ -23,7 +23,7 @@ git:
   overrideGpg: true
   paging:
     colorArg: always
-    pager: delta --paging=never
+    pager: sed 's/\t/├──┤/g' | delta --paging=never
 os:
   edit: 'git diff --name-only --diff-filter=U --relative | grep --quiet --line-regexp {{filename}} && nvim -c "DiffviewOpen -- {{filename}}" || nvim {{filename}}'
   editAtLine: 'git diff --name-only --diff-filter=U --relative | grep --quiet --line-regexp {{filename}} && nvim +{{line}} -c "DiffviewOpen -- {{filename}}" || nvim +{{line}} {{filename}}'

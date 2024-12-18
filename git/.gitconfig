@@ -6,13 +6,13 @@
     ui = auto
 [core]
     editor = nvim
-    pager = "{                                \
-        COLUMNS=$(tput cols);                 \
-        if [ $COLUMNS -ge 160 ]; then         \
-            delta --side-by-side -w $COLUMNS; \
-        else                                  \
-            delta;                            \
-        fi                                    \
+    pager = "{                                                    \
+        COLUMNS=$(tput cols);                                     \
+        if [ $COLUMNS -ge 160 ]; then                             \
+            sed 's/\t/├──┤/g' | delta --side-by-side -w $COLUMNS; \
+        else                                                      \
+            sed 's/\t/├──┤/g' | delta;                            \
+        fi                                                        \
     }"
     quotepath = false
     excludesfile = ~/.gitignore-global
