@@ -1,12 +1,20 @@
 # Kang's dotfiles
 
-## 1. clone this repo
+## 1. Generating a new SSH key and adding it to the ssh-agent
+
+```bash
+ssh-keygen -a 256 -t ed25519 -C "comment"
+
+/usr/bin/ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+```
+
+## 2. clone this repo
 
 ```bash
 git clone --recurse-submodules --depth=1 https://github.com/kang8/.dotfiles.git
 ```
 
-## 2. Install Homebrew first, and use `brew bundle` to install all dependencies from the [Brewfile](./Brewfile)
+## 3. Install Homebrew first, and use `brew bundle` to install all dependencies from the [Brewfile](./Brewfile)
 
 ```bash
 # From: https://brew.sh/
@@ -18,7 +26,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 brew bundle
 ```
 
-## 3. Run init.sh, follow the prompts to complete the setup.
+## 4. Run init.sh, follow the prompts to complete the setup.
 
 ```bash
 ./init.sh

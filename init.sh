@@ -11,7 +11,7 @@ cp .env.example .env
 ########
 echo "stow begging!!!"
 
-stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/' 'gnupg/' 'raycast-script/')
+stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/' 'gnupg/' 'raycast-script/' 'tampermonkey-scripts')
 
 for i in `ls -d */`; do
     printf "%s\n" "${stow_exclude[@]}" | grep -x -q "$i" ||
@@ -19,27 +19,6 @@ for i in `ls -d */`; do
 done
 
 zsh ~/.zshrc
-
-########
-# ssh key
-########
-is_missing_ssh=false
-for i in $HOME/.ssh/id_ed25519{,.pub}; do
-    if [[ ! -f $i ]]; then
-        echo "$i is missing!"
-        is_missing_ssh=true
-    fi
-done
-
-if [[ $is_missing_ssh == "true" ]]; then
-    read -rp "Can't found ssh key, Do your want to generate a new SSH key? [y|N] " is_generate
-    if [[ -n $is_generate && ($is_generate == "Y" || $is_generate == 'y') ]]; then
-        read -rp "Please input SSH key common: " ssh_common
-        echo -ne "\n\n\n" | ssh-keygen -t ed25519 -C "$ssh_common"
-    fi
-fi
-
-# TODO: test `ssh -T git@github.com` if not through to set ssh key to github.
 
 ########
 # ZSH
@@ -102,10 +81,9 @@ else
     git clone --depth=1 https://github.com/z-shell/F-Sy-H.git $ZSH_CUSTOM/plugins/F-Sy-H
 fi
 
-########
-# neovim
-########
+######## neovim ######## echo "\n"
 echo "neovim begging!!!"
+echo "\n"
 if [[ -d ~/.config/nvim ]];then
     echo "~/.config/nvim is already installed."
 else
@@ -115,29 +93,17 @@ fi
 ########
 # gpg
 ########
+echo "\n"
 echo "gpg begging!!!"
+echo "\n"
 
 # create ~/.gnupg/
 gpg -k
 
-if [[ -d ~/.config/kang-gpg ]]; then
-    echo "~/.config/kang-gpg is already installed."
+if [[ -d ~/kang/gpg-key-ring ]]; then
+    echo "~/kang/gpg-key-ring is already installed."
 else
-    git clone --depth=1 git@github.com:kang8/gpg-key-ring.git ~/.config/kang-gpg
+    git clone --depth=1 git@github.com:kang8/gpg-key-ring.git ~/kang/gpg-key-ring
 fi
 
 stow gnupg
-
-if [[ -z `gpg -K` ]]; then
-    (cd ~/.config/kang-gpg && gpg --import sign-sub.gpg)
-
-    expect <(printf "\
-    spawn gpg --expert --edit-key 9B18672C5BAD8159F5A76234CA67CB5DBBA86E4D
-    send \"trust\r5\ry\rq\r\"
-    interact
-    ")
-fi
-
-# setdown
-
-( cd ~/.dotfiles && git remote set-url origin git@github.com:kang8/.dotfiles.git )
