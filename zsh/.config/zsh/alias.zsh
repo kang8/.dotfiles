@@ -22,8 +22,8 @@ command -v kitty &> /dev/null && alias ssh='kitty +kitten ssh'
 # rg
 alias rga='rg --no-ignore --hidden'
 
-# neofetch
-type s > /dev/null || alias s='neofetch'
+# fastfetch
+type s > /dev/null || alias s='fastfetch'
 
 # lazygit set custom config file
 type lg > /dev/null || alias lg='lazygit'
