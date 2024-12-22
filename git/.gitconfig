@@ -17,6 +17,7 @@
     quotepath = false
     excludesfile = ~/.gitignore-global
     hooksPath = ~/.config/git/hooks
+    attributesfile = ~/.gitattributes-global
 [help]
     autocorrect = immediate
 [interactive]
@@ -57,6 +58,9 @@
     submodule = log
 [merge]
     conflictstyle = zdiff3
+[merge "mergiraf"]
+    name = mergiraf
+    driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P
 [push]
     autoSetupRemote = true
     default = current
