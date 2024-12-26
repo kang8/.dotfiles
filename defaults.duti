@@ -11,3 +11,6 @@ dev.zed.Zed                     .tf                                             
 dev.zed.Zed                     .sh                                             all
 dev.zed.Zed                     .ts                                             all
 dev.zed.Zed                     .mjs                                            all
+dev.zed.Zed                     .py                                             all
+dev.zed.Zed                     .yaml                                           all
+dev.zed.Zed                     .sql                                            all
