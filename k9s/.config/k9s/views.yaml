@@ -1,0 +1,9 @@
+views:
+  v1/pods:
+    sortColumn: STATUS:desc
+    columns:
+      - NAME
+      - READY
+      - STATUS
+      - IP
+      - NODE
