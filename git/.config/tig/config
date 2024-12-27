@@ -345,6 +345,7 @@ bind generic    B   @zsh -c "source $ZSH/lib/clipboard.zsh; git show -s --format
 bind generic    g   move-first-line
 bind generic    G   move-last-line
 bind main       G   move-last-line
+bind main       0   :goto HEAD
 
 
 # Colors
