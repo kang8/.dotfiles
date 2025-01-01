@@ -1,6 +1,14 @@
-31 11 * * 2 cd ~/.config/nvim && git fetch && git rebase origin/master && ~/.local/share/bob/nvim-bin/nvim --headless "+Lazy! restore" +qa
-0 11 * * * cd ~/.dotfiles && /opt/homebrew/bin/brew bundle dump --no-restart --force && make format
-5 11 * * * cd ~/Library/Rime && git pull
+# Run at 10:00pm every day
 0 10 * * * /opt/homebrew/bin/brew update && /opt/homebrew/bin/brew upgrade
 
+# Run at 10:05pm every day
 5 10 * * * ~/.local/bin/cleanup-merged-branches.sh
+
+# Run at 11:00pm every day
+0 11 * * * cd ~/.dotfiles && /opt/homebrew/bin/brew bundle dump --no-restart --force && make format
+
+# Run at 11:05pm every day
+5 11 * * * cd ~/Library/Rime && git pull
+
+# Run at 11:31pm every Tuesday
+31 11 * * 2 cd ~/.config/nvim && git fetch && git rebase origin/master && ~/.local/share/bob/nvim-bin/nvim --headless "+Lazy! restore" +qa
