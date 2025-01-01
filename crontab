@@ -10,5 +10,8 @@
 # Run at 11:05pm every day
 5 11 * * * cd ~/Library/Rime && git pull
 
+# Run at 15:00pm every day
+0 15 * * * ~/.local/bin/screenshot_all_displays.sh && open ~/Applications/ScreenshotAllDisplays.app
+
 # Run at 11:31pm every Tuesday
 31 11 * * 2 cd ~/.config/nvim && git fetch && git rebase origin/master && ~/.local/share/bob/nvim-bin/nvim --headless "+Lazy! restore" +qa
