@@ -28,5 +28,4 @@ if $is_full_screen; then
     open -g raycast://extensions/raycast/window-management/toggle-fullscreen
 else
     open -g raycast://extensions/raycast/window-management/next-display
-    open -g raycast://extensions/raycast/window-management/almost-maximize
 fi
