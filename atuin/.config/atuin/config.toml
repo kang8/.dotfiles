@@ -1,6 +1,6 @@
 ## which search mode to use
 ## possible values: prefix, fulltext, fuzzy, skim
-search_mode = "skim"
+search_mode = "fuzzy"
 
 ## what to do when the escape key is pressed when searching
 ## possible values: return-original, return-query
