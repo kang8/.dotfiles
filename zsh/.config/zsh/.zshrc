@@ -35,6 +35,7 @@ plugins=(
     kubectl
     direnv
     starship
+    jira
 )
 
 . $ZSH/oh-my-zsh.sh
