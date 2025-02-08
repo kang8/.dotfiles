@@ -8,3 +8,6 @@ shuf -n 1 /usr/share/dict/words
 
 # Password generate
 openssl rand -base64 24
+
+# List All Fonts
+fc-list | awk '{$1=""}1' | cut -d: -f1 | sort | uniq
