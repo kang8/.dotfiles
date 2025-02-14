@@ -13,5 +13,11 @@ bindkey -s '^[[109;6u' 'fzf_man^M'  # <C-S-m>
 bindkey -s '^s' 'navi^M'
 bindkey -s '^[[98;9u' '$(git branch --show-current)^I' # <cmd-b>
 
-bindkey '\C-x\C-e' edit-command-line
-bindkey -M vicmd 'm' edit-command-line
+function edit-command-line-with-ft() {
+    EDITOR='nvim -c "set ft=json"'
+    edit-command-line
+}
+zle -N edit-command-line-with-ft
+
+bindkey '\C-x\C-e' edit-command-line-with-ft
+bindkey -M vicmd 'm' edit-command-line-with-ft
