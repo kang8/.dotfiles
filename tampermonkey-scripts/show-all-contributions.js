@@ -2,7 +2,7 @@
 // @name              Show all contributions by year in the GitHub profile
 // @name:zh-CN        在 GitHub profile 页面以年份展示用户所有的贡献
 // @namespace         https://github.com/kang8
-// @version           0.0.4
+// @version           0.0.5
 // @updateURL         https://raw.githubusercontent.com/kang8/.dotfiles/master/tampermonkey-scripts/show-all-contributions.js
 // @downloadURL       https://raw.githubusercontent.com/kang8/.dotfiles/master/tampermonkey-scripts/show-all-contributions.js
 // @description       Show all contributions by year since the user was created in the GitHub profile page
@@ -18,8 +18,10 @@
 (async function () {
   'use strict';
 
-  // Wait for 1.5 seconds for the DOM to load.
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  const contributionsLastYearSelector =
+    'div.js-yearly-contributions > div:nth-child(1)';
+
+  await waitForElement(contributionsLastYearSelector);
 
   const pathArr = location.pathname.split('/');
 
@@ -35,7 +37,7 @@
     const userId = pathArr[1];
 
     const contributionsLastYear = document.querySelector(
-      'div.js-yearly-contributions > div:nth-child(1)',
+      contributionsLastYearSelector,
     );
 
     const contributionsAllYearsDiv = document.createElement('div');
@@ -147,4 +149,27 @@ function getYearByContributionsCalendar(childNode) {
     /\s/g,
     '',
   ).slice(-4);
+}
+
+/**
+ * @param {string} selector
+ */
+function waitForElement(selector) {
+  return new Promise((resolve) => {
+    if (document.querySelector(selector)) {
+      return resolve(document.querySelector(selector));
+    }
+
+    const observer = new MutationObserver(() => {
+      if (document.querySelector(selector)) {
+        observer.disconnect();
+        resolve(document.querySelector(selector));
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  });
 }
