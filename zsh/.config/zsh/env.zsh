@@ -8,6 +8,7 @@ export FZF_DEFAULT_OPTS='--color "light"'
 
 # fzf-tab
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'tree -C $realpath' # preview for cd
 
 export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude ".git"'
 export FZF_CTRL_T_OPTS="
