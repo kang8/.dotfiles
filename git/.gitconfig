@@ -73,7 +73,7 @@
     auto = 0
 [rebase]
     autoSquash = true
-    autostash = true
+    autoStash = true
 [sendemail]
     smtpserver = smtp.gmail.com
     smtpuser = yi1115610574@gmail.com
@@ -93,6 +93,9 @@
     fsckObjects = true
 [fetch]
     fsckObjects = true
+    prune = true
+    pruneTags = true
+    all = true
 [receive]
     fsckObjects = true
 [status]
