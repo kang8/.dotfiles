@@ -3,6 +3,7 @@
 
 add_newline = false
 right_format = """
+${custom.git_master_status}\
 ${custom.v2raya}\
 ${custom.ranger}\
 ${time}
@@ -54,6 +55,34 @@ style = 'yellow'
 [custom.v2raya]
 when = ''' lsof -nP -iTCP:$V2RAYA_ADDRESS | grep LISTEN '''
 format = '[󰰫$output]($style) '
+
+[custom.git_master_status]
+command = '''
+current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+if [[ -n $current_branch && $current_branch != "master" ]]; then
+  is_merged=$(git branch --merged origin/master | grep -w "$current_branch" || echo "")
+  if [[ -n $is_merged ]]; then
+    echo "merged"
+    exit 0
+  fi
+fi
+
+ahead=$(git rev-list --count origin/master..HEAD 2>/dev/null || echo "0")
+behind=$(git rev-list --count HEAD..origin/master 2>/dev/null || echo "0")
+
+if [[ $ahead -gt 0 && $behind -gt 0 ]]; then
+  echo "⇡$ahead⇣$behind"
+elif [[ $ahead -gt 0 ]]; then
+  echo "⇡$ahead"
+elif [[ $behind -gt 0 ]]; then
+  echo "⇣$behind"
+else
+  echo ""
+fi
+'''
+when = 'git rev-parse --is-inside-work-tree &>/dev/null'
+format = '[$output]($style) '
+style = 'red'
 
 ############
 # Disabled #
