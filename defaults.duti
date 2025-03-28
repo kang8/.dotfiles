@@ -14,3 +14,4 @@ dev.zed.Zed                     .mjs                                            
 dev.zed.Zed                     .py                                             all
 dev.zed.Zed                     .yaml                                           all
 dev.zed.Zed                     .sql                                            all
+dev.zed.Zed                     .ps1                                            all
