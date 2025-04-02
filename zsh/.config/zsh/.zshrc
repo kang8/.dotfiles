@@ -48,3 +48,7 @@ plugins=(
 # atuin setup
 export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
+
+# https://github.com/hchbaw/zce.zsh
+. $ZDOTDIR/zce.zsh
+zstyle ':zce:*' search-case smartcase

@@ -21,3 +21,5 @@ zle -N edit-command-line-with-ft
 
 bindkey '\C-x\C-e' edit-command-line-with-ft
 bindkey -M vicmd 'm' edit-command-line-with-ft
+
+bindkey "^[[105;6u" zce # <C-S-i>
