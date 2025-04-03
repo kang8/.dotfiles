@@ -7,8 +7,10 @@ export ZSH=~/.config/zsh/.oh-my-zsh
 export FZF_DEFAULT_OPTS='--color "light"'
 
 # fzf-tab
+zstyle ':fzf-tab:*' fzf-flags  --height=60%
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'tree -C $realpath' # preview for cd
+zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
+export LESSOPEN='|~/.config/zsh/.fzf-tab-preview %s'
 
 export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude ".git"'
 export FZF_CTRL_T_OPTS="
