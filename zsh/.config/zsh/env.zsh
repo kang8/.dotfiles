@@ -70,8 +70,9 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 setopt PUSHD_IGNORE_DUPS
 
-setopt nocaseglob # ignore case
-setopt correct # correct spelling mistakes
+setopt NO_CASE_GLOB # ignore case
+setopt GLOB_DOTS # include hidden files in globbing
+setopt CORRECT # correct spelling mistakes
 
 # customize variable
 [[ -e ~/.dotfiles/.env ]] && . ~/.dotfiles/.env
