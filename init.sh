@@ -81,6 +81,13 @@ else
     git clone --depth=1 https://github.com/z-shell/F-Sy-H.git $ZSH_CUSTOM/plugins/F-Sy-H
 fi
 
+if [[ -d ${ZSH}/custom/plugins/zsh-completions ]] ; then
+    echo "zsh-completions is already installed."
+else
+    echo "Install zsh plug: zsh-completions..."
+    git clone --depth=1 https://github.com/zsh-users/zsh-completions.git $ZSH_CUSTOM/plugins/zsh-completions
+fi
+
 ######## neovim ######## echo "\n"
 echo "neovim begging!!!"
 echo "\n"

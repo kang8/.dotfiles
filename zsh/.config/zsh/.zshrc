@@ -38,6 +38,9 @@ plugins=(
     jira
 )
 
+# zsh-completions setup
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+
 . $ZSH/oh-my-zsh.sh
 . $ZDOTDIR/vim-mode.zsh
 . $ZDOTDIR/vim-switch.zsh
