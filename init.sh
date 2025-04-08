@@ -88,6 +88,13 @@ else
     git clone --depth=1 https://github.com/zsh-users/zsh-completions.git $ZSH_CUSTOM/plugins/zsh-completions
 fi
 
+if [[ -d ${ZSH}/custom/plugins/jq ]] ; then
+    echo "jq-zsh-plugin is already installed."
+else
+    echo "Install zsh plug: jq-zsh-plugin..."
+    git clone --depth=1 https://github.com/reegnz/jq-zsh-plugin.git $ZSH_CUSTOM/plugins/jq
+fi
+
 ######## neovim ######## echo "\n"
 echo "neovim begging!!!"
 echo "\n"
