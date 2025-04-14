@@ -48,7 +48,7 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 . $ZDOTDIR/key-bindings.zsh
 . $ZDOTDIR/alias.zsh
 
-# TODO: send a PR to support  atuin
+# TODO: send a PR to oh-my-zsh for support atuin
 # atuin setup
 export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
@@ -56,3 +56,7 @@ eval "$(atuin init zsh)"
 # https://github.com/hchbaw/zce.zsh
 . $ZDOTDIR/zce.zsh
 zstyle ':zce:*' search-case smartcase
+
+# TODO: send a PR to oh-my-zsh for support navi
+# navi setup
+eval "$(navi widget zsh)"
