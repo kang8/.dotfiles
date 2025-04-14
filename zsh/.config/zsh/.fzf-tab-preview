@@ -10,5 +10,5 @@ elif [ "$category" = image ]; then
 elif [ "$category" = text ]; then
     bat --color=always "$1"
 else
-    bat --color=always
+    lesspipe.sh "$1" | bat --color=always
 fi
