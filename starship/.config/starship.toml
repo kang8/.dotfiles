@@ -46,6 +46,10 @@ style = 'yellow'
 [python]
 format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
 
+[nodejs]
+format = '[$symbol($version )]($style)'
+symbol = " "
+
 [custom.ranger]
 command = 'echo $RANGER_LEVEL' # shows output of command
 when = ''' [[ -n $RANGER_LEVEL ]] '''
