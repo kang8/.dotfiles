@@ -9,9 +9,6 @@ git stash --staged
 # Rebase into current origin branch
 git rebase origin/$(git rev-parse --abbrev-ref HEAD)
 
-# Reset the index and working tree into current origin branch
-git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
-
 # Follow the history of the file beyond renames (works only for a single file). Also apply to `tig`
 git log --follow <file_name>
 
