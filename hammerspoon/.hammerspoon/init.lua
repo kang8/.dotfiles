@@ -23,3 +23,7 @@ hs.hotkey.bind({"alt"}, "w", function()
   hs.alert.show(hs.application.frontmostApplication())
   print(hs.application.frontmostApplication():name())
 end)
+
+-- https://github.com/dzirtusss/vifari
+hs.loadSpoon("Vifari")
+spoon.Vifari:start() -- this will add hooks. `:stop()` to remove hooks
