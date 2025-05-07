@@ -2,3 +2,4 @@ patch:
   'menu/page_size': 8
   'punctuator/half_shape/<': '<'
   'punctuator/half_shape/>': '>'
+  'punctuator/half_shape/"': { pair: ['「', '」'] }
