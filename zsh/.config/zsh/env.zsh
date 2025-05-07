@@ -4,7 +4,7 @@ export LC_ALL=en_US.UTF-8
 export ZSH=~/.config/zsh/.oh-my-zsh
 
 # fzf
-export FZF_DEFAULT_OPTS='--color "light"'
+export FZF_DEFAULT_OPTS='--color "light" --style minimal'
 
 # fzf-tab
 zstyle ':fzf-tab:*' fzf-flags  --height=60%
