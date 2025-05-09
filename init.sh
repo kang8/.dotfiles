@@ -121,3 +121,16 @@ else
 fi
 
 stow gnupg
+
+########
+# MacOS setting
+########
+# Disable the .DS file creation
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+# Show the path bar in the Finder
+defaults write com.apple.finder "ShowPathbar" -bool "true" && killall Finder
+
+# Show hidden files in the Finder
+defaults write com.apple.finder "AppleShowAllFiles" -bool "true" && killall Finder
