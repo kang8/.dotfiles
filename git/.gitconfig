@@ -22,6 +22,7 @@
     autocorrect = immediate
 [interactive]
     diffFilter = delta --color-only
+    singlekey = true
 [add.interactive]
     useBuiltin = false
 [delta]
