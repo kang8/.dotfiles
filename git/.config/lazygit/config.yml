@@ -39,9 +39,9 @@ customCommands:
     command: 'git diff {{.SelectedFile.Name}} | delta --paging always'
     context: 'files'
     description: 'Show change(diff) in local'
-    subprocess: true
+    output: terminal
   - key: 'C'
     command: 'git diff --cached {{.SelectedFile.Name}} | delta --paging always'
     context: 'files'
     description: 'Show change(diff) in work tree'
-    subprocess: true
+    output: terminal
