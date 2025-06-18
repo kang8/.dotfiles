@@ -53,6 +53,7 @@ export PATH=$PATH:~/go/bin # go binary file
 [[ -d /opt/homebrew/opt/node@18/bin ]] && export PATH=/opt/homebrew/opt/node@18/bin:$PATH # Use Node.js LTS version
 [[ -d ~/.local/share/bob/nvim-bin ]] && export PATH=$PATH:~/.local/share/bob/nvim-bin # bob, a neovim version manager
 [[ -d /opt/homebrew/opt/rustup/bin ]] && export PATH=$PATH:/opt/homebrew/opt/rustup/bin # rustup
+[[ -d ~/.cargo/bin ]] && export PATH=$PATH:~/.cargo/bin # cargo
 
 # history
 export HISTFILE="$HOME/.zsh_history"
