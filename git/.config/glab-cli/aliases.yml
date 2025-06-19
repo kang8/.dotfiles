@@ -1,1 +1,2 @@
 open: mr view --web
+show: mr view --comments --system-logs
