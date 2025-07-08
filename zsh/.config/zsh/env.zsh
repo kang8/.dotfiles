@@ -100,3 +100,7 @@ export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
 
 # Windsurf
 export PATH=$PATH:$HOME/.codeium/windsurf/bin
+
+# fx, doc: https://fx.wtf/configuration#fx-theme[Documentation]
+export FX_SHOW_SIZE=true
+export FX_LINE_NUMBERS=true
