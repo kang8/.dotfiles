@@ -4,3 +4,6 @@ version: '2024-04-06'
 sort: by_weight
 ...
 onboarding	onboarding
+simplesat	simplesat
+部署	bus
+不是	bus
