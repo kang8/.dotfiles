@@ -3,7 +3,10 @@
 if [[ `uname` == 'Darwin' ]]; then
     open raycast://extensions/raycast/raycast/confetti
 
-    open /Applications/kitty.app
+    # Don't open the main kitty app if we're already in kitty-quick-access
+    if [[ "$KITTY_INSTALLATION_DIR" != "/Applications/kitty.app/Contents/kitty-quick-access.app/Contents/Resources/kitty" ]]; then
+        open /Applications/kitty.app
+    fi
 fi
 
 
