@@ -8,3 +8,6 @@ ifconfig -a | grep "inet "
 
 # Speed test (only for macOS)
 networkQuality -v
+
+# Get IP information
+curl -s https://ipinfo.io/json | jq
