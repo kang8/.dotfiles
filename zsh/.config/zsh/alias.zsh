@@ -41,7 +41,7 @@ if command -v git &> /dev/null; then
     alias gcod='git checkout --detach'
     alias gct='git checkout -b temp' # create temp branch
     alias gcmessage='git show -s --pretty=%B' # just show commit message
-    alias reset-git-hook-path='git config core.hooksPath .git/hooks'
+    alias unset-git-hook-path='git config --global --unset core.hooksPath'
     alias grbomi='git rebase origin/$(git_main_branch) --interactive'
 
     unalias gco
