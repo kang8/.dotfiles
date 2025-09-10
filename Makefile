@@ -4,4 +4,4 @@ duti: defaults.duti
 	duti defaults.duti
 
 format:
-	sort Brewfile --output=Brewfile
+	LC_ALL=C sort Brewfile --output=Brewfile
