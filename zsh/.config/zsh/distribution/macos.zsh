@@ -19,19 +19,19 @@ function manp {
 # Add the `g` prefix when search manual: use `man ggrep` instand of `man grep`
 
 # brew install grep
-[[ -d /opt/homebrew/opt/grep/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/grep/libexec/gnubin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/grep/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/grep/libexec/gnubin:$PATH"
 
 # brew install findutils, will install `find`, `xargs`, `locate`
-[[ -d /opt/homebrew/opt/findutils/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/findutils/libexec/gnubin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin:$PATH"
 
 # brew install coreutils, will install `dd`, `ls`, 'mv' and so on...
-[[ -d /opt/homebrew/opt/coreutils/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
 
 # brew install coreutils, will install `sed`
-[[ -d /opt/homebrew/opt/gnu-sed/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin:$PATH"
 
 # brew install diffutils, will install `diff`
-[[ -d /opt/homebrew/opt/diffutils/bin ]] && export PATH="/opt/homebrew/opt/diffutils/bin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/diffutils/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/diffutils/bin:$PATH"
 
 # brew install gnu-tar, will install `tar`
-[[ -d /opt/homebrew/opt/gnu-tar/libexec/gnubin ]] && export PATH="/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/gnu-tar/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/gnu-tar/libexec/gnubin:$PATH"
