@@ -134,3 +134,12 @@ defaults write com.apple.finder "ShowPathbar" -bool "true" && killall Finder
 
 # Show hidden files in the Finder
 defaults write com.apple.finder "AppleShowAllFiles" -bool "true" && killall Finder
+
+########
+# Miscellaneous items
+########
+
+# Make these files immutable to prevent external programs from modifying them
+chflags uimmutable ~/.zprofile
+chflags -h uimmutable ~/.zshrc # Use `-h` flag for symbolic links to change the link's flags rather than the target file
+# `chflags nouimmutable ~/.zprofile` If you want to modify them
