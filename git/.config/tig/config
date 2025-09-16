@@ -346,6 +346,7 @@ bind generic    g   move-first-line
 bind generic    G   move-last-line
 bind main       G   move-last-line
 bind main       0   :goto HEAD
+bind main       r   >git rebase -i %(commit)^
 
 
 # Colors
