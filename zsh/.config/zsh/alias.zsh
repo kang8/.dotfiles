@@ -89,6 +89,9 @@ fi
 # custom
 alias ct="cd `mktemp -d /tmp/artin-XXXXXX`"
 alias vt="ct && vim temp"
+alias path='echo -e ${PATH//:/\\n}'
+alias now='date +"%T"'
+alias nowdate='date +"%d-%m-%Y"'
 
 # tldr fuzzy find and preview, learning for https://www.youtube.com/watch?v=4EE7qlTaO7c
 alias tldrf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-window=right,70% | xargs tldr'
