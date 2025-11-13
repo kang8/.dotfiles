@@ -3,3 +3,5 @@ patch:
   'punctuator/half_shape/<': '<'
   'punctuator/half_shape/>': '>'
   'punctuator/half_shape/"': { pair: ['「', '」'] }
+  'switcher/hotkeys':
+    - 'F4'
