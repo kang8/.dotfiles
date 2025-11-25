@@ -4,8 +4,11 @@
   "permissions": {
     "allow": [
       "WebSearch"
-    ]
+    ],
+    "deny": [],
+    "defaultMode": "plan"
   },
+  "model": "opus",
   "hooks": {
     "Notification": [
       {
@@ -30,7 +33,7 @@
       }
     ]
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754063086050
   }
