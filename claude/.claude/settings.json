@@ -6,7 +6,7 @@
       "WebSearch"
     ],
     "deny": [],
-    "defaultMode": "plan"
+    "defaultMode": "default"
   },
   "model": "opus",
   "hooks": {
