@@ -45,6 +45,7 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 . $ZDOTDIR/vim-switch.zsh
 . $ZDOTDIR/key-bindings.zsh
 . $ZDOTDIR/alias.zsh
+. $ZDOTDIR/local-zshrc.zsh
 
 # TODO: send a PR to oh-my-zsh for support atuin
 # atuin setup
