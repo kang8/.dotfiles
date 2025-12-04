@@ -103,3 +103,5 @@
     submoduleSummary = true
 [advice]
     detachedHead = false
+[diff "pandoc"]
+    textconv = pandoc --sandbox --to=markdown
