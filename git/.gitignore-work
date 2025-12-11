@@ -12,3 +12,5 @@
 _typos.toml
 
 CLAUDE.md
+
+**/.claude/settings.local.json
