@@ -33,6 +33,7 @@
       }
     ]
   },
+  "syntaxHighlightingDisabled": false,
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754063086050
