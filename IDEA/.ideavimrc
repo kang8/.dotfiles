@@ -65,6 +65,7 @@ map <D-[>      :action PreviousTab<CR>
 map <F2>       :action RenameElement<CR>
 map <D-g>      :action Annotate<CR>
 
+" Require install https://github.com/hadix-lin/ideavim_extension
 " 在normal模式保持英文状态
 set keep-english-in-normal
 
