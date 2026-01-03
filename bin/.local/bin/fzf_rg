@@ -1,18 +1,56 @@
 #!/usr/bin/env bash
 
 # Switch between Ripgrep launcher mode and fzf filtering mode (CTRL-T)
-rm -f /tmp/rg-fzf-{r,f}
+# Switch between smart-case and ignore-case (CTRL-I)
+# Switch between fixed-strings and regex (CTRL-R)
+rm -f /tmp/rg-fzf-{r,f,case,regex}
+echo "smart" > /tmp/rg-fzf-case
+echo "fixed" > /tmp/rg-fzf-regex
 
-RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case --hidden --fixed-strings"
+RG_BASE="rg --column --line-number --no-heading --color=always --hidden"
+RG_PREFIX="$RG_BASE --smart-case --fixed-strings"
 INITIAL_QUERY="${*:-}"
+
+# Helper: build prompt - usage: P=$(. /tmp/rg-fzf-prompt)
+cat > /tmp/rg-fzf-prompt << 'SCRIPT'
+p="Ripgrep"
+[ "$(cat /tmp/rg-fzf-case)" = "ignore" ] && p="$p [i]"
+[ "$(cat /tmp/rg-fzf-regex)" = "regex" ] && p="$p [r]"
+echo "$p> "
+SCRIPT
+
+# Helper: build rg cmd - usage: CMD=$(. /tmp/rg-fzf-cmd)
+cat > /tmp/rg-fzf-cmd << 'SCRIPT'
+c="rg --column --line-number --no-heading --color=always --hidden"
+[ "$(cat /tmp/rg-fzf-case)" = "smart" ] && c="$c --smart-case" || c="$c --ignore-case"
+[ "$(cat /tmp/rg-fzf-regex)" = "fixed" ] && c="$c --fixed-strings"
+echo "$c"
+SCRIPT
+
 fzf --ansi \
     --cycle \
     --disabled --query "$INITIAL_QUERY" \
     --bind "start:reload:$RG_PREFIX {q}" \
-    --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
-    --bind 'ctrl-t:transform:[[ ! $FZF_PROMPT =~ Ripgrep ]] &&
-      echo "rebind(change)+change-prompt(Ripgrep> )+disable-search+transform-query:echo \{q} > /tmp/rg-fzf-f; cat /tmp/rg-fzf-r" ||
-      echo "unbind(change)+change-prompt(Fzf> )+enable-search+transform-query:echo \{q} > /tmp/rg-fzf-r; cat /tmp/rg-fzf-f"' \
+    --bind 'change:reload:sleep 0.1; $(. /tmp/rg-fzf-cmd) {q} || true' \
+    --bind 'ctrl-t:transform:
+      case "$FZF_PROMPT" in
+        *Ripgrep*) echo "unbind(change)+change-prompt(Fzf> )+enable-search+transform-query:echo \{q} > /tmp/rg-fzf-r; cat /tmp/rg-fzf-f" ;;
+        *) echo "rebind(change)+change-prompt($(. /tmp/rg-fzf-prompt))+disable-search+transform-query:echo \{q} > /tmp/rg-fzf-f; cat /tmp/rg-fzf-r" ;;
+      esac' \
+    --bind 'ctrl-i:transform:
+      if [ "$(cat /tmp/rg-fzf-case)" = "smart" ]; then
+        echo "ignore" > /tmp/rg-fzf-case;
+      else
+        echo "smart" > /tmp/rg-fzf-case;
+      fi;
+      echo "change-prompt($(. /tmp/rg-fzf-prompt))+reload:$(. /tmp/rg-fzf-cmd) {q}"' \
+    --bind 'ctrl-r:transform:
+      if [ "$(cat /tmp/rg-fzf-regex)" = "fixed" ]; then
+        echo "regex" > /tmp/rg-fzf-regex;
+      else
+        echo "fixed" > /tmp/rg-fzf-regex;
+      fi;
+      echo "change-prompt($(. /tmp/rg-fzf-prompt))+reload:$(. /tmp/rg-fzf-cmd) {q}"' \
     --bind "alt-k:preview-up,alt-p:preview-up" \
     --bind "alt-j:preview-down,alt-n:preview-down" \
     --bind "alt-u:preview-half-page-up" \
@@ -21,6 +59,7 @@ fzf --ansi \
     --bind "ctrl-/:toggle-preview" \
     --color "hl:-1:underline,hl+:-1:underline:reverse" \
     --prompt 'Ripgrep> ' \
+    --header 'C-t: Ripgrep/Fzf | C-i: case | C-r: regex' \
     --delimiter : \
     --tiebreak "begin" \
     --preview 'bat --color=always {1} --highlight-line {2}' \
