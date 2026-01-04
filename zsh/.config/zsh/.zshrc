@@ -59,3 +59,6 @@ zstyle ':zce:*' search-case smartcase
 # TODO: send a PR to oh-my-zsh for support navi
 # navi setup
 eval "$(navi widget zsh)"
+
+# wt https://github.com/max-sixty/worktrunk
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
