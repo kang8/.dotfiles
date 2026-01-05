@@ -13,8 +13,9 @@ spoon.InputSourceSwitch:setApplications({
     ["kitty"] = "ABC",
     ["PyCharm"] = "ABC",
     ["WebStorm"] = "ABC",
-    ["Cursor"] = "ABC",
-    ["Typing Mind"] = "Squirrel - Simplified",
+    ["Fork"] = "ABC",
+    ["IntelliJ IDEA"] = "ABC",
+    ["DataGrip"] = "ABC",
 })
 spoon.InputSourceSwitch:start()
 
