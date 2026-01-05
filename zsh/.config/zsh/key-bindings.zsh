@@ -15,12 +15,7 @@ bindkey -s '^[[98;9u' '$(git branch --show-current)^I' # <cmd-b>
 bindkey "^[[105;6u" zce # <C-S-i>
 bindkey '^[[106;6u' jq-complete # <C-S-j>
 
-function edit-command-line-with-ft() {
-    EDITOR='nvim -c "set ft=json"'
-    edit-command-line
-}
-zle -N edit-command-line-with-ft
-
 bindkey '\C-x\C-e' edit-command-line-with-ft
 bindkey -M vicmd 'm' edit-command-line-with-ft
 
+bindkey '^w' backward-kill-word-smart

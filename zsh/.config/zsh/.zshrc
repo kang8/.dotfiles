@@ -43,6 +43,7 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 . $ZSH/oh-my-zsh.sh
 . $ZDOTDIR/vim-mode.zsh
 . $ZDOTDIR/vim-switch.zsh
+. $ZDOTDIR/widgets.zsh
 . $ZDOTDIR/key-bindings.zsh
 . $ZDOTDIR/alias.zsh
 . $ZDOTDIR/local-zshrc.zsh
