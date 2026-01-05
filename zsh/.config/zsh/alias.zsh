@@ -87,8 +87,6 @@ if command -v awrit &> /dev/null; then
 fi
 
 # custom
-alias ct="cd `mktemp -d /tmp/artin-XXXXXX`"
-alias vt="ct && vim temp"
 alias path='echo -e ${PATH//:/\\n}'
 alias now='date +"%T"'
 alias nowdate='date +"%d-%m-%Y"'
