@@ -46,6 +46,8 @@ export PATH="$PNPM_HOME:$PATH"
 export PYTHON_AUTO_VRUN=true
 export PYTHON_VENV_NAME=venv
 export VIRTUAL_ENV_DISABLE_PROMPT=1
+# ruby
+[[ -d /opt/homebrew/opt/ruby/bin ]] && export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
