@@ -6,7 +6,7 @@
       "WebSearch"
     ],
     "deny": [],
-    "defaultMode": "default"
+    "defaultMode": "acceptEdits"
   },
   "model": "claude-opus-4-5@20251101",
   "hooks": {
