@@ -33,6 +33,9 @@
       }
     ]
   },
+  "enabledPlugins": {
+    "pyright-lsp@claude-plugins-official": true
+  },
   "syntaxHighlightingDisabled": false,
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
