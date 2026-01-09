@@ -16,18 +16,19 @@ spoon.InputSourceSwitch:setApplications({
     ["Fork"] = "ABC",
     ["IntelliJ IDEA"] = "ABC",
     ["DataGrip"] = "ABC",
+    ["kitty-quick-access"] = { source = "ABC", watcher = "application" },
 })
 spoon.InputSourceSwitch:start()
 
 -- InputSourceSwitch uses hs.window.filter which can't capture kitty-quick-access focus events, use application.watcher instead
-AppWatcher = hs.application.watcher.new(function(appName, eventType, appObj)
-  if eventType == hs.application.watcher.activated then
-    if appName == "kitty-quick-access" then
-      hs.keycodes.currentSourceID("com.apple.keylayout.ABC")
-    end
-  end
-end)
-AppWatcher:start()
+-- AppWatcher = hs.application.watcher.new(function(appName, eventType, appObj)
+--   if eventType == hs.application.watcher.activated then
+--     if appName == "kitty-quick-access" then
+--       hs.keycodes.currentSourceID("com.apple.keylayout.ABC")
+--     end
+--   end
+-- end)
+-- AppWatcher:start()
 
 -- Other
 hs.hotkey.bind({"alt"}, "w", function()
