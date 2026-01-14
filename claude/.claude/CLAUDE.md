@@ -14,3 +14,9 @@ Important Notes:
 - Do not include unstaged changes in commit message descriptions
 - Trust that the user has properly staged the intended changes
 - Focus commit messages on what is actually being committed (staged files only)
+
+## GitLab Access
+
+When accessing GitLab data (issues, merge requests, pipelines, etc.):
+
+- Use the `glab` CLI tool instead of API calls or other methods
