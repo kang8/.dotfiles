@@ -4,3 +4,14 @@
 sf org display --verbose -o <org_alias> --json | jq -r '.result.accessToken'
 
 $ org_alias: sf org list --json | jq -r '.result.nonScratchOrgs.[].alias'
+
+# Display all orgs
+sf org list
+
+# List the configuration variables
+sf config list
+
+# Set default org
+sf config set target-org <org_alias>
+
+$ org_alias: sf org list --json | jq -r '.result.nonScratchOrgs.[].alias'
