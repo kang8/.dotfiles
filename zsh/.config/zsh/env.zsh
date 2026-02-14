@@ -22,7 +22,7 @@ export FZF_ALT_C_OPTS="
     --bind 'ctrl-/:change-preview-window(hidden|)'"
 
 # bat
-export BAT_THEME="Coldark-Cold"
+export BAT_THEME="Catppuccin Latte"
 
 # lazygit
 export LG_CONFIG_FILE="${HOME}/.config/lazygit/config.yml"
