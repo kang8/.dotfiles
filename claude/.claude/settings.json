@@ -3,7 +3,8 @@
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "WebFetch"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
