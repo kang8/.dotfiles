@@ -1,11 +1,5 @@
 # Custom ZLE widgets
 
-# Edit command line with filetype set to json
-function edit-command-line-with-ft() {
-    EDITOR='nvim -c "set ft=json"'
-    edit-command-line
-}
-zle -N edit-command-line-with-ft
 
 # Custom backward-kill-word:
 # - Deletes alphanumeric characters continuously, stops at symbols
