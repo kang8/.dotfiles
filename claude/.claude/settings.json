@@ -4,6 +4,7 @@
   "permissions": {
     "allow": [
       "WebSearch",
+      "Bash(glab mr view:*)",
       "WebFetch"
     ],
     "deny": [],
