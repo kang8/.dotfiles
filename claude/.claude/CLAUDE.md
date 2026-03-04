@@ -15,6 +15,10 @@ Important Notes:
 - Trust that the user has properly staged the intended changes
 - Focus commit messages on what is actually being committed (staged files only)
 
+## Git Branch Naming
+
+- Bugfix branches must use the prefix `bugfix/`
+
 ## GitLab Access
 
 When accessing GitLab data (issues, merge requests, pipelines, etc.):
