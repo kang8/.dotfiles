@@ -107,3 +107,6 @@ export PATH=$PATH:$HOME/.codeium/windsurf/bin
 export FX_SHOW_SIZE=true
 export FX_LINE_NUMBERS=true
 export FX_INDENT=1
+
+# bison
+export PATH="/opt/homebrew/opt/bison/bin:$PATH"
