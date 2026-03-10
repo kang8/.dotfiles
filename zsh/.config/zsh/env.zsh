@@ -109,4 +109,4 @@ export FX_LINE_NUMBERS=true
 export FX_INDENT=1
 
 # bison
-export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+export PATH="$(brew --prefix bison)/bin:$PATH"
