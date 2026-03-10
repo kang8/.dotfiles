@@ -122,6 +122,9 @@ fi
 
 stow gnupg
 
+# Create symlink for pinentry-mac to support both Apple Silicon and Intel
+ln -sf "$(brew --prefix pinentry-mac)/bin/pinentry-mac" ~/.local/bin/pinentry-mac
+
 ########
 # MacOS setting
 ########
