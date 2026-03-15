@@ -40,21 +40,21 @@ export PATH="$PNPM_HOME:$PATH"
 [[ ! -r ~/.opam/opam-init/init.zsh ]] || source ~/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
 
 # llvm
-[[ -d /opt/homebrew/opt/llvm/bin ]] && export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/llvm/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/llvm/bin:$PATH"
 # python
-[[ -d /opt/homebrew/opt/python/libexec/bin ]] && export PATH="/opt/homebrew/opt/python/libexec/bin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/python/libexec/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/python/libexec/bin:$PATH"
 export PYTHON_AUTO_VRUN=true
 export PYTHON_VENV_NAME=venv
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 # ruby
-[[ -d /opt/homebrew/opt/ruby/bin ]] && export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/ruby/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/ruby/bin:$PATH"
 
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
 export PATH=$PATH:~/go/bin # go binary file
-[[ -d /opt/homebrew/opt/node@24/bin ]] && export PATH=/opt/homebrew/opt/node@24/bin:$PATH # Use Node.js LTS version
+[[ -d $HOMEBREW_PREFIX/opt/node@24/bin ]] && export PATH=$HOMEBREW_PREFIX/opt/node@24/bin:$PATH # Use Node.js LTS version
 [[ -d ~/.local/share/bob/nvim-bin ]] && export PATH=$PATH:~/.local/share/bob/nvim-bin # bob, a neovim version manager
-[[ -d /opt/homebrew/opt/rustup/bin ]] && export PATH=$PATH:/opt/homebrew/opt/rustup/bin # rustup
+[[ -d $HOMEBREW_PREFIX/opt/rustup/bin ]] && export PATH=$PATH:$HOMEBREW_PREFIX/opt/rustup/bin # rustup
 [[ -d ~/.cargo/bin ]] && export PATH=$PATH:~/.cargo/bin # cargo
 
 # history
@@ -109,4 +109,4 @@ export FX_LINE_NUMBERS=true
 export FX_INDENT=1
 
 # bison
-export PATH="$(brew --prefix bison)/bin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/bison/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/bison/bin:$PATH"
