@@ -85,8 +85,8 @@ brew "mkcert"
 brew "mosh"
 brew "navi"
 brew "ncdu"
-brew "node", link: false
-brew "node@24", link: true
+brew "node"
+brew "node@24"
 brew "nss"
 brew "onefetch"
 brew "openssh"
