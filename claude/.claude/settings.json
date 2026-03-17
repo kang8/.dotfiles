@@ -44,8 +44,9 @@
   },
   "syntaxHighlightingDisabled": false,
   "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
   "feedbackSurveyState": {
     "lastShownTime": 1754063086050
   },
-  "effortLevel": "high"
+  "skipDangerousModePermissionPrompt": true
 }
