@@ -5,6 +5,7 @@
     "allow": [
       "WebSearch",
       "Bash(glab mr view:*)",
+      "Bash(git status:*)",
       "WebFetch"
     ],
     "deny": [],
