@@ -48,6 +48,8 @@ export PYTHON_VENV_NAME=venv
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 # ruby
 [[ -d $HOMEBREW_PREFIX/opt/ruby/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/ruby/bin:$PATH"
+# postgresql client interface
+[[ -d $HOMEBREW_PREFIX/opt/libpq/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/libpq/bin:$PATH"
 
 # PATH
 export PATH=$PATH:~/.local/bin # customize binary file and python binary file
