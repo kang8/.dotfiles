@@ -1,0 +1,10 @@
+% tailscale
+
+# Start Tailscale service
+sudo brew services start tailscale
+
+# Stop Tailscale service
+sudo brew services stop tailscale
+
+# Show Tailscale status
+tailscale status
