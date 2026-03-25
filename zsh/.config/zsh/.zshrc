@@ -1,5 +1,4 @@
 . $ZDOTDIR/env.zsh
-. $ZDOTDIR/distribution/setup.zsh
 . $ZDOTDIR/proxy.zsh
 
 plugins=(

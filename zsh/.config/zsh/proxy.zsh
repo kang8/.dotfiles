@@ -1,3 +1,6 @@
+export proxy_ip=127.0.0.1
+export proxy_http_port=20171
+
 function echo_proxy() {
     echo "use_proxy: $use_proxy"
     echo "http_proxy: $http_proxy"

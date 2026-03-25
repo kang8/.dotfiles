@@ -112,3 +112,24 @@ export FX_INDENT=1
 
 # bison
 [[ -d $HOMEBREW_PREFIX/opt/bison/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/bison/bin:$PATH"
+
+# Use GNU tools instead of macOS BSD tools
+# Add the `g` prefix when search manual: use `man ggrep` instead of `man grep`
+[[ -d $HOMEBREW_PREFIX/opt/grep/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/grep/libexec/gnubin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/diffutils/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/diffutils/bin:$PATH"
+[[ -d $HOMEBREW_PREFIX/opt/gnu-tar/libexec/gnubin ]] && export PATH="$HOMEBREW_PREFIX/opt/gnu-tar/libexec/gnubin:$PATH"
+
+# Preview man pages in Preview.app
+function manp {
+    local page
+    if (( $# > 0 )); then
+        for page in "$@"; do
+            man -t "$page" | open -f -a Preview
+        done
+    else
+        print 'What manual page do you want?' >&2
+    fi
+}
