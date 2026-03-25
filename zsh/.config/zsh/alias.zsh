@@ -11,7 +11,7 @@ else
 fi
 
 # bash
-alias bash 'bash --norc'
+alias bash='bash --norc'
 
 # vim
 command -v nvim &> /dev/null && alias vim='nvim'
