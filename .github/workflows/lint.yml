@@ -11,5 +11,5 @@ jobs:
         uses: crate-ci/typos@v1.44.0
       - uses: denoland/setup-deno@v2
         with:
-          deno-version: 2.7.7 # Run with latest stable Deno.
+          deno-version: 2.7.9 # Run with latest stable Deno.
       - run: deno fmt --check
