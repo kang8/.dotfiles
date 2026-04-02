@@ -57,7 +57,7 @@ format = '[ $output]($style) '
 style = 'yellow'
 
 [custom.v2raya]
-when = ''' lsof -nP -iTCP:$V2RAYA_ADDRESS | grep LISTEN '''
+when = ''' nc -z 127.0.0.1 $V2RAYA_ADDRESS 2>/dev/null '''
 format = '[󰰫$output]($style) '
 
 [custom.git_master_status]

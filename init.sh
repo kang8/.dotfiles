@@ -9,7 +9,7 @@ cp .env.example .env
 ########
 # stow
 ########
-echo "stow begging!!!"
+echo "stow beginning!!!"
 
 stow_exclude=('~/' 'ibus-rime/' 'sublime-text/' 'wakatime/' 'gnupg/' 'raycast-script/' 'tampermonkey-scripts')
 
@@ -32,71 +32,29 @@ else
     git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ${ZSH}
 fi
 
-if [[ -d "${ZSH}/custom/plugins/zsh-syntax-highlighting"  ]]; then
-    echo "zsh-syntax-highlighting is already installed."
-else
-    echo "Install zsh plug: zsh-syntax-highlighting..."
-    git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH}/custom/plugins/zsh-syntax-highlighting
-fi
+install_zsh_plugin() {
+    local name=$1 repo=$2
+    local dest="${ZSH}/custom/plugins/${name}"
+    if [[ -d "$dest" ]]; then
+        echo "${name} is already installed."
+    else
+        echo "Install zsh plug: ${name}..."
+        git clone --depth=1 "$repo" "$dest"
+    fi
+}
 
-if [[ -d ${ZSH}/custom/plugins/zsh-autosuggestions ]] ; then
-    echo "zsh-autosuggestions is already installed."
-else
-    echo "Install zsh plug: zsh-autosuggestions..."
-    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH}/custom/plugins/zsh-autosuggestions
-fi
+install_zsh_plugin zsh-autosuggestions https://github.com/zsh-users/zsh-autosuggestions
+install_zsh_plugin fzf-tab https://github.com/Aloxaf/fzf-tab.git
+install_zsh_plugin z.lua https://github.com/skywind3000/z.lua.git
+install_zsh_plugin zsh-autopair https://github.com/hlissner/zsh-autopair
+install_zsh_plugin you-should-use https://github.com/MichaelAquilina/zsh-you-should-use.git
+install_zsh_plugin fast-syntax-highlighting https://github.com/zdharma-continuum/fast-syntax-highlighting.git
+install_zsh_plugin zsh-completions https://github.com/zsh-users/zsh-completions.git
+install_zsh_plugin jq https://github.com/reegnz/jq-zsh-plugin.git
 
-if [[ -d ${ZSH}/custom/plugins/fzf-tab ]] ; then
-    echo "fzf-tab is already installed."
-else
-    echo "Install zsh plug: fzf-tab..."
-    git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git ${ZSH}/custom/plugins/fzf-tab
-fi
-
-if [[ -d ${ZSH}/custom/plugins/z.lua ]] ; then
-    echo "z.lua is already installed."
-else
-    echo "Install zsh plug: z.lua..."
-    git clone --depth=1 https://github.com/skywind3000/z.lua.git ${ZSH}/custom/plugins/z.lua
-fi
-
-if [[ -d ${ZSH}/custom/plugins/zsh-autopair ]] ; then
-    echo "zsh-autopair is already installed."
-else
-    echo "Install zsh plug: zsh-autopair..."
-    git clone --depth=1 https://github.com/hlissner/zsh-autopair ${ZSH}/custom/plugins/zsh-autopair
-fi
-
-if [[ -d ${ZSH}/custom/plugins/you-should-use ]] ; then
-    echo "you-should-use is already installed."
-else
-    echo "Install zsh plug: you-should-use..."
-    git clone --depth=1 https://github.com/MichaelAquilina/zsh-you-should-use.git $ZSH_CUSTOM/plugins/you-should-use
-fi
-
-if [[ -d ${ZSH}/custom/plugins/F-Sy-H ]] ; then
-    echo "F-Sy-H is already installed."
-else
-    echo "Install zsh plug: F-Sy-H..."
-    git clone --depth=1 https://github.com/z-shell/F-Sy-H.git $ZSH_CUSTOM/plugins/F-Sy-H
-fi
-
-if [[ -d ${ZSH}/custom/plugins/zsh-completions ]] ; then
-    echo "zsh-completions is already installed."
-else
-    echo "Install zsh plug: zsh-completions..."
-    git clone --depth=1 https://github.com/zsh-users/zsh-completions.git $ZSH_CUSTOM/plugins/zsh-completions
-fi
-
-if [[ -d ${ZSH}/custom/plugins/jq ]] ; then
-    echo "jq-zsh-plugin is already installed."
-else
-    echo "Install zsh plug: jq-zsh-plugin..."
-    git clone --depth=1 https://github.com/reegnz/jq-zsh-plugin.git $ZSH_CUSTOM/plugins/jq
-fi
-
-######## neovim ######## echo "\n"
-echo "neovim begging!!!"
+######## neovim ########
+echo "\n"
+echo "neovim beginning!!!"
 echo "\n"
 if [[ -d ~/.config/nvim ]];then
     echo "~/.config/nvim is already installed."
@@ -108,7 +66,7 @@ fi
 # gpg
 ########
 echo "\n"
-echo "gpg begging!!!"
+echo "gpg beginning!!!"
 echo "\n"
 
 # create ~/.gnupg/

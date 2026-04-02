@@ -6,11 +6,9 @@ plugins=(
     vi-mode
     git
     git-auto-fetch
-    zsh-syntax-highlighting
-    F-Sy-H
+    fast-syntax-highlighting
     zsh-autosuggestions
     fzf
-    systemd
     docker
     docker-compose
     sudo
