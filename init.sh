@@ -50,7 +50,6 @@ install_zsh_plugin zsh-autopair https://github.com/hlissner/zsh-autopair
 install_zsh_plugin you-should-use https://github.com/MichaelAquilina/zsh-you-should-use.git
 install_zsh_plugin fast-syntax-highlighting https://github.com/zdharma-continuum/fast-syntax-highlighting.git
 install_zsh_plugin zsh-completions https://github.com/zsh-users/zsh-completions.git
-install_zsh_plugin jq https://github.com/reegnz/jq-zsh-plugin.git
 
 ######## neovim ########
 echo "\n"

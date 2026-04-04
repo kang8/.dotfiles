@@ -31,7 +31,6 @@ plugins=(
     direnv
     starship
     jira
-    jq
 )
 
 # zsh-completions setup
