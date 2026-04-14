@@ -12,6 +12,9 @@
     "defaultMode": "acceptEdits"
   },
   "model": "claude-opus-4-6",
+  "env": {
+    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"
+  },
   "hooks": {
     "Notification": [
       {
@@ -31,6 +34,10 @@
           {
             "type": "command",
             "command": "node ~/.claude/claude-hook-handler.mjs"
+          },
+          {
+            "type": "command",
+            "command": "bash ~/.claude/set-session-title.sh"
           }
         ]
       }
