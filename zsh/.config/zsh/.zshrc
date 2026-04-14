@@ -30,7 +30,6 @@ plugins=(
     kubectl
     direnv
     starship
-    jira
 )
 
 # zsh-completions setup
