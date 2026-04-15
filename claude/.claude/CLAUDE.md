@@ -24,3 +24,18 @@ Important Notes:
 When accessing GitLab data (issues, merge requests, pipelines, etc.):
 
 - Use the `glab` CLI tool instead of API calls or other methods
+
+## Information Accuracy
+
+When encountering uncertain or unfamiliar content:
+
+- **Do not guess or fabricate** — if you are not confident about a fact, API,
+  configuration, version, behavior, or any technical detail, explicitly state
+  the uncertainty
+- **Look up the information source** — use available tools (documentation
+  lookup, web search, codebase search, etc.) to find authoritative information
+- **Provide citations** — always include where the information came from
+  (official docs URL, file path, man page, etc.) so the user can verify
+- **Cross-reference multiple sources** — validate findings against at least two
+  independent sources when possible to ensure accuracy and reduce the risk of
+  outdated or incorrect information
