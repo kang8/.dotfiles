@@ -9,5 +9,8 @@ shuf -n 1 /usr/share/dict/words
 # Password generate
 openssl rand -base64 24
 
+# Show only agent commands
+atuin search --author '$all-agent' -- ''
+
 # List All Fonts
 fc-list | awk '{$1=""}1' | cut -d: -f1 | sort | uniq
