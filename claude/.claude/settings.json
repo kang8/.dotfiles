@@ -16,6 +16,17 @@
     "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"
   },
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/set-title-status.sh run"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "",
@@ -23,6 +34,10 @@
           {
             "type": "command",
             "command": "node ~/.claude/claude-hook-handler.mjs"
+          },
+          {
+            "type": "command",
+            "command": "bash ~/.claude/set-title-status.sh alert"
           }
         ]
       }
@@ -70,7 +85,7 @@
           },
           {
             "type": "command",
-            "command": "bash ~/.claude/set-session-title.sh"
+            "command": "bash ~/.claude/set-title-status.sh done"
           }
         ]
       }
