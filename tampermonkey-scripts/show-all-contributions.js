@@ -2,7 +2,7 @@
 // @name              Show all contributions by year in the GitHub profile
 // @name:zh-CN        在 GitHub profile 页面以年份展示用户所有的贡献
 // @namespace         https://github.com/kang8
-// @version           0.0.5
+// @version           0.0.6
 // @updateURL         https://raw.githubusercontent.com/kang8/.dotfiles/master/tampermonkey-scripts/show-all-contributions.js
 // @downloadURL       https://raw.githubusercontent.com/kang8/.dotfiles/master/tampermonkey-scripts/show-all-contributions.js
 // @description       Show all contributions by year since the user was created in the GitHub profile page
@@ -45,15 +45,17 @@
     contributionsAllYearsDiv.id = 'contributions-all-years';
     contributionsLastYear.after(contributionsAllYearsDiv);
 
-    const details = document.createElement('details');
-    details.className = 'py-3';
-    details.innerHTML =
-      '<summary class="px-3">All contributions by year</summary>';
-    contributionsAllYearsDiv.append(details);
-
     const totalYearsCreated =
       document.querySelectorAll('div.js-profile-timeline-year-list > ul > li')
         .length;
+
+    const details = document.createElement('details');
+    details.className = 'py-3';
+
+    const summary = createSummaryElement(totalYearsCreated, details);
+    details.append(summary);
+    contributionsAllYearsDiv.append(details);
+
     const thisYear = new Date().getFullYear();
 
     for (let index = 0; index < totalYearsCreated; index++) {
@@ -172,4 +174,92 @@ function waitForElement(selector) {
       subtree: true,
     });
   });
+}
+
+/**
+ * @param {number} totalYears
+ * @param {HTMLDetailsElement} details
+ * @returns {HTMLElement}
+ */
+function createSummaryElement(totalYears, details) {
+  const summary = document.createElement('summary');
+  summary.className = 'px-3';
+  Object.assign(summary.style, {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    padding: '10px 16px',
+    fontSize: '14px',
+    fontWeight: '600',
+    listStyle: 'none',
+    userSelect: 'none',
+  });
+
+  const calendarIcon = createSVG(
+    'M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2H13a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h.75V.75A.75.75 0 0 1 4.75 0M3.5 7v6.5h9V7zm9-1V3.5h-9V6z',
+    'octicon mr-2',
+  );
+  calendarIcon.style.flexShrink = '0';
+  calendarIcon.style.color = 'var(--fgColor-muted, var(--color-fg-muted))';
+
+  const titleSpan = document.createElement('span');
+  titleSpan.textContent = 'All contributions by year';
+  titleSpan.style.flex = '1';
+
+  const countBadge = document.createElement('span');
+  countBadge.textContent = totalYears + ' years';
+  Object.assign(countBadge.style, {
+    fontSize: '12px',
+    fontWeight: '500',
+    color: 'var(--fgColor-muted, var(--color-fg-muted))',
+    backgroundColor: 'var(--bgColor-neutral-muted, var(--color-neutral-muted))',
+    padding: '2px 8px',
+    borderRadius: '20px',
+    marginRight: '8px',
+  });
+
+  const chevron = createSVG(
+    'M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0z',
+    '',
+  );
+  Object.assign(chevron.style, {
+    flexShrink: '0',
+    color: 'var(--fgColor-muted, var(--color-fg-muted))',
+    transition: 'transform 0.2s ease',
+  });
+
+  summary.addEventListener('mouseenter', () => {
+    summary.style.backgroundColor =
+      'var(--bgColor-neutral-muted, var(--color-neutral-muted))';
+  });
+  summary.addEventListener('mouseleave', () => {
+    summary.style.backgroundColor = '';
+  });
+
+  details.addEventListener('toggle', () => {
+    chevron.style.transform = details.open ? 'rotate(180deg)' : '';
+  });
+
+  summary.append(calendarIcon, titleSpan, countBadge, chevron);
+  return summary;
+}
+
+/**
+ * @param {string} pathData
+ * @param {string} className
+ * @returns {SVGElement}
+ */
+function createSVG(pathData, className) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 16 16');
+  svg.setAttribute('width', '16');
+  svg.setAttribute('height', '16');
+  svg.setAttribute('fill', 'currentColor');
+  svg.setAttribute('class', className);
+
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', pathData);
+  svg.append(path);
+
+  return svg;
 }

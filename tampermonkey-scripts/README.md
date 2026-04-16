@@ -16,7 +16,5 @@
 #### Features
 
 - Show ALL contributions by year in GitHub profile
-
-#### Possible subsequent improvements
-
-- [ ] Provide an option to remember default expand/close toggle
+- Styled summary bar with calendar icon, year count badge, and animated chevron
+- Respects GitHub's light/dark theme via CSS custom properties
