@@ -6,6 +6,8 @@
       "WebSearch",
       "Bash(glab mr view:*)",
       "Bash(git status:*)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr checks *)",
       "WebFetch"
     ],
     "deny": [],
@@ -101,6 +103,7 @@
     "pr-review-toolkit@claude-plugins-official": true,
     "ralph-loop@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
     "visual-explainer@visual-explainer-marketplace": true
   },
   "extraKnownMarketplaces": {
@@ -114,6 +117,7 @@
   "syntaxHighlightingDisabled": false,
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754063086050
