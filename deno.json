@@ -3,6 +3,10 @@
     "useTabs": false,
     "singleQuote": true,
     "indentWidth": 2,
-    "semiColons": true
+    "semiColons": true,
+    "exclude": [
+      "kitty/.config/kitty/kitty_grab",
+      "ranger/.config/ranger/plugins/ranger_devicons"
+    ]
   }
 }
