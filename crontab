@@ -13,5 +13,8 @@
 # Run at 15:00 every day
 0 15 * * * ~/.local/bin/screenshot_all_displays.sh && open ~/Applications/ScreenshotAllDisplays.app
 
+# Run at 11:10 every day
+10 11 * * * cd ~/.dotfiles && git submodule update --remote
+
 # Run at 11:31 every Tuesday
 31 11 * * 2 cd ~/.config/nvim && git fetch && git rebase origin/master && ~/.local/share/bob/nvim-bin/nvim --headless "+Lazy! restore" +qa
