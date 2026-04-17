@@ -12,7 +12,6 @@ plugins=(
     docker
     docker-compose
     sudo
-    composer
     gpg-agent
     fzf-tab
     rust

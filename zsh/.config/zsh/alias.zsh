@@ -93,3 +93,9 @@ alias nowdate='date +"%d-%m-%Y"'
 
 # tldr fuzzy find and preview, learning for https://www.youtube.com/watch?v=4EE7qlTaO7c
 alias tldrf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-window=right,70% | xargs tldr'
+
+# Claude Code
+alias c='claude'
+alias continue='claude --continue'
+alias resume='claude --resume'
+alias commit='claude commit'
