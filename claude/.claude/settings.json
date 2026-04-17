@@ -8,6 +8,9 @@
       "Bash(git status:*)",
       "Bash(gh pr view *)",
       "Bash(gh pr checks *)",
+      "Bash(gh pr list *)",
+      "Bash(gh issue list *)",
+      "Bash(gh issue view *)",
       "WebFetch"
     ],
     "deny": [],
@@ -104,6 +107,7 @@
     "ralph-loop@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
     "visual-explainer@visual-explainer-marketplace": true
   },
   "extraKnownMarketplaces": {
