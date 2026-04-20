@@ -1,0 +1,22 @@
+[ -z "$PS1" ] && return
+
+[ -f /etc/bashrc ] && . /etc/bashrc
+[ -f ~/.bashrc.local ] && . ~/.bashrc.local
+
+shopt -s autocd
+shopt -s histappend
+shopt -s checkwinsize
+
+HISTSIZE=10000
+HISTFILESIZE=20000
+HISTCONTROL=ignoreboth
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ll='ls -lah --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF --color=auto'
+alias grep='grep --color=auto'
+
+PS1='\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\$ '
