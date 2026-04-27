@@ -5,7 +5,7 @@
 5 10 * * * ~/.local/bin/cleanup-merged-branches.sh
 
 # Run at 11:00 every day
-0 11 * * * cd ~/.dotfiles && /opt/homebrew/bin/brew bundle dump --no-restart --force && make format
+0 11 * * * /bin/zsh -lc 'cd ~/.dotfiles && brew bundle dump --no-restart --force && make format'
 
 # Run at 11:05 every day
 5 11 * * * cd ~/Library/Rime && git pull
