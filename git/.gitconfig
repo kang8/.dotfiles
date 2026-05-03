@@ -16,15 +16,12 @@
     }"
     quotepath = false
     excludesfile = ~/.gitignore-global
-    hooksPath = ~/.config/git/hooks
     attributesfile = ~/.gitattributes-global
 [help]
     autocorrect = immediate
 [interactive]
     diffFilter = delta --color-only
     singlekey = true
-[add.interactive]
-    useBuiltin = false
 [delta]
     true-color = always
     line-numbers = true
@@ -67,9 +64,14 @@
     default = current
 [alias]
     cleanup = !zsh -c --interactive 'gbda' # use onmyzsh function
-    history = !git log --graph --decorate --oneline $(git rev-list --walk-reflogs --all) # All history include orphan commit
     fixup = "!git log -n 15 --pretty=format:'%h %cs |%aL| %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
     open = browse
+[hook "commit-confetti"]
+    event = post-commit
+    command = ~/.config/git/hooks/post-commit
+[http]
+    maxRetries = 3
+    maxRetryTime = 60
 [gc]
     auto = 0
 [rebase]
@@ -101,6 +103,7 @@
     fsckObjects = true
 [status]
     submoduleSummary = true
+    compareBranches = @{upstream} @{push}
 [advice]
     detachedHead = false
 [diff "pandoc"]

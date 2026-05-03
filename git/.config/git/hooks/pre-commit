@@ -1,5 +1,0 @@
-#!/bin/sh
-
-if [ -x ./.git/hooks/pre-commit ]; then
-    ./.git/hooks/pre-commit "$@"
-fi
