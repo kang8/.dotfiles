@@ -19,6 +19,13 @@
     "deny": [],
     "defaultMode": "acceptEdits"
   },
+  "sandbox": {
+    "filesystem": {
+      "allowWrite": [
+        "~/.cache/node/corepack/"
+      ]
+    }
+  },
   "model": "claude-opus-4-7",
   "hooks": {
     "UserPromptSubmit": [
