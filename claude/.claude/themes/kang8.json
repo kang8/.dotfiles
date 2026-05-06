@@ -1,0 +1,9 @@
+{
+  "name": "kang8",
+  "base": "light",
+  "overrides": {
+    "subtle": "rgb(37,99,235)",
+    "bashMessageBackgroundColor": "rgb(250, 245, 10)",
+    "userMessageBackground": "rgb(240, 200, 240)"
+  }
+}
