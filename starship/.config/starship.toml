@@ -12,7 +12,7 @@ ${time}
 [character]
 success_symbol = '\$'
 error_symbol = '✗'
-vicmd_symbol = 'V'
+vimcmd_symbol = 'V'
 
 [[battery.display]]
 threshold = 20

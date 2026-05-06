@@ -18,6 +18,7 @@ cursor_mode() {
             [[ $1 = 'beam' ]]; then
             echo -ne $cursor_beam
         fi
+        zle reset-prompt
     }
 
     zle-line-init() {
