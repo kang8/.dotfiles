@@ -50,6 +50,14 @@ format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
 format = '[$symbol($version )]($style)'
 symbol = " "
 
+[kubernetes]
+disabled = false
+format = '[$symbol$context( \($namespace\))]($style) '
+symbol = '☸ '
+style = 'cyan bold'
+detect_files = ['Chart.yaml', 'skaffold.yaml', 'kustomization.yaml', 'Tiltfile', 'devspace.yaml']
+detect_folders = ['k8s', 'kubernetes', 'helm', 'kustomize', 'manifests', '.kube']
+
 [custom.ranger]
 command = 'echo $RANGER_LEVEL' # shows output of command
 when = ''' [[ -n $RANGER_LEVEL ]] '''
