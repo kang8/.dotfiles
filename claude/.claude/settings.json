@@ -22,7 +22,8 @@
   "sandbox": {
     "filesystem": {
       "allowWrite": [
-        "~/.cache/node/corepack/"
+        "~/.cache/node/corepack/",
+        "~/Library/pnpm/"
       ]
     }
   },
