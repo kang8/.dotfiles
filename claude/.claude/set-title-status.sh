@@ -33,4 +33,19 @@ case "$STATUS" in
     *)     icon="●"  ;;
 esac
 
-printf '\033]0;%s %s\007' "$icon" "$base" > /dev/tty
+# Walk up the process tree to find a real controlling TTY. Hook subprocesses
+# may be spawned without one, but Claude Code (or its ancestor terminal) has it.
+pid=$PPID
+target=""
+for _ in 1 2 3 4 5 6 7 8; do
+    [ -z "$pid" ] || [ "$pid" -le 1 ] && break
+    tty=$(ps -o tty= -p "$pid" 2>/dev/null | tr -d ' \n')
+    case "$tty" in
+        ""|"?"|"??") ;;
+        /dev/*) target="$tty"; break ;;
+        *)      target="/dev/$tty"; break ;;
+    esac
+    pid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' \n')
+done
+
+[ -n "$target" ] && printf '\033]0;%s %s\007' "$icon" "$base" > "$target" 2>/dev/null || true
