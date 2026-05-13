@@ -1,9 +1,110 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
+  "enabledPlugins": {
+    "code-simplifier@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "visual-explainer@visual-explainer-marketplace": true
+  },
   "env": {
-    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"
+    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1",
+    "CLAUDE_CODE_SCROLL_SPEED": "2"
+  },
+  "extraKnownMarketplaces": {
+    "visual-explainer-marketplace": {
+      "source": {
+        "repo": "nicobailon/visual-explainer",
+        "source": "github"
+      }
+    }
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754063086050
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "command": "node ~/.claude/claude-hook-handler.mjs",
+            "type": "command"
+          },
+          {
+            "command": "bash ~/.claude/set-title-status.sh alert",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "atuin hook claude-code",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "command": "atuin hook claude-code",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "atuin hook claude-code",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "node ~/.claude/claude-hook-handler.mjs",
+            "type": "command"
+          },
+          {
+            "command": "bash ~/.claude/set-title-status.sh done",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "command": "bash ~/.claude/set-title-status.sh run",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ]
   },
   "includeCoAuthoredBy": false,
+  "model": "claude-opus-4-7",
   "permissions": {
     "allow": [
       "WebSearch",
@@ -16,8 +117,8 @@
       "Bash(gh issue view *)",
       "WebFetch"
     ],
-    "deny": [],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "acceptEdits",
+    "deny": []
   },
   "sandbox": {
     "filesystem": {
@@ -27,112 +128,12 @@
       ]
     }
   },
-  "model": "claude-opus-4-7",
-  "hooks": {
-    "UserPromptSubmit": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ~/.claude/set-title-status.sh run"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.claude/claude-hook-handler.mjs"
-          },
-          {
-            "type": "command",
-            "command": "bash ~/.claude/set-title-status.sh alert"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "atuin hook claude-code"
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "atuin hook claude-code"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "atuin hook claude-code"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.claude/claude-hook-handler.mjs"
-          },
-          {
-            "type": "command",
-            "command": "bash ~/.claude/set-title-status.sh done"
-          }
-        ]
-      }
-    ]
-  },
+  "skipDangerousModePermissionPrompt": true,
   "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
-  },
-  "enabledPlugins": {
-    "context7@claude-plugins-official": true,
-    "security-guidance@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
-    "ralph-loop@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true,
-    "visual-explainer@visual-explainer-marketplace": true
-  },
-  "extraKnownMarketplaces": {
-    "visual-explainer-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "nicobailon/visual-explainer"
-      }
-    }
+    "command": "bash ~/.claude/statusline-command.sh",
+    "type": "command"
   },
   "syntaxHighlightingDisabled": false,
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
-  "tui": "fullscreen",
-  "skipDangerousModePermissionPrompt": true,
-  "feedbackSurveyState": {
-    "lastShownTime": 1754063086050
-  },
-  "theme": "custom:kang8"
+  "theme": "custom:kang8",
+  "tui": "fullscreen"
 }
