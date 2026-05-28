@@ -2,8 +2,25 @@
   "name": "kang8",
   "base": "light",
   "overrides": {
-    "subtle": "rgb(37,99,235)",
-    "bashMessageBackgroundColor": "rgb(250, 245, 10)",
-    "userMessageBackground": "rgb(240, 200, 240)"
+    "claude": "rgb(37,99,235)",
+    "claudeShimmer": "rgb(100,150,250)",
+    "promptBorder": "rgb(180,200,240)",
+    "planMode": "rgb(37,99,235)",
+
+    "subtle": "rgb(190,200,215)",
+    "inactive": "rgb(140,150,170)",
+
+    "success": "rgb(34,139,90)",
+    "error": "rgb(220,38,127)",
+    "warning": "rgb(217,119,6)",
+
+    "bashMessageBackgroundColor": "rgb(254,249,195)",
+    "bashBorder": "rgb(217,119,6)",
+
+    "userMessageBackground": "rgb(240,200,240)",
+    "userMessageBackgroundHover": "rgb(245,215,245)",
+    "messageActionsBackground": "rgb(235,195,235)",
+    "memoryBackgroundColor": "rgb(230,210,240)",
+    "selectionBg": "rgb(220,180,220)"
   }
 }
