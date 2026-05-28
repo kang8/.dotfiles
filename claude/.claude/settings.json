@@ -184,6 +184,10 @@
     "deny": []
   },
   "sandbox": {
+    "excludedCommands": [
+      "git commit",
+      "git tag"
+    ],
     "filesystem": {
       "allowWrite": [
         "~/.cache/node/corepack/",
