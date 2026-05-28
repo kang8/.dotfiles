@@ -109,6 +109,7 @@
     "allow": [
       "WebSearch",
       "Bash(git status:*)",
+      "Bash(git fetch:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(git show:*)",
