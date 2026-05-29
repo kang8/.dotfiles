@@ -8,8 +8,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.2
       - name: Spell Check Repo
-        uses: crate-ci/typos@v1.46.3
+        uses: crate-ci/typos@v1.47.0
       - uses: denoland/setup-deno@v2.0.4
         with:
-          deno-version: 2.7.14 # Run with latest stable Deno.
+          deno-version: 2.8.1 # Run with latest stable Deno.
       - run: deno fmt --check
