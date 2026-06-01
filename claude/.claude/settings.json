@@ -179,6 +179,7 @@
       "Bash(glab user *)",
       "Bash(glab auth status *)",
       "Bash(glab version)",
+      "Bash(pnpm install *)",
       "WebFetch"
     ],
     "defaultMode": "acceptEdits",
