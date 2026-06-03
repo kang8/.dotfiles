@@ -18,4 +18,9 @@
 
 #####################################################################################
 
+# Raycast runs scripts with cwd=/, and the quick-access panel daemon inherits
+# that as the default cwd for every new tab. Start from $HOME so new tabs open
+# in ~ instead of / (matching the native kitty.app behaviour).
+cd "$HOME" || exit 1
+
 /opt/homebrew/bin/kitten quick-access-terminal
