@@ -183,7 +183,7 @@
       "Bash(pnpm install *)",
       "WebFetch"
     ],
-    "defaultMode": "auto",
+    "defaultMode": "acceptEdits",
     "deny": []
   },
   "sandbox": {
