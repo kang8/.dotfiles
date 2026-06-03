@@ -15,7 +15,15 @@ UNFOCUSED_OPACITY = "0.55"  # how see-through it gets when you click away
 
 
 def on_focus_change(boss, window, data):
-    opacity = FOCUSED_OPACITY if data["focused"] else UNFOCUSED_OPACITY
+    # Don't trust data["focused"]: it reflects this *kitty window's* focus, but
+    # background opacity is an *OS-window* property. Opening/switching tabs makes
+    # the old window fire focused=False while the OS window still has keyboard
+    # focus -- the stale event would wrongly dim the panel. Instead ask kitty
+    # which OS window actually holds focus and compare it to ours.
+    from kitty.fast_data_types import current_focused_os_window_id
+
+    focused = current_focused_os_window_id() == window.os_window_id
+    opacity = FOCUSED_OPACITY if focused else UNFOCUSED_OPACITY
     # Match by window id explicitly: when focus moves to Chrome there is no
     # "active" kitty OS window, so an unmatched set-background-opacity would
     # silently do nothing. Matching the id targets the panel regardless.
