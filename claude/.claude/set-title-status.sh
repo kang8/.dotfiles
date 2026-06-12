@@ -1,7 +1,7 @@
 #!/bin/bash
 # set-title-status.sh - Terminal title with Claude Code status
 # Usage: echo '<hook_json>' | bash set-title-status.sh <status>
-# Statuses: run (⏳)  alert (👀)  done (✅)
+# Statuses: run (⏳)  alert (🔴 + bell)  done (✅)
 
 STATUS="${1:-done}"
 input=$(cat)
@@ -27,10 +27,10 @@ dir=$(basename "$PWD")
 [ -n "$topic" ] && base="$dir: $topic" || base="$dir"
 
 case "$STATUS" in
-    run)   icon="⏳" ;;
-    alert) icon="👀" ;;
-    done)  icon="✅" ;;
-    *)     icon="●"  ;;
+    run)   title="⏳ $base" ;;
+    alert) title="🔴 $base" ;;
+    done)  title="✅ $base" ;;
+    *)     title="● $base" ;;
 esac
 
 # Walk up the process tree to find a real controlling TTY. Hook subprocesses
@@ -48,4 +48,11 @@ for _ in 1 2 3 4 5 6 7 8; do
     pid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' \n')
 done
 
-[ -n "$target" ] && printf '\033]0;%s %s\007' "$icon" "$base" > "$target" 2>/dev/null || true
+if [ -n "$target" ]; then
+    printf '\033]0;%s\007' "$title" > "$target" 2>/dev/null || true
+    # alert: ring the terminal bell so kitty marks the tab (bell_on_tab "🔔")
+    # and bounces the Dock icon when unfocused (window_alert_on_bell)
+    if [ "$STATUS" = "alert" ]; then
+        printf '\a' > "$target" 2>/dev/null || true
+    fi
+fi
