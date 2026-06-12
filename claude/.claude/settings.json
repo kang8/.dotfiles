@@ -40,7 +40,7 @@
             "type": "command"
           }
         ],
-        "matcher": ""
+        "matcher": "permission_prompt|elicitation_dialog"
       }
     ],
     "PostToolUse": [
