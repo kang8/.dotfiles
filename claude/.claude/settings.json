@@ -10,6 +10,7 @@
     "ralph-loop@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true,
     "visual-explainer@visual-explainer-marketplace": true
   },
   "env": {
