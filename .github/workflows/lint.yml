@@ -6,7 +6,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
       - name: Spell Check Repo
         uses: crate-ci/typos@v1.47.2
       - uses: denoland/setup-deno@v2.0.4
