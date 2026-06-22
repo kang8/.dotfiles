@@ -194,7 +194,9 @@
     "filesystem": {
       "allowWrite": [
         "~/.cache/node/corepack/",
-        "~/Library/pnpm/"
+        "~/Library/pnpm/",
+        "~/.cache/prek/",
+        "~/.cache/uv/"
       ]
     }
   },
