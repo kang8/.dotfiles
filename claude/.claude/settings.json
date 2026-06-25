@@ -198,6 +198,11 @@
         "~/.cache/prek/",
         "~/.cache/uv/"
       ]
+    },
+    "network": {
+      "allowedDomains": [
+        "api.day.app"
+      ]
     }
   },
   "skipDangerousModePermissionPrompt": true,
