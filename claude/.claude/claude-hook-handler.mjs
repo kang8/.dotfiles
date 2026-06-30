@@ -44,19 +44,26 @@ async function main() {
     'Stop': message || 'Done',
   };
 
-  await fetch('https://api.day.app/push', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify({
-      device_key: process.env.BARK_KEY,
-      title: projectName,
-      body: eventMessages[hook_event_name],
-      group: 'Claude Code',
-      icon: 'https://wpforms.com/wp-content/uploads/2024/08/claude-logo.png',
-    }),
-  });
+  try {
+    await fetch('https://api.day.app/push', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify({
+        device_key: process.env.BARK_KEY,
+        title: projectName,
+        body: eventMessages[hook_event_name],
+        group: 'Claude Code',
+        icon: 'https://wpforms.com/wp-content/uploads/2024/08/claude-logo.png',
+      }),
+      signal: AbortSignal.timeout(8000),
+    });
+  } catch (err) {
+    // Bark push is best-effort; never let a network failure crash the hook.
+    debug({ pushError: String(err) });
+  }
 }
 
-main();
+// Catch-all so an unexpected error never produces an uncaught rejection.
+main().catch((err) => debug({ mainError: String(err) }));
