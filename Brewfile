@@ -91,6 +91,7 @@ brew "node"
 brew "node@24"
 brew "nss"
 brew "onefetch"
+brew "openjdk"
 brew "openssh"
 brew "oven-sh/bun/bun", trusted: true
 brew "pandoc"
