@@ -1,5 +1,4 @@
 . $ZDOTDIR/env.zsh
-. $ZDOTDIR/proxy.zsh
 
 plugins=(
     brew
