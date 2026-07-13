@@ -138,6 +138,7 @@ cask "android-file-transfer"
 cask "anybar"
 cask "calibre"
 cask "codex"
+cask "codex-app"
 cask "drawio"
 cask "dzirtusss/tap/vifari", trusted: true
 cask "firefox"
