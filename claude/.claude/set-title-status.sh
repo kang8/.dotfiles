@@ -10,10 +10,19 @@ transcript_path=$(echo "$input" | jq -r '.transcript_path // empty')
 
 [ -z "$session_id" ] && exit 0
 
-# Resolve session topic from index or first user message
+# Resolve session topic. Prefer the LATEST prompt (updates every turn) so the
+# tab tracks the current question, not the first thing asked hours ago.
 index="$(dirname "$transcript_path")/sessions-index.json"
 topic=""
-if [ -f "$index" ]; then
+if [ -f "$transcript_path" ]; then
+    # gsub folds embedded newlines to spaces; .[0:60] truncates by Unicode
+    # codepoint so CJK titles never get sliced mid-character. tail -1 = newest.
+    topic=$(jq -r 'select(.type == "last-prompt")
+        | (.lastPrompt // "") | gsub("[\\n\\r\\t]+"; " ") | .[0:60]' \
+        "$transcript_path" 2>/dev/null | tail -1)
+fi
+# Fallbacks for older transcripts / resumed sessions without a last-prompt entry.
+if [ -z "$topic" ] && [ -f "$index" ]; then
     topic=$(jq -r --arg id "$session_id" \
         '.entries[] | select(.sessionId == $id) | .summary // empty' "$index")
 fi
