@@ -105,7 +105,7 @@ set truncation-delimiter    = ~     # Character drawn for truncations, or "utf-8
 # Similarly, `remote` is used if no `tracked-remote` format exists.
 # Prefix with `hide:` to not show that reference type, e.g. `hide:remote`.
 # Expects a space-separated list of format strings.
-set reference-format        = [branch] <tag> {remote} ~replace~
+set reference-format        = head branch tracked-remote remote tag local-tag ~replace~
 
 # Settings controlling how content is read from Git
 set commit-order        = auto      # Enum: auto, default, topo, date, reverse (main)
@@ -444,13 +444,14 @@ color title-blur                    white   blue
 color title-focus                   white   blue    bold
 color main-commit                   default default
 color main-annotated                default default bold
-color main-tag                      magenta default bold
-color main-local-tag                magenta default
-color main-remote                   yellow  default
-color main-replace                  cyan    default
-color main-tracked                  yellow  default bold
-color main-ref                      cyan    default
-color main-head                     cyan    default bold
+# Ref labels styled as Fork-like pills (fg bg [attrs]); 256-color codes.
+color main-head                     color16  color40  bold   # 当前分支（亮绿底，最醒目）
+color main-ref                      color231 color238        # 其它本地分支（灰底）
+color main-tracked                  color16  color166 bold   # 当前分支的上游（橙底）
+color main-remote                   color231 color127 bold   # 远程分支 origin/*（亮品红底，含 origin/master）
+color main-tag                      color16  color136        # 注释 tag（金底）
+color main-local-tag                color16  color100        # 轻量 tag（橄榄底）
+color main-replace                  cyan     default
 color stat-none                     default default
 color stat-staged                   magenta default
 color stat-unstaged                 magenta default
