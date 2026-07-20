@@ -12,6 +12,10 @@ context_remaining=$(echo "$input" | jq -r '.context_window.remaining_percentage 
 vim_mode=$(echo "$input" | jq -r '.vim.mode // empty')
 agent_name=$(echo "$input" | jq -r '.agent.name // empty')
 worktree_name=$(echo "$input" | jq -r '.worktree.name // empty')
+session_id=$(echo "$input" | jq -r '.session_id // empty')
+cost_usd=$(echo "$input" | jq -r '.cost.total_cost_usd // empty')
+# Reasoning effort: absent when the model does not support the effort parameter
+effort=$(echo "$input" | jq -r '.effort.level // empty')
 
 # Get git branch if in a git repo (skip optional locks for performance)
 git_branch=""
@@ -63,9 +67,23 @@ if [ -n "$context_remaining" ]; then
   components+=("$(printf "%.0f%%" "$context_remaining")")
 fi
 
-# Model name (shortened)
+# Session cost so far (USD), from .cost.total_cost_usd
+if [ -n "$cost_usd" ]; then
+  components+=("$(printf '$%.2f' "$cost_usd")")
+fi
+
+# Model name (shortened), with reasoning effort if the model supports it
 model_short=$(echo "$model" | sed 's/Claude //' | sed 's/ (.*)//')
-components+=("$model_short")
+if [ -n "$effort" ]; then
+  components+=("$model_short $effort")
+else
+  components+=("$model_short")
+fi
+
+# Current session id (.session_id)
+if [ -n "$session_id" ]; then
+  components+=("$session_id")
+fi
 
 # Join components with space separator
 result=""
