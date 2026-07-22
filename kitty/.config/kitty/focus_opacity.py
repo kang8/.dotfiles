@@ -10,8 +10,8 @@
 #     kitty_override watcher=focus_opacity.py         # load this file
 #
 # Tweak the two values below to taste (0.0 = fully transparent, 1.0 = opaque).
-FOCUSED_OPACITY = "0.90"    # keep in sync with `background_opacity` in the .conf
-UNFOCUSED_OPACITY = "0.55"  # how see-through it gets when you click away
+FOCUSED_OPACITY = "0.95"    # keep in sync with `background_opacity` in the .conf
+UNFOCUSED_OPACITY = "0.35"  # how see-through it gets when you click away
 
 # Focus *events* alone are not reliable: Window.focus_changed() dedupes on
 # Window.is_focused, a flag that tab/window activation also sets while the OS
