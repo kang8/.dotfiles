@@ -6,6 +6,10 @@ repos:
         language: system
         entry: make
         args: [format]
+        # `make format` reformats the whole repo and ignores filenames; passing
+        # them makes pre-commit split into parallel batches that race on a shared
+        # temp file. Run it once, serially.
+        pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
