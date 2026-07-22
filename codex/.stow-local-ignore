@@ -1,0 +1,8 @@
+# Do NOT symlink config.toml into ~/.codex.
+#
+# Codex owns and rewrites ~/.codex/config.toml in place, appending machine- and
+# runtime-specific sections (incl. private [projects.*] folder names). We keep a
+# hand-curated, portable copy here in the repo and let Codex own its own live
+# file, so the two never share an inode and the repo never sees the churn.
+# init.sh seeds a fresh machine with `cp -n codex/.codex/config.toml ~/.codex/`.
+config\.toml

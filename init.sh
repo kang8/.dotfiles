@@ -4,6 +4,10 @@ set -Eeuo pipefail
 # setup
 mkdir -p ~/.config/lazygit || true
 mkdir -p ~/.local/bin || true
+# Ensure ~/.codex exists so `stow codex` folds into it (links individual files)
+# instead of turning the whole dir into a symlink and polluting the repo with
+# codex runtime data (sqlite, sessions, logs).
+mkdir -p ~/.codex || true
 cp .env.example .env
 
 ########
@@ -17,6 +21,11 @@ for i in `ls -d */`; do
     printf "%s\n" "${stow_exclude[@]}" | grep -x -q "$i" ||
         ( echo "  stow $i" && stow $i )
 done
+
+# Seed codex's config on a fresh machine only. config.toml is stow-ignored (see
+# codex/.stow-local-ignore) because Codex owns/rewrites it in place; `-n` never
+# clobbers an existing live file, so re-runs are safe.
+cp -n codex/.codex/config.toml ~/.codex/config.toml || true
 
 zsh ~/.zshrc
 

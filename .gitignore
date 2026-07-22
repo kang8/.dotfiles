@@ -19,3 +19,14 @@ k9s/.config/k9s/clusters/
 k9s/.config/k9s/screen-dumps/
 hammerspoon/.hammerspoon/Spoons/
 claude/.claude/debug.log
+
+# codex runtime data (never version — credentials, history, DBs, sessions)
+codex/.codex/auth.json
+codex/.codex/history.jsonl
+codex/.codex/*.sqlite*
+codex/.codex/session_index.jsonl
+codex/.codex/.codex-global-state.json*
+codex/.codex/sessions/
+codex/.codex/log/
+codex/.codex/logs_*
+codex/.codex/plugins/
