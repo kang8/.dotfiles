@@ -2,7 +2,14 @@
 name: commit
 description: Commit currently staged changes following the project's conventions. Decides automatically whether a feature/bugfix branch is needed based on the project's commit workflow inferred from CLAUDE.md instructions and recent git history. Use when the user says "commit", "/commit", or asks to commit + (optionally) branch.
 disable-model-invocation: true
+context: fork
+agent: general-purpose
 ---
+
+> Runs in a forked subagent (background). The subagent receives this skill
+> content as its prompt but **not** the live conversation, so it cannot rely on
+> chat history. If a ticket id or branching hint isn't discoverable from git or
+> CLAUDE.md, surface that in the final report instead of blocking on a question.
 
 You are creating a git commit from currently staged changes, following the
 active project's conventions.
@@ -47,10 +54,12 @@ Branch naming:
 - **Prefix**: `bugfix/` only if the change is clearly a bug fix; otherwise
   `feature/`. Other prefixes (`chore/`, `refactor/`, `hotfix/`, etc.) are **not
   allowed** unless the active CLAUDE.md explicitly permits them.
-- **Ticket**: scan the recent conversation for a ticket id the user has been
-  working on (Jira-style format: uppercase letters + dash + digits, e.g.
-  `PROJ-123`). If none is found in context, ask the user — do not guess and do
-  not invent one.
+- **Ticket**: look for a ticket id (Jira-style format: uppercase letters, a
+  dash, then digits, e.g. `PROJ-123`) in the current branch name, the recent
+  `git log`, or any ticket id passed in as an argument. Do not guess and do not
+  invent one. If none can be found, omit the ticket segment and note in the
+  final report that a ticket id could not be determined — do not block waiting
+  for an answer (this skill runs in a forked subagent and cannot ask mid-run).
 - **Slug**: a short kebab-case description derived from the staged diff (3-7
   words, lowercase, dashes between words, no punctuation). Aim for what the
   change _does_, not what file it touches.
@@ -99,9 +108,14 @@ amend.
 
 Run `git status` to confirm the commit succeeded and the working tree state.
 
-Tell the user:
+Return a concise final report (this is the subagent's result, surfaced back to
+the main conversation) covering:
 
 - The new branch name (if created) and short SHA of the commit
-- Whether you want to push (always ask — never auto-push)
+- Any ticket id that could not be determined, or any branch/no-branch judgement
+  call worth confirming
+- A note that the commit has **not** been pushed — never auto-push, and never
+  block waiting to ask; leave the push decision to the user in the main
+  conversation
 
 Do **not** create a pull/merge request unless explicitly asked.
