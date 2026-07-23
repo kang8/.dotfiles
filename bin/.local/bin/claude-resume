@@ -94,6 +94,19 @@ if ARGV.delete('--projects')
   exit
 end
 
+# SESSION: given a bare session id (UUID), resume it directly instead of opening
+# the picker — mirrors the old `resume = claude --resume` alias. If the session
+# is known to history, cd into its project first so it resumes from anywhere;
+# otherwise fall back to resuming in the current directory.
+UUID = /\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/
+if (session = ARGV.find { it =~ UUID })
+  if (entry = entries.find { it[:sessionId] == session }) &&
+     File.directory?(entry[:project])
+    Dir.chdir(entry[:project])
+  end
+  exec 'claude', '--resume', session
+end
+
 # ANSI 256 color palette, skipping the darkest cube colors for legibility.
 COLORS = (17..230).select do |c|
   idx = c - 16
