@@ -5,7 +5,6 @@
 [color]
     ui = auto
 [core]
-    fsmonitor = true
     untrackedCache = true
     editor = nvim
     pager = "{                                                    \
