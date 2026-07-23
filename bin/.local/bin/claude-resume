@@ -1,0 +1,224 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# MIT License
+#
+# Copyright (c) 2026 Junegunn Choi
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# claude-resume: an fzf picker over `~/.claude/history.jsonl` for resuming Claude
+# Code sessions. Derived from junegunn's everything.fzf/claude.fzf, but without
+# the tmux integration and with project-scoped browsing:
+#
+#   * defaults to sessions of the current directory (like `claude --resume`),
+#   * Ctrl-A shows every project,
+#   * Ctrl-P pops up a picker to scope to any single project.
+
+require 'json'
+require 'time'
+require 'shellwords'
+require 'tmpdir'
+
+begin
+  require 'ansi256'
+rescue LoadError
+  require 'bundler/inline'
+  gemfile(true) do
+    source 'https://rubygems.org'
+    gem 'ansi256'
+  end
+end
+
+HISTORY = File.expand_path('~/.claude/history.jsonl')
+abort "History file not found: #{HISTORY}" unless File.exist?(HISTORY)
+
+HOME = Dir.home
+RS = "\x0"
+ZWSP = "​"
+
+entries = File.foreach(HISTORY).filter_map do |line|
+  JSON.parse(line, symbolize_names: true)
+      .tap { it => { sessionId:, timestamp:, display:, project: } }
+rescue JSON::ParserError, NoMatchingPatternKeyError
+  nil
+end
+
+def format_time(timestamp)
+  Time.at(timestamp / 1000).localtime.strftime('%F %a %T')
+end
+
+# --preview SESSION: render every history entry of a single session.
+if ARGV.delete('--preview')
+  session = ARGV.first
+  abort 'usage: claude-resume --preview SESSION' unless session
+
+  entries = entries.select { it[:sessionId] == session }
+
+  entries.sort_by { -it[:timestamp].to_i }.each_with_index do |entry, idx|
+    idx = "##{entries.length - idx}/#{entries.length}"
+    entry => { timestamp:, display: }
+
+    header = "#{idx.green} #{format_time(timestamp).cyan}"
+    puts header
+    puts ('▔' * header.plain.length).dim
+    puts display.italic
+    puts
+  end
+  exit
+end
+
+# --projects: list distinct project directories, most-recently-active first.
+# Feeds the Ctrl-P picker.
+if ARGV.delete('--projects')
+  entries.group_by { it[:project] }
+         .map { |proj, items| [proj, items.map { it[:timestamp].to_i }.max] }
+         .sort_by { -it[1] }
+         .each { puts it.first }
+  exit
+end
+
+# ANSI 256 color palette, skipping the darkest cube colors for legibility.
+COLORS = (17..230).select do |c|
+  idx = c - 16
+  rgb = [idx / 36, (idx / 6) % 6, idx % 6]
+  r, g, b = rgb
+  rgb.sum >= 7 && r > g && g > b
+end.freeze
+
+# Deterministic per-session color, stable across reload subprocesses (unlike
+# String#hash, which is seeded per process).
+def color_for(session)
+  COLORS[session.bytes.sum % COLORS.size]
+end
+
+# Assign each entry a line offset into its session's preview, so selecting a
+# specific entry can scroll the preview to it (`--preview-window +{4}`).
+def with_offsets(entries)
+  entries.group_by { it[:sessionId] }.transform_values do |items|
+    items = items.sort_by { -it[:timestamp].to_i }
+    offset = 1
+    items.map do |item|
+      item.merge(offset: offset).tap do
+        offset += item[:display].to_s.each_line.count + 3
+      end
+    end
+  end.values.flatten
+end
+
+COLUMN_HEADER = [
+  'TIMESTAMP'.ljust(23),
+  'SESSION'.ljust(36),
+  'PROJECT'
+].map(&:bold).join('  ')
+
+# --list [--all | --scope-file FILE]: emit the NUL-delimited fzf input.
+#
+# Scope is resolved as: --all -> every project; --scope-file -> the project path
+# in FILE (empty file means every project); otherwise $CLAUDE_FZF_PROJECT if set.
+if ARGV.delete('--list')
+  scope =
+    if ARGV.delete('--all')
+      nil
+    elsif (i = ARGV.index('--scope-file'))
+      f = ARGV[i + 1]
+      val = (File.read(f).lines.first&.strip if f && File.exist?(f))
+      val unless val.to_s.empty?
+    elsif !(env = ENV['CLAUDE_FZF_PROJECT'].to_s).empty?
+      env
+    end
+
+  entries = with_offsets(entries)
+  entries = entries.select { it[:project] == scope } if scope
+
+  $stdout.print((ZWSP * 4) + COLUMN_HEADER + RS)
+  entries.sort_by { -it[:timestamp].to_i }.each do |entry|
+    entry => { sessionId: session, project:, timestamp:, display:, offset: }
+    dir = project.start_with?(HOME) ? project.sub(HOME, '~') : project
+
+    command = "cd #{project.shellescape} && exec claude -r #{session}"
+
+    $stdout.print [command, session, project, offset].map { it.to_s + ZWSP }.join
+    $stdout.print [format_time(timestamp).cyan,
+                   session.fg(color_for(session)),
+                   dir.blue].map { it + ZWSP }.join('  ')
+    $stdout.print "\n"
+    display.each_line { $stdout.print "  #{it.italic}" }
+    $stdout.print RS
+  rescue Errno::EPIPE
+    break
+  end
+  exit
+end
+
+# Main mode: launch fzf. It pulls its list via `start:reload` (and Ctrl-A/Ctrl-P
+# re-scope via further reloads), so the current environment carries the initial
+# scope down to the first `--list` subprocess.
+self_esc = __FILE__.shellescape
+ruby = "ruby #{self_esc}"
+tmp = File.join(Dir.tmpdir, "claude-resume-#{Process.pid}.scope")
+at_exit { File.delete(tmp) if File.exist?(tmp) }
+
+pwd = Dir.pwd
+if entries.any? { it[:project] == pwd }
+  ENV['CLAUDE_FZF_PROJECT'] = pwd
+  label = " Claude sessions · #{pwd.start_with?(HOME) ? pwd.sub(HOME, '~') : pwd} "
+else
+  ENV['CLAUDE_FZF_PROJECT'] = ''
+  label = ' Claude sessions · all projects '
+end
+
+all_label = ' Claude sessions · all projects '
+
+# Ctrl-A toggles between all projects and the current directory's scope, reading
+# the live border label (exported as $FZF_BORDER_LABEL) to know which way to flip.
+ctrl_a =
+  'ctrl-a:transform:case "$FZF_BORDER_LABEL" in ' \
+  "*'all projects'*) " \
+  "printf 'change-border-label(%s)+reload(%s --list)' '#{label}' '#{ruby}';; " \
+  '*) ' \
+  "printf 'change-border-label(%s)+reload(%s --list --all)' '#{all_label}' '#{ruby}';; " \
+  'esac'
+
+ctrl_p =
+  "ctrl-p:execute(#{ruby} --projects | fzf --no-multi --reverse --prompt 'project> ' > #{tmp})" +
+  "+transform:[ -s #{tmp} ] && " \
+  "printf 'change-border-label( Claude sessions · %s )+reload(#{ruby} --list --scope-file #{tmp})' " \
+  "\"$(basename \"$(cat #{tmp})\")\""
+
+fzf_args = [
+  'fzf', '--read0', '--ansi', '--reverse', '--style', 'full', '--gap',
+  '--wrap', 'word',
+  '--delimiter', ZWSP, '--with-nth', '5..', '--accept-nth', '{1}',
+  '--highlight-line', '--scheme', 'history',
+  '--border-label', label,
+  '--header', 'Ctrl-A: toggle all/current / Ctrl-P: filter project / Ctrl-/: preview',
+  '--header-lines', '1',
+  '--header-border', 'dashed', '--header-lines-border', 'inline',
+  '--preview', "#{ruby} --preview {2}",
+  '--preview-window', 'hidden:wrap-word:+{4}',
+  '--bind', 'ctrl-/:toggle-preview',
+  '--bind', "start:reload(#{ruby} --list)",
+  '--bind', ctrl_a,
+  '--bind', ctrl_p,
+  *ARGV
+]
+
+selected = IO.popen(fzf_args, 'r', in: File::NULL, &:read).to_s.strip
+exec "eval #{selected.shellescape}" unless selected.empty?
