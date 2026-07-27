@@ -91,6 +91,37 @@ stow gnupg
 # Create symlink for pinentry-mac to support both Apple Silicon and Intel
 ln -sf "$(brew --prefix pinentry-mac)/bin/pinentry-mac" ~/.local/bin/pinentry-mac
 
+# Shadow GNUPGHOME used by Claude Code's sandbox (see claude/.claude/settings.json).
+# Sandboxed gpg reaches gpg-agent only through its *restricted* socket, which
+# refuses EXPORT_KEY, so sandboxed code can sign but cannot exfiltrate the private
+# key. gpg's lock/random_seed/trustdb writes land here instead of in ~/.gnupg.
+#
+# This directory deliberately contains NO symlinks. A socket bind unlinks its path
+# first, so a symlink to a real ~/.gnupg socket would let any daemon accidentally
+# started against this home hijack the real socket with an empty keyring, breaking
+# GPG system-wide. Instead:
+#   - S.gpg-agent is bound here directly by the real agent (see gnupg/.gnupg/gpg-agent.conf)
+#   - the public keyring is a static local copy, so no keyboxd socket is needed
+#
+# HAZARD: never run gpgconf/gpg from inside Claude Code without setting
+# GNUPGHOME=$HOME/.gnupg explicitly. Claude Code exports GNUPGHOME=~/.gnupg-sandbox
+# for every subprocess, including ones run outside the sandbox.
+mkdir -p ~/.gnupg-sandbox
+chmod 700 ~/.gnupg-sandbox
+# no-autostart: never let a sandboxed gpg spawn its own agent; a sandboxed agent
+# cannot launch pinentry-mac (Apple Events are blocked) and would break signing.
+printf 'keyid-format long\nno-autostart\n' > ~/.gnupg-sandbox/gpg.conf
+# Static public keyring. Note this is a snapshot: keys imported into ~/.gnupg
+# later are not visible to Claude Code until this runs again.
+GNUPGHOME=~/.gnupg gpg --batch --export | GNUPGHOME=~/.gnupg-sandbox gpg --batch --import
+# ownertrust lives in GNUPGHOME/trustdb.gpg, so without this the shadow home
+# treats your own key as unknown and git reports signatures as U, not G.
+GNUPGHOME=~/.gnupg gpg --batch --export-ownertrust > ~/.gnupg-sandbox/ownertrust.txt
+GNUPGHOME=~/.gnupg-sandbox gpg --batch --import-ownertrust ~/.gnupg-sandbox/ownertrust.txt
+# The agent must be (re)started so it binds extra-socket into the shadow home.
+GNUPGHOME=~/.gnupg gpgconf --kill gpg-agent
+GNUPGHOME=~/.gnupg gpgconf --launch gpg-agent
+
 ########
 # MacOS setting
 ########

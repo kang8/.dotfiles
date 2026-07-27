@@ -11,7 +11,8 @@
   },
   "env": {
     "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1",
-    "CLAUDE_CODE_SCROLL_SPEED": "2"
+    "CLAUDE_CODE_SCROLL_SPEED": "2",
+    "GNUPGHOME": "/Users/kang/.gnupg-sandbox"
   },
   "extraKnownMarketplaces": {
     "visual-explainer-marketplace": {
@@ -189,13 +190,12 @@
         "~/Library/pnpm/",
         "~/.cache/prek/",
         "~/.cache/uv/",
-        "~/.gnupg/"
+        "~/.gnupg-sandbox/"
       ]
     },
     "network": {
       "allowUnixSockets": [
-        "~/.gnupg/S.gpg-agent",
-        "~/.gnupg/S.keyboxd"
+        "~/.gnupg-sandbox/S.gpg-agent"
       ],
       "allowedDomains": [
         "api.day.app"
