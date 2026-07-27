@@ -8,7 +8,9 @@ session_name=$(echo "$input" | jq -r '.session_name // empty')
 model=$(echo "$input" | jq -r '.model.display_name')
 cwd=$(echo "$input" | jq -r '.workspace.current_dir')
 output_style=$(echo "$input" | jq -r '.output_style.name // empty')
-context_remaining=$(echo "$input" | jq -r '.context_window.remaining_percentage // empty')
+context_used_tokens=$(echo "$input" | jq -r '.context_window.total_input_tokens // empty')
+context_total_tokens=$(echo "$input" | jq -r '.context_window.context_window_size // empty')
+context_used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 vim_mode=$(echo "$input" | jq -r '.vim.mode // empty')
 agent_name=$(echo "$input" | jq -r '.agent.name // empty')
 worktree_name=$(echo "$input" | jq -r '.worktree.name // empty')
@@ -62,9 +64,16 @@ if [ -n "$output_style" ] && [ "$output_style" != "default" ]; then
   components+=("[$output_style]")
 fi
 
-# Context remaining
-if [ -n "$context_remaining" ]; then
-  components+=("$(printf "%.0f%%" "$context_remaining")")
+# Context size: show as "usedK/totalK (used%)", e.g. "50K/200K (25%)".
+# Windows of 1M or more render as "M" so extended-context models don't show "1000K".
+if [ -n "$context_used_tokens" ] && [ -n "$context_total_tokens" ] && [ -n "$context_used_pct" ]; then
+  used_k=$((context_used_tokens / 1000))
+  if [ "$context_total_tokens" -ge 1000000 ]; then
+    total_fmt="$((context_total_tokens / 1000000))M"
+  else
+    total_fmt="$((context_total_tokens / 1000))K"
+  fi
+  components+=("$(printf "%dK/%s (%.0f%%)" "$used_k" "$total_fmt" "$context_used_pct")")
 fi
 
 # Session cost so far (USD), from .cost.total_cost_usd
