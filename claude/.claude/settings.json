@@ -183,19 +183,20 @@
     "deny": []
   },
   "sandbox": {
-    "excludedCommands": [
-      "git commit",
-      "git tag"
-    ],
     "filesystem": {
       "allowWrite": [
         "~/.cache/node/corepack/",
         "~/Library/pnpm/",
         "~/.cache/prek/",
-        "~/.cache/uv/"
+        "~/.cache/uv/",
+        "~/.gnupg/"
       ]
     },
     "network": {
+      "allowUnixSockets": [
+        "~/.gnupg/S.gpg-agent",
+        "~/.gnupg/S.keyboxd"
+      ],
       "allowedDomains": [
         "api.day.app"
       ]
