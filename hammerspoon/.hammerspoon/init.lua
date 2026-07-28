@@ -36,6 +36,9 @@ hs.hotkey.bind({"alt"}, "w", function()
   print(hs.application.frontmostApplication():name())
 end)
 
+-- Toggle Chrome's vertical tab strip (cmd+shift+,) -- see the file's header for config
+require("chrome-sidebar-toggle")
+
 -- https://github.com/dzirtusss/vifari
 hs.loadSpoon("Vifari")
 spoon.Vifari:start() -- this will add hooks. `:stop()` to remove hooks
