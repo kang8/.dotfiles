@@ -7,6 +7,7 @@
     "ralph-loop@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
     "vercel@claude-plugins-official": true,
+    "view-browser-tab@peek-cli": true,
     "visual-explainer@visual-explainer-marketplace": true
   },
   "env": {
@@ -15,6 +16,12 @@
     "GNUPGHOME": "/Users/kang/.gnupg-sandbox"
   },
   "extraKnownMarketplaces": {
+    "peek-cli": {
+      "source": {
+        "repo": "puffinsoft/peek-cli",
+        "source": "github"
+      }
+    },
     "visual-explainer-marketplace": {
       "source": {
         "repo": "nicobailon/visual-explainer",
