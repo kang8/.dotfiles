@@ -1,0 +1,53 @@
+#:schema https://yazi-rs.github.io/schemas/keymap.json
+
+# Only deltas from Yazi's preset keymap. `prepend_keymap` outranks the presets;
+# every binding not listed here keeps its Yazi default.
+#
+# TOML forbids mixing the inline-array form with the [[mgr.prepend_keymap]]
+# table form, so this file uses the inline array throughout.
+
+[mgr]
+prepend_keymap = [
+	# ── Diff selected files (ranger: `dv` / `dc`) ────────────────────────
+	# Moved off the `d` prefix: Yazi binds `d` to trash and `D` to permanent
+	# delete, and relative-motions claims `d` as a count operator (2dd). Making
+	# `d` a prefix would leave a delete one mistyped key away. `=` is unbound in
+	# every Yazi layer and reads as a diff sigil.
+	{ on = [ "=", "v" ], run = "shell --block -- nvim -d %s", desc = "Diff selected files in Neovim" },
+	{ on = [ "=", "c" ], run = "shell -- code -d %s",         desc = "Diff selected files in VS Code" },
+
+	# ── Open in $EDITOR (ranger: `E edit`) ───────────────────────────────
+	# Yazi's `o` uses the opener rules; this always forces the editor.
+	{ on = "E", run = "shell --block -- $EDITOR %s", desc = "Edit selected files in $EDITOR" },
+
+	# ── Preview scrolling (ranger: `<A-j>` / `<A-k>` scroll_preview) ─────
+	# Yazi's defaults J/K seek 5 units at a time; these add ranger's 1-unit step.
+	{ on = "<A-j>", run = "seek 1",  desc = "Scroll preview down 1 unit" },
+	{ on = "<A-k>", run = "seek -1", desc = "Scroll preview up 1 unit" },
+
+	# ── Counted motions (ranger: set line_numbers relative + quantifiers) ─
+	# Yazi binds bare digits to tab switching, but ranger used them as motion
+	# counts with tabs on Alt+N. Reproducing ranger's model: digits start a
+	# motion, and the tab bindings move to Alt+N (no Alt key is bound by
+	# default in the [mgr] layer, so nothing is displaced).
+	{ on = "1", run = "plugin relative-motions 1", desc = "Move in relative steps" },
+	{ on = "2", run = "plugin relative-motions 2", desc = "Move in relative steps" },
+	{ on = "3", run = "plugin relative-motions 3", desc = "Move in relative steps" },
+	{ on = "4", run = "plugin relative-motions 4", desc = "Move in relative steps" },
+	{ on = "5", run = "plugin relative-motions 5", desc = "Move in relative steps" },
+	{ on = "6", run = "plugin relative-motions 6", desc = "Move in relative steps" },
+	{ on = "7", run = "plugin relative-motions 7", desc = "Move in relative steps" },
+	{ on = "8", run = "plugin relative-motions 8", desc = "Move in relative steps" },
+	{ on = "9", run = "plugin relative-motions 9", desc = "Move in relative steps" },
+
+	# ── Tabs on Alt+N (ranger: `map <a-1>` … `<a-9>` tab_open) ───────────
+	{ on = "<A-1>", run = "tab_switch 0", desc = "Switch to first tab" },
+	{ on = "<A-2>", run = "tab_switch 1", desc = "Switch to second tab" },
+	{ on = "<A-3>", run = "tab_switch 2", desc = "Switch to third tab" },
+	{ on = "<A-4>", run = "tab_switch 3", desc = "Switch to fourth tab" },
+	{ on = "<A-5>", run = "tab_switch 4", desc = "Switch to fifth tab" },
+	{ on = "<A-6>", run = "tab_switch 5", desc = "Switch to sixth tab" },
+	{ on = "<A-7>", run = "tab_switch 6", desc = "Switch to seventh tab" },
+	{ on = "<A-8>", run = "tab_switch 7", desc = "Switch to eighth tab" },
+	{ on = "<A-9>", run = "tab_switch 8", desc = "Switch to ninth tab" },
+]

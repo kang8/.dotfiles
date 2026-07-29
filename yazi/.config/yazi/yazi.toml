@@ -1,0 +1,63 @@
+#:schema https://yazi-rs.github.io/schemas/yazi.json
+
+# Only deltas from Yazi's built-in defaults live here. Unlike ranger — which
+# ships a full copy of its defaults for you to edit in place — Yazi keeps its
+# presets internal, so anything absent below stays at the upstream default.
+#
+# Comments name the ranger `rc.conf` setting each block replaces, so the
+# migration stays auditable.
+
+[mgr]
+# ranger: set column_ratios 1,3,4
+ratio          = [ 1, 3, 4 ]
+
+# ranger: set sort natural
+#         set sort_case_insensitive true
+#         set sort_directories_first true
+#         set sort_reverse false
+sort_by        = "natural"
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true
+
+# ranger: set display_size_in_main_column true
+# The git.yazi fetcher renders its status sign alongside this linemode.
+linemode       = "size"
+
+# ranger: set show_hidden false  — toggle at runtime with `.`
+show_hidden    = false
+show_symlink   = true
+
+# ranger: set scroll_offset 8
+scrolloff      = 8
+
+[preview]
+# ranger: set wrap_plaintext_previews false
+wrap     = "no"
+tab_size = 4
+
+# Image previews go through kitty's graphics protocol automatically — Yazi
+# detects the terminal, so there is no equivalent of ranger's
+# `set preview_images_method kitty`.
+#
+# NOTE: these are pixel caps on the *rendered image*, not a port of ranger's
+# `set preview_max_size 2048000` (which capped previewable *file* size — Yazi
+# has no such setting). Raised above the 600x900 default so previews stay sharp
+# on a HiDPI display. Run `yazi --clear-cache` after changing these.
+max_width     = 1200
+max_height    = 1800
+image_filter  = "lanczos3"
+image_quality = 90
+
+# ranger: set vcs_aware true / set vcs_backend_git local
+# Supplied by the git.yazi plugin (see init.lua and package.toml). Two fetchers
+# are required: `*` matches files, `*/` matches directories.
+[[plugin.prepend_fetchers]]
+url   = "*"
+run   = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+url   = "*/"
+run   = "git"
+group = "git"

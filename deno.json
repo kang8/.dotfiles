@@ -5,8 +5,7 @@
     "indentWidth": 2,
     "semiColons": true,
     "exclude": [
-      "kitty/.config/kitty/kitty_grab",
-      "ranger/.config/ranger/plugins/ranger_devicons"
+      "kitty/.config/kitty/kitty_grab"
     ]
   }
 }

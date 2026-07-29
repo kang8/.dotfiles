@@ -27,6 +27,15 @@ done
 # clobbers an existing live file, so re-runs are safe.
 cp -n codex/.codex/config.toml ~/.codex/config.toml || true
 
+# Restore Yazi's plugins at the revisions locked in yazi/.config/yazi/package.toml.
+# The plugins/ directory is git-ignored, so this is what a fresh machine needs
+# (it replaces the ranger_devicons submodule the old ranger config carried).
+# Must run after stow, since `ya` reads ~/.config/yazi.
+if command -v ya &> /dev/null; then
+    echo "restoring yazi plugins..."
+    ya pkg install || true
+fi
+
 zsh ~/.zshrc
 
 ########

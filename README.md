@@ -40,7 +40,7 @@ It will setup:
 - [gpg](gpg)
 - [ssh](https://github.com/kang8/.dotfiles/blob/master/zsh/.config/zsh/ssh-proxy.zsh)
 - [IDEAVIM](https://github.com/kang8/.dotfiles/blob/master/IDEA/.ideavimrc)
-- [ranger](https://github.com/kang8/.dotfiles/tree/master/ranger/.config/ranger)
+- [yazi](https://github.com/kang8/.dotfiles/tree/master/yazi/.config/yazi)
 
 It will install:
 

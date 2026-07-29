@@ -1,0 +1,5 @@
+# Plugins are pinned by revision in package.toml and restored with
+# `ya pkg install` (see init.sh), so the fetched sources stay out of the repo.
+# This replaces the ranger_devicons git submodule the ranger config used.
+/plugins/
+/flavors/

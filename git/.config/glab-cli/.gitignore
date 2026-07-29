@@ -1,0 +1,4 @@
+# glab writes partial MR/issue payloads here when a create call fails. They are
+# machine-local scratch files (and often invalid JSON), so keep them out of the
+# repo and out of `deno fmt`, which honours .gitignore but not .git/info/exclude.
+/recover/
