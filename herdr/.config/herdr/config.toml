@@ -1,0 +1,5 @@
+[theme]
+name = "catppuccin-latte"
+
+[ui]
+agent_panel_sort = "priority"
