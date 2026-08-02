@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 function debug(data) {
-  if (process.env.CLAUDE_DEBUG === 0) {
+  if (process.env.CLAUDE_DEBUG === '0') {
     return;
   }
 
@@ -23,6 +23,28 @@ function debug(data) {
   }
 }
 
+// Notification bodies are plain text: drop the decorations that only make
+// sense in a terminal, and cap the length so the push stays glanceable.
+function summarize(text, limit = 400) {
+  if (!text) {
+    return '';
+  }
+
+  const cleaned = text
+    .replace(/```[\s\S]*?```/g, '[code]') // fenced blocks -> placeholder
+    .replace(/[─━—]{3,}/g, '') // ★ Insight rules
+    .replace(/^[ \t]*[-*=_]{3,}[ \t]*$/gm, '') // markdown horizontal rules
+    .replace(/^[ \t]*[#>]+[ \t]*/gm, '') // headings / blockquote markers
+    .replace(/[*_`]/g, '') // inline emphasis + code ticks
+    .replace(/[ \t]+$/gm, '')
+    .replace(/\n{2,}/g, '\n')
+    .trim();
+
+  return cleaned.length > limit
+    ? cleaned.slice(0, limit - 1).trimEnd() + '…'
+    : cleaned;
+}
+
 async function main() {
   const stdinData = await text(process.stdin);
   const hookData = JSON.parse(stdinData);
@@ -33,6 +55,7 @@ async function main() {
     cwd,
     hook_event_name,
     message,
+    last_assistant_message,
   } = hookData;
 
   const projectName = cwd?.split('/').pop() || 'Unknown Project';
@@ -41,7 +64,8 @@ async function main() {
     'Notification':
       message?.replace('Claude needs your permission to use ', '') ||
       'Awaiting your input',
-    'Stop': message || 'Done',
+    // Stop carries no `message`; the reply text lives in last_assistant_message.
+    'Stop': summarize(last_assistant_message) || 'Done',
   };
 
   try {
