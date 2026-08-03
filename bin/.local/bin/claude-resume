@@ -29,7 +29,7 @@
 #
 #   * defaults to sessions of the current directory (like `claude --resume`),
 #   * Ctrl-A shows every project,
-#   * Ctrl-P pops up a picker to scope to any single project.
+#   * Alt-P (Option-P on macOS) pops up a picker to scope to any single project.
 
 require 'json'
 require 'time'
@@ -85,7 +85,7 @@ if ARGV.delete('--preview')
 end
 
 # --projects: list distinct project directories, most-recently-active first.
-# Feeds the Ctrl-P picker.
+# Feeds the Alt-P picker.
 if ARGV.delete('--projects')
   entries.group_by { it[:project] }
          .map { |proj, items| [proj, items.map { it[:timestamp].to_i }.max] }
@@ -180,7 +180,7 @@ if ARGV.delete('--list')
   exit
 end
 
-# Main mode: launch fzf. It pulls its list via `start:reload` (and Ctrl-A/Ctrl-P
+# Main mode: launch fzf. It pulls its list via `start:reload` (and Ctrl-A/Alt-P
 # re-scope via further reloads), so the current environment carries the initial
 # scope down to the first `--list` subprocess.
 self_esc = __FILE__.shellescape
@@ -209,8 +209,8 @@ ctrl_a =
   "printf 'change-border-label(%s)+reload(%s --list --all)' '#{all_label}' '#{ruby}';; " \
   'esac'
 
-ctrl_p =
-  "ctrl-p:execute(#{ruby} --projects | fzf --no-multi --reverse --prompt 'project> ' > #{tmp})" +
+alt_p =
+  "alt-p:execute(#{ruby} --projects | fzf --no-multi --reverse --prompt 'project> ' > #{tmp})" +
   "+transform:[ -s #{tmp} ] && " \
   "printf 'change-border-label( Claude sessions · %s )+reload(#{ruby} --list --scope-file #{tmp})' " \
   "\"$(basename \"$(cat #{tmp})\")\""
@@ -221,7 +221,7 @@ fzf_args = [
   '--delimiter', ZWSP, '--with-nth', '5..', '--accept-nth', '{1}',
   '--highlight-line', '--scheme', 'history',
   '--border-label', label,
-  '--header', 'Ctrl-A: toggle all/current / Ctrl-P: filter project / Ctrl-/: preview',
+  '--header', 'Ctrl-A: toggle all/current / Alt-P: filter project / Ctrl-/: preview',
   '--header-lines', '1',
   '--header-border', 'dashed', '--header-lines-border', 'inline',
   '--preview', "#{ruby} --preview {2}",
@@ -229,7 +229,7 @@ fzf_args = [
   '--bind', 'ctrl-/:toggle-preview',
   '--bind', "start:reload(#{ruby} --list)",
   '--bind', ctrl_a,
-  '--bind', ctrl_p,
+  '--bind', alt_p,
   *ARGV
 ]
 
