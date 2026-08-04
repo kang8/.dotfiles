@@ -33,6 +33,10 @@ URL = re.compile(
     r'://[^\s\x00\x1b\x07"\'<>()\[\]`|]+'
 )
 
+# as_ansi=True keeps OSC 8, but also every SGR on the line. fzf runs without
+# --ansi, so an unstripped ESC[34m shows up as a literal "[34m" prefix.
+CSI = re.compile(r'\x1b\[[0-?]*[ -/]*[@-~]')
+
 TRAILING = '.,;:!?\'"'
 SEP = '\x1f'  # fzf field separator; cannot occur in screen text
 
@@ -43,6 +47,7 @@ def main(args):
 
 
 def clean(s):
+    s = CSI.sub('', s)
     return s.replace('\n', '').replace('\x00', '').strip()
 
 
