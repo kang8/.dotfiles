@@ -3,7 +3,7 @@ export MANPAGER='nvim +Man!'
 export LC_ALL=en_US.UTF-8
 export ZSH=~/.config/zsh/.oh-my-zsh
 
-# fzf
+# fzf -- mirrored in kitty.conf for the overlays kitty launches itself
 export FZF_DEFAULT_OPTS='--color "light" --style minimal'
 
 # fzf-tab
