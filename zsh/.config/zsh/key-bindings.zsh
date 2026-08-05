@@ -6,7 +6,7 @@ bindkey '^[b' backward-word
 bindkey '^u' backward-kill-line
 bindkey '^y' yank
 bindkey '^r' _atuin_search_widget
-bindkey -s '^o' 'ranger^M'
+bindkey -s '^o' 'yazi^M'
 bindkey -s '^k' 'fork^M'
 bindkey -s '^[[102;6u' 'fzf_rg^M' # <C-S-f>
 bindkey -s '^[[109;6u' 'fzf_man^M'  # <C-S-m>
