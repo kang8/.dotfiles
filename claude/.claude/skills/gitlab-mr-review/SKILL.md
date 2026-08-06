@@ -43,7 +43,10 @@ silently degrades to a general (non-inline) comment:
 - **Removed line** (`-`) → `old_line` only.
 - **Context line** (unchanged, shown for context) → **both** `new_line` and
   `old_line`.
-- **Overall / non-line note** → omit both; it becomes an MR-level draft note.
+
+**Every finding must be inline.** A finding with neither `new_line` nor
+`old_line` becomes an MR-level draft note — never create one. See _No MR-level
+summary_ below.
 
 Line numbers are 1-based and refer to the file _as it appears in the diff_
 (new-file numbering for added/context lines; old-file numbering for removed).
@@ -68,10 +71,19 @@ description and threads).
     "file": "transform/models/.../x.sql",
     "new_line": 87,
     "body": "**[需确认]** ..."
-  },
-  { "body": "**总评** ... (MR-level, no line)" }
+  }
 ]
 ```
+
+### No MR-level summary
+
+Do **not** add an overall / 总评 / "here's my summary" entry — it's not the
+user's style. Every object in the array carries a `file` and a line. If a
+finding feels like it needs preamble, put that preamble in the one inline note
+it actually belongs to, or drop it.
+
+Any cross-cutting context worth saying (what you skipped and why, overall
+verdict) goes in your **reply in the conversation**, not on the MR.
 
 Write it to a temp file (e.g. `/tmp/mr_findings.json`) — easier than escaping a
 long heredoc.
@@ -107,7 +119,9 @@ for n in sorted(json.load(sys.stdin), key=lambda x: x['id']):
 ```
 
 Print the path, not just the line — a draft that lost its binding shows up as
-`MR-level`, which is invisible if you only look at line numbers.
+`MR-level`, which is invisible if you only look at line numbers. Since the skill
+never creates MR-level notes on purpose, **any** `MR-level` row is a bug: delete
+that draft and recreate it with correct line fields.
 
 Then tell the user:
 
