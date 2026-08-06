@@ -140,11 +140,13 @@ end
 # The full id still rides along in field 2 for the resume command.
 SESSION_ID_WIDTH = 8
 
-COLUMN_HEADER = [
-  'TIMESTAMP'.ljust(23),
-  'SESSION'.ljust(SESSION_ID_WIDTH),
-  'PROJECT'
-].map(&:bold).join('  ')
+# Scoped to one project, every row repeats the same path, so the column is
+# 20-30 wasted columns saying nothing. The border label already names the scope.
+def column_header(scoped)
+  cols = ['TIMESTAMP'.ljust(23), 'SESSION'.ljust(SESSION_ID_WIDTH)]
+  cols << 'PROJECT' unless scoped
+  cols.map(&:bold).join('  ')
+end
 
 # --list [--all | --scope-file FILE]: emit the NUL-delimited fzf input.
 #
@@ -165,17 +167,20 @@ if ARGV.delete('--list')
   entries = with_offsets(entries)
   entries = entries.select { it[:project] == scope } if scope
 
-  $stdout.print((ZWSP * 4) + COLUMN_HEADER + RS)
+  $stdout.print((ZWSP * 4) + column_header(scope) + RS)
   entries.sort_by { -it[:timestamp].to_i }.each do |entry|
     entry => { sessionId: session, project:, timestamp:, display:, offset: }
-    dir = project.start_with?(HOME) ? project.sub(HOME, '~') : project
 
     command = "cd #{project.shellescape} && exec claude -r #{session}"
 
+    cells = [format_time(timestamp).cyan,
+             session[0, SESSION_ID_WIDTH].fg(color_for(session))]
+    unless scope
+      cells << (project.start_with?(HOME) ? project.sub(HOME, '~') : project).blue
+    end
+
     $stdout.print [command, session, project, offset].map { it.to_s + ZWSP }.join
-    $stdout.print [format_time(timestamp).cyan,
-                   session[0, SESSION_ID_WIDTH].fg(color_for(session)),
-                   dir.blue].map { it + ZWSP }.join('  ')
+    $stdout.print cells.map { it + ZWSP }.join('  ')
     $stdout.print "\n"
     display.each_line { $stdout.print "  #{it.italic}" }
     $stdout.print RS
