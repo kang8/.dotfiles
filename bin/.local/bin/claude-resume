@@ -135,9 +135,14 @@ def with_offsets(entries)
   end.values.flatten
 end
 
+# Eight hex digits is enough to tell sessions apart by eye — no prefix collides
+# across a 2700-session history — and it spends 28 fewer columns than the UUID.
+# The full id still rides along in field 2 for the resume command.
+SESSION_ID_WIDTH = 8
+
 COLUMN_HEADER = [
   'TIMESTAMP'.ljust(23),
-  'SESSION'.ljust(36),
+  'SESSION'.ljust(SESSION_ID_WIDTH),
   'PROJECT'
 ].map(&:bold).join('  ')
 
@@ -169,7 +174,7 @@ if ARGV.delete('--list')
 
     $stdout.print [command, session, project, offset].map { it.to_s + ZWSP }.join
     $stdout.print [format_time(timestamp).cyan,
-                   session.fg(color_for(session)),
+                   session[0, SESSION_ID_WIDTH].fg(color_for(session)),
                    dir.blue].map { it + ZWSP }.join('  ')
     $stdout.print "\n"
     display.each_line { $stdout.print "  #{it.italic}" }
