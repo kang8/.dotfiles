@@ -98,9 +98,16 @@ fix that finding's line fields and re-run just that one. Optionally confirm
 cleanly:
 
 ```bash
-glab api projects/<id>/merge_requests/<iid>/draft_notes \
-  | python3 -c "import sys,json;[print(n['id'],(n.get('position') or {}).get('new_line')) for n in json.load(sys.stdin)]"
+glab api projects/<id>/merge_requests/<iid>/draft_notes | python3 -c "
+import sys, json
+for n in sorted(json.load(sys.stdin), key=lambda x: x['id']):
+    p = n.get('position') or {}
+    print(n['id'], str(p.get('new_line') or '-').rjust(4), p.get('new_path') or 'MR-level')
+"
 ```
+
+Print the path, not just the line — a draft that lost its binding shows up as
+`MR-level`, which is invisible if you only look at line numbers.
 
 Then tell the user:
 
@@ -120,5 +127,13 @@ explicitly asks to publish/submit the review now.
   sending a JSON body via `--input`. Don't "simplify" back to `-f` form fields.
 - To delete a stray draft:
   `glab api -X DELETE projects/<id>/merge_requests/<iid>/draft_notes/<draft_id>`.
+- **Editing an inline draft: delete and recreate — never `PUT`.** Update on a
+  draft note is whole-object replacement, not a patch: a
+  `PUT .../draft_notes/<id>` carrying only `note` silently drops `position`, and
+  the draft degrades to an MR-level comment. (Unlike published discussion notes,
+  where editing the body leaves the position alone.) So to reword an inline
+  draft, `DELETE` it and re-run `post_review.py` with the new body — the script
+  re-attaches a fresh `position`. Re-read the draft list afterwards to confirm;
+  the `PUT` response looks successful either way.
 - `diff_refs` (base/start/head SHA) come from the MR object and change on every
   push — the script always re-fetches them, so don't cache them.
