@@ -3,10 +3,8 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
   "enabledPlugins": {
-    "context7@claude-plugins-official": true,
     "ralph-loop@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
-    "vercel@claude-plugins-official": true,
     "view-browser-tab@peek-cli": true,
     "visual-explainer@visual-explainer-marketplace": true
   },
