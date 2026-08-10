@@ -4,7 +4,6 @@ plugins=(
     brew
     vi-mode
     git
-    git-auto-fetch
     fast-syntax-highlighting
     zsh-autosuggestions
     fzf
