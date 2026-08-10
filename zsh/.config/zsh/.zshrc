@@ -10,7 +10,6 @@ plugins=(
     docker
     docker-compose
     sudo
-    gpg-agent
     fzf-tab
     rust
     gh
@@ -33,6 +32,7 @@ plugins=(
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 . $ZSH/oh-my-zsh.sh
+. $ZDOTDIR/gpg-agent.zsh
 . $ZDOTDIR/vim-mode.zsh
 . $ZDOTDIR/vim-switch.zsh
 . $ZDOTDIR/widgets.zsh

@@ -3,6 +3,9 @@ export MANPAGER='nvim +Man!'
 export LC_ALL=en_US.UTF-8
 export ZSH=~/.config/zsh/.oh-my-zsh
 
+# Drop oh-my-zsh's hostname from the dump path: Bonjour renames orphan the cache
+export ZSH_COMPDUMP="$ZDOTDIR/.zcompdump-$ZSH_VERSION"
+
 # fzf -- mirrored in kitty.conf for the overlays kitty launches itself
 export FZF_DEFAULT_OPTS='--color "light" --style minimal'
 
