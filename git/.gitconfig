@@ -66,7 +66,6 @@
 [alias]
     cleanup = !zsh -c --interactive 'gbda' # use onmyzsh function
     fixup = "!git log -n 15 --pretty=format:'%h %cs |%aL| %s' --no-merges | fzf | cut -c -7 | xargs -o git history fixup"
-    open = browse
 [hook "commit-confetti"]
     event = post-commit
     command = ~/.config/git/hooks/post-commit

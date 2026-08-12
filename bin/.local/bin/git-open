@@ -1,0 +1,377 @@
+#!/usr/bin/env bash
+# git-open — open the pull/merge request for a branch in the browser, caching
+# the branch -> URL mapping on disk so repeat invocations skip the API round
+# trip. GitHub remotes are queried with `gh`, every other host with `glab`.
+#
+# A request's web URL never changes once assigned, so this mapping is safe to
+# cache for a long time. The one stale case is a branch whose request was closed
+# and replaced by a new one; the wrong page is then obvious in the browser, and
+# `-f` refetches.
+#
+# When a branch has no open request — including the default branch, which never
+# has one — the project's home page is opened instead.
+#
+#   git open                   open the request for the current branch
+#   git open some-branch       open the request for another branch
+#   git open -f                ignore the cache and refetch
+#   git open --print           print the URL instead of opening it
+#   git open -R group/proj     look in this project instead of the git remote
+#                              ([host/]group/project, subgroups included)
+#
+#   git open --warm            cache every open request of the current repo
+#   git open --warm-all        same, for every repo listed in the repos file
+#   git open --list            show what is cached
+#   git open --clear           empty the cache
+#
+# By default --warm only caches requests you authored. Add --everyone to cache
+# every open request of the project.
+#
+# GIT_OPEN_TTL_DAYS      cache lifetime in days (default 7)
+# GIT_OPEN_CACHE_DIR     cache location (default ${XDG_CACHE_HOME:-~/.cache}/git-open)
+# GIT_OPEN_REPOS         repos file for --warm-all
+#                        (default ${XDG_CONFIG_HOME:-~/.config}/git-open/repos)
+# GIT_OPEN_GITHUB_HOSTS  extra space-separated hosts served by `gh`
+#                        (GitHub Enterprise); github.com is always included
+
+set -euo pipefail
+
+ttl_days="${GIT_OPEN_TTL_DAYS:-7}"
+cache_dir="${GIT_OPEN_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/git-open}"
+repos_file="${GIT_OPEN_REPOS:-${XDG_CONFIG_HOME:-$HOME/.config}/git-open/repos}"
+
+force=0
+print_only=0
+mode=open
+everyone=0
+branch=""
+repo_override=""
+
+die() {
+	echo "git-open: $1" >&2
+	exit "${2:-1}"
+}
+
+# Which CLI serves a host. Anything not known to be GitHub is assumed to be a
+# GitLab instance, since self-hosted GitLab is the common case and GitHub
+# Enterprise hosts can be named through GIT_OPEN_GITHUB_HOSTS.
+forge_for_host() { # host -> github | gitlab
+	local h
+	for h in github.com ${GIT_OPEN_GITHUB_HOSTS:-}; do
+		[[ "$1" == "$h" ]] && { printf github; return; }
+	done
+	printf gitlab
+}
+
+noun_for_host() { # host -> the forge's name for a change request
+	[[ "$(forge_for_host "$1")" == github ]] && printf 'pull request' || printf 'merge request'
+}
+
+# The upstream project a request would live in, as "host<TAB>group/project". A
+# fork workflow pushes branches to a fork but opens requests against upstream,
+# so the branch's own push remote is the wrong thing to ask.
+resolve_remote() {
+	local url host rest
+	url="$(git remote get-url upstream 2>/dev/null || git remote get-url origin 2>/dev/null)" ||
+		die "no 'upstream' or 'origin' remote in $(pwd)"
+
+	# git@host:group/project.git, https://host/group/project.git and
+	# ssh://git@host:2222/group/project all reduce to host + group/project,
+	# subgroups included.
+	url="${url%.git}"
+	url="${url#*://}"
+	url="${url#*@}"
+	host="${url%%[:/]*}"
+	rest="${url#*[:/]}"
+	# An ssh:// URL with an explicit port leaves the port as the first segment.
+	[[ "$rest" =~ ^[0-9]+/ ]] && rest="${rest#*/}"
+	printf '%s\t%s' "$host" "$rest"
+}
+
+# -R takes [host/]group/project, the same shape `gh -R` and `glab -R` accept. A
+# dot in the first segment is what distinguishes a hostname from a group.
+split_repo_override() { # [host/]group/project, fallback host -> host<TAB>project
+	local spec="$1" fallback="$2"
+	if [[ "${spec%%/*}" == *.* ]]; then
+		printf '%s\t%s' "${spec%%/*}" "${spec#*/}"
+	else
+		printf '%s\t%s' "$fallback" "$spec"
+	fi
+}
+
+homepage() { # host, project -> the project's web page
+	printf 'https://%s/%s' "$1" "$2"
+}
+
+# Read from refs/remotes/<remote>/HEAD, which `git clone` writes and
+# `git remote set-head` refreshes. Empty when that ref is missing, in which case
+# the caller just does the lookup and lands on the home page anyway.
+default_branch() {
+	local remote ref
+	for remote in upstream origin; do # same precedence as resolve_remote
+		ref="$(git symbolic-ref --quiet --short "refs/remotes/$remote/HEAD" 2>/dev/null)" || continue
+		printf '%s' "${ref#*/}" # strip the remote name, keep slashes in the branch
+		return
+	done
+}
+
+cache_key() { # host, project, branch
+	printf '%s\n%s\n%s' "$1" "$2" "$3" | shasum -a 256 | cut -d' ' -f1
+}
+
+cache_put() { # host, project, branch, url
+	local entry tmp
+	entry="$cache_dir/$(cache_key "$1" "$2" "$3")"
+	mkdir -p "$cache_dir"
+	chmod 700 "$cache_dir"
+	tmp="$entry.$$"
+	# Trailing newline included: --list cats every entry into one stream.
+	printf '%s\t%s\t%s\t%s\n' "$1" "$2" "$3" "$4" >"$tmp"
+	mv -f "$tmp" "$entry" # atomic, so concurrent runs never read a partial file
+}
+
+cache_get() { # host, project, branch -> url on stdout, empty when missing or stale
+	local entry
+	entry="$cache_dir/$(cache_key "$1" "$2" "$3")"
+	[[ -f "$entry" ]] || return 0
+	# find -mtime +N is true once the file is strictly older than N days.
+	[[ -n "$(find "$entry" -mtime +"$ttl_days" -print -quit 2>/dev/null)" ]] && return 0
+	cut -f4 <"$entry"
+}
+
+# gh already knows how to resolve a branch to its head repository in a fork
+# workflow, so the filtering is left to it rather than reimplemented here.
+fetch_github() { # host, project, extra gh flags... -> "branch<TAB>url" lines
+	local host="$1" project="$2"
+	shift 2
+	gh pr list --repo "$host/$project" --state open --limit 200 \
+		--json headRefName,url --jq '.[] | [.headRefName, .url] | @tsv' "$@"
+}
+
+# One request per page. The list response carries web_url, so the merge
+# requests themselves never have to be fetched.
+fetch_gitlab() { # host, project, query -> "branch<TAB>url" lines
+	local host="$1" encoded="${2//\//%2F}" query="$3" page=1 got
+	while ((page <= 10)); do
+		# Checked explicitly: errexit does not apply inside a command
+		# substitution that is part of an `if` condition.
+		if ! got="$(glab api --hostname "$host" \
+			"projects/$encoded/merge_requests?state=opened&per_page=100&page=$page&$query" |
+			python3 -c 'import json,sys
+for mr in json.load(sys.stdin):
+    if mr.get("source_branch") and mr.get("web_url"):
+        print(mr["source_branch"], mr["web_url"], sep="\t")' 2>/dev/null)"; then
+			# glab has already reported the HTTP or auth error on stderr;
+			# a Python traceback on top of it only adds noise.
+			return 1
+		fi
+		[[ -n "$got" ]] || break
+		printf '%s\n' "$got"
+		# A short page is the last page.
+		(($(printf '%s\n' "$got" | wc -l) < 100)) && break
+		((page++))
+	done
+}
+
+fetch_requests() { # host, project, scope (branch:NAME | mine | all)
+	local host="$1" project="$2" scope="$3"
+	case "$(forge_for_host "$host")" in
+	github)
+		case "$scope" in
+		branch:*) fetch_github "$host" "$project" --head "${scope#branch:}" ;;
+		mine) fetch_github "$host" "$project" --author @me ;;
+		*) fetch_github "$host" "$project" ;;
+		esac
+		;;
+	gitlab)
+		local br
+		case "$scope" in
+		branch:*)
+			br="${scope#branch:}"
+			fetch_gitlab "$host" "$project" "source_branch=${br//\//%2F}"
+			;;
+		mine) fetch_gitlab "$host" "$project" "author_username=$(current_user "$host")" ;;
+		*) fetch_gitlab "$host" "$project" "" ;;
+		esac
+		;;
+	esac
+}
+
+# Looked up once per host per run, not once per repo. gh needs no equivalent:
+# `--author @me` is resolved server side.
+_gitlab_users=""
+current_user() { # host
+	local user
+	user="$(printf '%s' "$_gitlab_users" | awk -F'\t' -v h="$1" '$1 == h { print $2; exit }')"
+	if [[ -z "$user" ]]; then
+		user="$(glab api --hostname "$1" user |
+			python3 -c 'import json,sys; print(json.load(sys.stdin)["username"])')"
+		_gitlab_users+="$1	$user"$'\n'
+	fi
+	printf '%s' "$user"
+}
+
+warm_repo() { # repo directory
+	local dir="$1" host project scope count=0 requests
+	dir="${dir/#\~/$HOME}"
+	[[ -d "$dir" ]] || {
+		echo "  skipped (no such directory): $dir" >&2
+		return 0
+	}
+
+	pushd "$dir" >/dev/null
+	git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
+		popd >/dev/null
+		echo "  skipped (not a git repo): $dir" >&2
+		return 0
+	}
+
+	# Via a variable, not a process substitution: resolve_remote's die() only
+	# kills its own subshell, so its exit status has to be observable here.
+	local remote
+	if ! remote="$(resolve_remote)"; then
+		popd >/dev/null
+		return 1
+	fi
+	IFS=$'\t' read -r host project <<<"$remote"
+
+	scope=mine
+	((everyone)) && scope=all
+
+	# Captured rather than piped, so a failed request is not mistaken for a
+	# project that simply has none open.
+	if ! requests="$(fetch_requests "$host" "$project" "$scope")"; then
+		popd >/dev/null
+		echo "  $host/$project: request failed" >&2
+		return 1
+	fi
+
+	while IFS=$'\t' read -r br url; do
+		[[ -n "$br" ]] || continue
+		cache_put "$host" "$project" "$br" "$url"
+		((count++)) || true
+	done <<<"$requests"
+
+	popd >/dev/null
+	echo "  $host/$project: cached $count $(noun_for_host "$host")$([[ $count == 1 ]] || echo s)" >&2
+}
+
+open_url() {
+	if command -v open >/dev/null 2>&1; then
+		open "$1"
+	elif command -v xdg-open >/dev/null 2>&1; then
+		xdg-open "$1"
+	else
+		die "no browser opener found, use --print"
+	fi
+}
+
+while (($#)); do
+	case "$1" in
+	-f | --refresh) force=1 ;;
+	--print) print_only=1 ;;
+	--warm) mode=warm ;;
+	--warm-all) mode=warm-all ;;
+	--everyone) everyone=1 ;;
+	--list) mode=list ;;
+	--clear) mode=clear ;;
+	-R | --repo)
+		shift
+		repo_override="${1:-}"
+		[[ -n "$repo_override" ]] || die "-R needs a project path" 2
+		;;
+	-h | --help)
+		# The banner above, minus the shebang, up to the first blank/code line.
+		awk 'NR == 1 { next } /^#/ { sub(/^# ?/, ""); print; next } { exit }' "$0"
+		exit 0
+		;;
+	-*) die "unknown flag $1" 2 ;;
+	*) branch="$1" ;;
+	esac
+	shift
+done
+
+case "$mode" in
+clear)
+	rm -rf -- "$cache_dir"
+	echo "Cleared $cache_dir" >&2
+	exit 0
+	;;
+list)
+	[[ -d "$cache_dir" ]] || {
+		echo "(cache is empty)" >&2
+		exit 0
+	}
+	find "$cache_dir" -type f -exec cat {} + 2>/dev/null |
+		sort | awk -F'\t' '{printf "%-24s %-38s %-42s %s\n", $1, $2, $3, $4}'
+	exit 0
+	;;
+warm)
+	warm_repo "$(pwd)"
+	exit 0
+	;;
+warm-all)
+	[[ -f "$repos_file" ]] || die "no repos file at $repos_file"
+	while read -r line; do
+		line="${line%%#*}"
+		line="${line#"${line%%[![:space:]]*}"}"
+		line="${line%"${line##*[![:space:]]}"}"
+		# One unreachable repo must not abort the rest of the run.
+		[[ -n "$line" ]] && { warm_repo "$line" || echo "  failed: $line" >&2; }
+	done <"$repos_file"
+	exit 0
+	;;
+esac
+
+# --- open a single request ----------------------------------------------------
+
+host=""
+project=""
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+	remote="$(resolve_remote)" # errexit stops here when there is no usable remote
+	IFS=$'\t' read -r host project <<<"$remote"
+elif [[ -z "$repo_override" ]]; then
+	die "not inside a git repository"
+fi
+
+if [[ -n "$repo_override" ]]; then
+	override="$(split_repo_override "$repo_override" "${host:-github.com}")"
+	IFS=$'\t' read -r host project <<<"$override"
+fi
+
+if [[ -z "$branch" ]]; then
+	branch="$(git branch --show-current)" ||
+		die "cannot determine the current branch"
+	[[ -n "$branch" ]] || die "detached HEAD, pass a branch name"
+fi
+
+url=""
+# Skipped under -R, where the default branch of the repo you happen to be
+# standing in says nothing about the project being asked for.
+[[ -n "$repo_override" ]] || default="$(default_branch)"
+
+if [[ -n "${default:-}" && "$branch" == "$default" ]]; then
+	# The default branch never has a request of its own; skip the round trip.
+	url="$(homepage "$host" "$project")"
+else
+	((force)) || url="$(cache_get "$host" "$project" "$branch")"
+fi
+
+if [[ -z "$url" ]]; then
+	requests="$(fetch_requests "$host" "$project" "branch:$branch")" ||
+		die "request failed for '$branch' in $host/$project"
+	url="$(printf '%s' "$requests" | head -1 | cut -f2)"
+	if [[ -n "$url" ]]; then
+		cache_put "$host" "$project" "$branch" "$url"
+	else
+		# Nothing open for this branch, so the project page is the most useful
+		# thing left. Deliberately not cached: a request may show up later.
+		echo "git-open: no open $(noun_for_host "$host") for '$branch', opening $host/$project" >&2
+		url="$(homepage "$host" "$project")"
+	fi
+fi
+
+if ((print_only)); then
+	echo "$url"
+else
+	open_url "$url"
+fi
