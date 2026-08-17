@@ -8,9 +8,10 @@
     "view-browser-tab@peek-cli": true
   },
   "env": {
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1",
     "CLAUDE_CODE_SCROLL_SPEED": "2",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_TELEMETRY": "1",
     "GNUPGHOME": "/Users/kang/.gnupg-sandbox"
   },
   "extraKnownMarketplaces": {
