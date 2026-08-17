@@ -29,7 +29,8 @@
 #
 #   * defaults to sessions of the current directory (like `claude --resume`),
 #   * Ctrl-A shows every project,
-#   * Alt-P (Option-P on macOS) pops up a picker to scope to any single project.
+#   * Alt-P (Option-P on macOS) pops up a picker to scope to any single project,
+#   * Alt-B does the same for the git branch the session was last on.
 
 require 'json'
 require 'time'
@@ -64,6 +65,53 @@ def format_time(timestamp)
   Time.at(timestamp / 1000).localtime.strftime('%F %a %T')
 end
 
+def tildify(path)
+  path.start_with?(HOME) ? path.sub(HOME, '~') : path
+end
+
+# `history.jsonl` records no branch, but every message in a session transcript
+# (`~/.claude/projects/<slug>/<session>.jsonl`) carries a `gitBranch`. The slug
+# is a lossy encoding of the project path, so index by file name instead of
+# reconstructing it: transcripts are named after their session id.
+TRANSCRIPTS = File.expand_path('~/.claude/projects/*/*.jsonl')
+GIT_BRANCH = /"gitBranch":"((?:[^"\\]|\\.)*)"/
+TAIL_BYTES = 128 * 1024
+
+# The *last* branch is the interesting one — that is where resuming lands you —
+# so read a tail window rather than the whole file: 500MB of transcripts would
+# cost seconds to scan in full, a 128KB tail costs ~0.15s for the whole history
+# and covers every session seen so far. Falls back to a head scan otherwise.
+def branch_index
+  @branch_index ||= Dir.glob(TRANSCRIPTS).each_with_object({}) do |path, index|
+    branch = File.open(path, 'rb') do |io|
+      io.seek([io.size - TAIL_BYTES, 0].max)
+      io.read.scan(GIT_BRANCH).last&.first ||
+        (io.rewind
+         io.each_line.lazy.filter_map { GIT_BRANCH.match(it)&.[](1) }.first)
+    end
+    index[File.basename(path, '.jsonl')] = branch unless branch.to_s.empty?
+  rescue SystemCallError
+    nil
+  end
+end
+
+# Scope is passed between fzf and its `reload` subprocesses through two temp
+# files (project and branch); an empty or missing file means "unscoped".
+def read_scope(file)
+  return nil unless file && File.exist?(file)
+
+  value = File.read(file).lines.first&.strip
+  value unless value.to_s.empty?
+end
+
+def arg_value(flag)
+  (i = ARGV.index(flag)) ? ARGV[i + 1] : nil
+end
+
+def scopes
+  [read_scope(arg_value('--scope-file')), read_scope(arg_value('--branch-file'))]
+end
+
 # --preview SESSION: render every history entry of a single session.
 if ARGV.delete('--preview')
   session = ARGV.first
@@ -91,6 +139,30 @@ if ARGV.delete('--projects')
          .map { |proj, items| [proj, items.map { it[:timestamp].to_i }.max] }
          .sort_by { -it[1] }
          .each { puts it.first }
+  exit
+end
+
+# --branches [--scope-file FILE]: distinct branches, most-recently-active first,
+# restricted to the current project scope so `master` from twenty repos does not
+# drown out the branch you are looking for. Feeds the Alt-B picker.
+if ARGV.delete('--branches')
+  project, = scopes
+  entries = entries.select { it[:project] == project } if project
+
+  entries.group_by { branch_index[it[:sessionId]] }
+         .reject { |branch, _| branch.nil? }
+         .map { |branch, items| [branch, items.map { it[:timestamp].to_i }.max] }
+         .sort_by { -it[1] }
+         .each { puts it.first }
+  exit
+end
+
+# --label: the fzf border label for the current scope. Computed here rather than
+# assembled in shell so every binding gets the same formatting for free.
+if ARGV.delete('--label')
+  project, branch = scopes
+  scope = [project ? tildify(project) : 'all projects', branch].compact
+  puts " Claude sessions · #{scope.join(' · ')} "
   exit
 end
 
@@ -140,44 +212,60 @@ end
 # The full id still rides along in field 2 for the resume command.
 SESSION_ID_WIDTH = 8
 
-# Scoped to one project, every row repeats the same path, so the column is
-# 20-30 wasted columns saying nothing. The border label already names the scope.
-def column_header(scoped)
+# Scoped to one project (or one branch), every row repeats the same value, so
+# the column is 20-30 wasted columns saying nothing. The border label already
+# names the scope.
+def column_header(project_scope, branch_scope, branch_width)
   cols = ['TIMESTAMP'.ljust(23), 'SESSION'.ljust(SESSION_ID_WIDTH)]
-  cols << 'PROJECT' unless scoped
+  cols << (project_scope ? 'BRANCH' : 'BRANCH'.ljust(branch_width)) unless branch_scope
+  cols << 'PROJECT' unless project_scope
   cols.map(&:bold).join('  ')
 end
 
-# --list [--all | --scope-file FILE]: emit the NUL-delimited fzf input.
-#
-# Scope is resolved as: --all -> every project; --scope-file -> the project path
-# in FILE (empty file means every project); otherwise $CLAUDE_FZF_PROJECT if set.
+# --list [--scope-file FILE] [--branch-file FILE]: emit the NUL-delimited fzf
+# input, restricted to whichever project/branch scope those files name.
 if ARGV.delete('--list')
-  scope =
-    if ARGV.delete('--all')
-      nil
-    elsif (i = ARGV.index('--scope-file'))
-      f = ARGV[i + 1]
-      val = (File.read(f).lines.first&.strip if f && File.exist?(f))
-      val unless val.to_s.empty?
-    elsif !(env = ENV['CLAUDE_FZF_PROJECT'].to_s).empty?
-      env
-    end
+  project_scope, branch_scope = scopes
 
   entries = with_offsets(entries)
-  entries = entries.select { it[:project] == scope } if scope
+  entries = entries.select { it[:project] == project_scope } if project_scope
+  if branch_scope
+    entries = entries.select { branch_index[it[:sessionId]] == branch_scope }
+  end
 
-  $stdout.print((ZWSP * 4) + column_header(scope) + RS)
-  entries.sort_by { -it[:timestamp].to_i }.each do |entry|
+  # A back-and-forth within one session lands as a run of adjacent rows that all
+  # resume to the same place — the newest prompt of the run already tells you
+  # what the session is about, so keep only that one. A session interleaved with
+  # others still shows up once per run, which is the useful signal: it says you
+  # came back to it. The preview (Ctrl-/) still lists every prompt.
+  rows = entries.sort_by { -it[:timestamp].to_i }
+                .chunk_while { |a, b| a[:sessionId] == b[:sessionId] }
+                .map(&:first)
+
+  # Pad to the widest branch actually on screen so PROJECT still lines up.
+  branch_width =
+    if branch_scope
+      0
+    else
+      rows.map { branch_index[it[:sessionId]].to_s.length }
+          .push('BRANCH'.length).max
+    end
+
+  $stdout.print((ZWSP * 4) +
+                column_header(project_scope, branch_scope, branch_width) + RS)
+  rows.each do |entry|
     entry => { sessionId: session, project:, timestamp:, display:, offset: }
 
     command = "cd #{project.shellescape} && exec claude -r #{session}"
 
     cells = [format_time(timestamp).cyan,
              session[0, SESSION_ID_WIDTH].fg(color_for(session))]
-    unless scope
-      cells << (project.start_with?(HOME) ? project.sub(HOME, '~') : project).blue
+    unless branch_scope
+      branch = branch_index[session].to_s
+      pad = project_scope ? 0 : branch_width - [branch.length, 1].max
+      cells << (branch.empty? ? '-'.dim : branch.yellow) + (' ' * pad)
     end
+    cells << tildify(project).blue unless project_scope
 
     $stdout.print [command, session, project, offset].map { it.to_s + ZWSP }.join
     $stdout.print cells.map { it + ZWSP }.join('  ')
@@ -190,40 +278,63 @@ if ARGV.delete('--list')
   exit
 end
 
-# Main mode: launch fzf. It pulls its list via `start:reload` (and Ctrl-A/Alt-P
-# re-scope via further reloads), so the current environment carries the initial
-# scope down to the first `--list` subprocess.
-self_esc = __FILE__.shellescape
-ruby = "ruby #{self_esc}"
-tmp = File.join(Dir.tmpdir, "claude-resume-#{Process.pid}.scope")
-at_exit { File.delete(tmp) if File.exist?(tmp) }
+# Main mode: launch fzf. Scope lives in two temp files rather than the
+# environment, because `reload` subprocesses inherit the environment fzf was
+# started with — files are the only channel a keybinding can write to and the
+# next `--list` can read back. Every binding therefore follows the same shape:
+# rewrite a scope file, then re-derive both the label and the list from it.
+# Absolute, because the reload/execute subprocesses are spawned by fzf and a
+# relative `__FILE__` would only resolve while the cwd happens to match.
+self_path = File.expand_path(__FILE__)
+ruby = "ruby #{self_path.shellescape}"
+prefix = File.join(Dir.tmpdir, "claude-resume-#{Process.pid}")
+proj_f = "#{prefix}.project"
+branch_f = "#{prefix}.branch"
+pick_f = "#{prefix}.pick"
+temps = [proj_f, branch_f, pick_f]
+cleanup = -> { temps.each { File.delete(it) if File.exist?(it) } }
+at_exit(&cleanup)
 
+# Start scoped to the current directory, like `claude --resume`, but only if it
+# has sessions — otherwise there is nothing to show and every project is the
+# more useful default. `pwd_scope` is what Ctrl-A toggles back to.
 pwd = Dir.pwd
-if entries.any? { it[:project] == pwd }
-  ENV['CLAUDE_FZF_PROJECT'] = pwd
-  label = " Claude sessions · #{pwd.start_with?(HOME) ? pwd.sub(HOME, '~') : pwd} "
-else
-  ENV['CLAUDE_FZF_PROJECT'] = ''
-  label = ' Claude sessions · all projects '
+pwd_scope = entries.any? { it[:project] == pwd } ? pwd : ''
+File.write(proj_f, pwd_scope)
+File.write(branch_f, '')
+
+scope_args = "--scope-file #{proj_f} --branch-file #{branch_f}"
+list = "#{ruby} --list #{scope_args}"
+relabel = "$(#{ruby} --label #{scope_args})"
+refresh = "printf 'change-border-label(%s)+reload(%s)' \"#{relabel}\" '#{list}'"
+
+# chomp, not strip: the label's surrounding spaces are the border padding.
+label = IO.popen(['ruby', self_path, '--label',
+                  '--scope-file', proj_f, '--branch-file', branch_f],
+                 &:read).chomp
+
+# Ctrl-A toggles between the current directory and every project. Either way the
+# branch scope is dropped: a branch picked inside one project rarely means
+# anything in the next, and a stale filter that silently hides rows is worse
+# than one keystroke of re-filtering.
+ctrl_a =
+  "ctrl-a:transform:if [ -s #{proj_f} ]; then : > #{proj_f}; " \
+  "else printf '%s' #{pwd_scope.shellescape} > #{proj_f}; fi; " \
+  ": > #{branch_f}; #{refresh}"
+
+# Alt-P / Alt-B: pick into a scratch file first, so cancelling the inner fzf
+# (which leaves it empty) neither clobbers the live scope nor triggers a reload.
+picker = lambda do |key, prompt, source, target, also = ':'|
+  "#{key}:execute(#{source} | " \
+  "fzf --no-multi --reverse --prompt '#{prompt}> ' > #{pick_f})" \
+  "+transform:[ -s #{pick_f} ] && " \
+  "{ cat #{pick_f} > #{target}; #{also}; #{refresh}; }"
 end
 
-all_label = ' Claude sessions · all projects '
-
-# Ctrl-A toggles between all projects and the current directory's scope, reading
-# the live border label (exported as $FZF_BORDER_LABEL) to know which way to flip.
-ctrl_a =
-  'ctrl-a:transform:case "$FZF_BORDER_LABEL" in ' \
-  "*'all projects'*) " \
-  "printf 'change-border-label(%s)+reload(%s --list)' '#{label}' '#{ruby}';; " \
-  '*) ' \
-  "printf 'change-border-label(%s)+reload(%s --list --all)' '#{all_label}' '#{ruby}';; " \
-  'esac'
-
-alt_p =
-  "alt-p:execute(#{ruby} --projects | fzf --no-multi --reverse --prompt 'project> ' > #{tmp})" +
-  "+transform:[ -s #{tmp} ] && " \
-  "printf 'change-border-label( Claude sessions · %s )+reload(#{ruby} --list --scope-file #{tmp})' " \
-  "\"$(basename \"$(cat #{tmp})\")\""
+alt_p = picker.call('alt-p', 'project', "#{ruby} --projects", proj_f,
+                    ": > #{branch_f}")
+alt_b = picker.call('alt-b', 'branch',
+                    "#{ruby} --branches --scope-file #{proj_f}", branch_f)
 
 fzf_args = [
   'fzf', '--read0', '--ansi', '--reverse', '--style', 'full', '--gap',
@@ -231,17 +342,20 @@ fzf_args = [
   '--delimiter', ZWSP, '--with-nth', '5..', '--accept-nth', '{1}',
   '--highlight-line', '--scheme', 'history',
   '--border-label', label,
-  '--header', 'Ctrl-A: toggle all/current / Alt-P: filter project / Ctrl-/: preview',
+  '--header', 'Ctrl-A: toggle all/current / Alt-P: project / Alt-B: branch / Ctrl-/: preview',
   '--header-lines', '1',
   '--header-border', 'dashed', '--header-lines-border', 'inline',
   '--preview', "#{ruby} --preview {2}",
   '--preview-window', 'hidden:wrap-word:+{4}',
   '--bind', 'ctrl-/:toggle-preview',
-  '--bind', "start:reload(#{ruby} --list)",
+  '--bind', "start:reload(#{list})",
   '--bind', ctrl_a,
   '--bind', alt_p,
+  '--bind', alt_b,
   *ARGV
 ]
 
 selected = IO.popen(fzf_args, 'r', in: File::NULL, &:read).to_s.strip
+# `exec` replaces the process image, so at_exit never runs — clean up by hand.
+cleanup.call
 exec "eval #{selected.shellescape}" unless selected.empty?
