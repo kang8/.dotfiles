@@ -30,3 +30,13 @@ codex/.codex/sessions/
 codex/.codex/log/
 codex/.codex/logs_*
 codex/.codex/plugins/
+
+# Agent skills: only the ones written here are versioned. Third-party skills are
+# a cache rebuilt by agents/.agents/restore-skills.sh from .skill-lock.json, so
+# adding one of your own means adding it below too - restore-skills.sh warns
+# about any skill that is neither locked nor committed.
+agents/.agents/skills/*
+!agents/.agents/skills/commit/
+!agents/.agents/skills/gitlab-mr-review/
+!agents/.agents/skills/squash-branch/
+!agents/.agents/skills/web-to-epub/

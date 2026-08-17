@@ -8,6 +8,9 @@ mkdir -p ~/.local/bin || true
 # instead of turning the whole dir into a symlink and polluting the repo with
 # codex runtime data (sqlite, sessions, logs).
 mkdir -p ~/.codex || true
+# Same folding trick for ~/.agents/skills: third-party skills live here as real
+# directories (restored from .skill-lock.json), ours arrive as stow symlinks.
+mkdir -p ~/.agents/skills || true
 cp .env.example .env
 
 ########
@@ -26,6 +29,29 @@ done
 # codex/.stow-local-ignore) because Codex owns/rewrites it in place; `-n` never
 # clobbers an existing live file, so re-runs are safe.
 cp -n codex/.codex/config.toml ~/.codex/config.toml || true
+
+# Third-party skills are git-ignored (see .gitignore); rebuild them from the
+# lock file. Skipped when they are already present, since it hits the network.
+if [[ ! -d ~/.agents/skills || -z "$(ls -A ~/.agents/skills 2>/dev/null)" ]]; then
+    echo "restoring third-party skills..."
+    ~/.agents/restore-skills.sh || true
+fi
+
+# Fan ~/.agents/skills out to each harness. Claude Code hardcodes its scan roots
+# to .claude/skills and ~/.claude/skills and never looks at ~/.agents, so every
+# skill needs its own link rather than one directory link. Real directories are
+# left alone: that is how a harness keeps a local-only skill out of the repo.
+for harness in ~/.claude/skills ~/.codex/skills; do
+    [[ -L "$harness" ]] && rm "$harness"
+    mkdir -p "$harness"
+    # drop links to skills that no longer exist upstream
+    find "$harness" -maxdepth 1 -type l ! -exec test -e {} \; -delete
+    for skill in ~/.agents/skills/*/; do
+        name=$(basename "$skill")
+        [[ -d "$harness/$name" && ! -L "$harness/$name" ]] && continue
+        ln -sfn "../../.agents/skills/$name" "$harness/$name"
+    done
+done
 
 # Restore Yazi's plugins at the revisions locked in yazi/.config/yazi/package.toml.
 # The plugins/ directory is git-ignored, so this is what a fresh machine needs
