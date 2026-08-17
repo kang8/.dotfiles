@@ -55,32 +55,68 @@ the hunk headers to confirm which side a line lives on.
 
 ## Step 3 — Write the findings JSON
 
-Build a JSON array. Keep each `body` concise and actionable; lead with a short
-bold tag (e.g. `**[bug]**`, `**[需确认]**`) so the MR thread scans well. Match
-the language the user/MR is using (mirror the language of the existing MR
-description and threads).
+Build a JSON array. Match the language the user/MR is using (mirror the language
+of the existing MR description and threads).
 
 ```json
 [
-  {
-    "file": "transform/models/.../x.sql",
-    "new_line": 11,
-    "body": "**[bug]** ..."
-  },
-  {
-    "file": "transform/models/.../x.sql",
-    "new_line": 87,
-    "body": "**[需确认]** ..."
-  }
+  { "file": "transform/models/.../x.sql", "new_line": 11, "body": "..." },
+  { "file": "transform/models/.../x.sql", "new_line": 87, "body": "..." }
 ]
 ```
 
+### Comment shape
+
+**Verdict first, as its own one-line paragraph. Then one paragraph giving the
+single most fundamental reason. Then stop.** Shape of a real comment the user
+wrote after cutting an AI draft to a third of its length:
+
+```
+These two lines are unnecessary.
+
+"TagPills is real" answers the last review round; it is not written for a
+reader of the docs. Someone reading this for the first time in six months
+does not care whether the example exists elsewhere — they care whether
+copying it works.
+```
+
+Note what that does: it names _who the text is for_ — one criterion the author
+can reuse on the next comment like it — and nothing else.
+
+Do **not** include:
+
+- a bold tag prefix (`**[bug]**`, `**[nit]**`) — the user strips them
+- hedging — "suggest", "I'd lean toward", "perhaps", "it might be worth"
+- a second and third supporting reason. Pick the most fundamental one, cut the
+  rest — extra evidence proves you did the homework, it does not change what the
+  author does next
+- the harm/consequence argument ("otherwise this silently reaches downstream…")
+  — the author is a competent colleague and does not need the danger explained
+- an alternative wording for prose, unless the fix is genuinely non-obvious
+
+Attribute to the process, not the person: "this answers the last review round"
+lands better than "you wrote this to satisfy a reviewer".
+
+Add, but only when it earns its place:
+
+- a `>` blockquote of evidence — only when the claim rests on a fact the reader
+  cannot confirm by re-reading the commented line (a cross-file interaction, a
+  constant defined elsewhere, framework behaviour). Never for a judgement call
+  about the line itself.
+- a fenced code block introduced by a softening lead-in — only when proposing
+  concrete replacement code. In Chinese threads the user's own lead-in is
+  `仅供参考：`.
+
+Length check before posting: prefer the shortest version that still gives the
+author a reusable criterion. A comment longer than the hunk it annotates is
+almost always padded.
+
 ### No MR-level summary
 
-Do **not** add an overall / 总评 / "here's my summary" entry — it's not the
-user's style. Every object in the array carries a `file` and a line. If a
-finding feels like it needs preamble, put that preamble in the one inline note
-it actually belongs to, or drop it.
+Do **not** add an overall / "here's my summary" entry — it's not the user's
+style. Every object in the array carries a `file` and a line. If a finding feels
+like it needs preamble, put that preamble in the one inline note it actually
+belongs to, or drop it.
 
 Any cross-cutting context worth saying (what you skipped and why, overall
 verdict) goes in your **reply in the conversation**, not on the MR.
