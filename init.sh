@@ -48,8 +48,17 @@ for harness in ~/.claude/skills ~/.codex/skills; do
     find "$harness" -maxdepth 1 -type l ! -exec test -e {} \; -delete
     for skill in ~/.agents/skills/*/; do
         name=$(basename "$skill")
-        [[ -d "$harness/$name" && ! -L "$harness/$name" ]] && continue
-        ln -sfn "../../.agents/skills/$name" "$harness/$name"
+        # if/else, not `[[ … ]] && continue`: on a real directory ln -sfn puts the
+        # link *inside* it, so a skipped guard silently nests <name>/<name>.
+        # Absolute, not ../../: the relative form hardcodes a depth of two and
+        # would silently dangle for a harness nested any deeper. These links are
+        # regenerated per machine, so there is nothing to gain by keeping them
+        # relocatable.
+        if [[ -d "$harness/$name" && ! -L "$harness/$name" ]]; then
+            :
+        else
+            ln -sfn "${HOME}/.agents/skills/$name" "$harness/$name"
+        fi
     done
 done
 

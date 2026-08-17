@@ -35,10 +35,43 @@ while IFS=$'\t' read -r source names; do
     npx -y skills@latest add "$source" -g "${args[@]}" -a claude-code -y </dev/null
 done <"$rows"
 
+# The CLI copies into the agent directory and replaces any symlink there, so
+# without this the harnesses drift apart: Claude Code reads its fresh copy while
+# Codex still reads the older one under ~/.agents. Move each locked copy back to
+# ~/.agents and re-link. A real directory that is *not* locked is a deliberate
+# harness-local skill, so leave it.
+locked=$(python3 -c 'import json,sys;print("\n".join(json.load(open(sys.argv[1]))["skills"]))' "$LOCK")
+for harness in "${HOME}/.claude/skills" "${HOME}/.codex/skills"; do
+    [[ -d $harness ]] || continue
+    for dir in "$harness"/*/; do
+        name=$(basename "$dir")
+        if [[ -L ${dir%/} ]]; then
+            :
+        elif grep -qxF "$name" <<<"$locked"; then
+            rm -rf "${SKILLS:?}/${name}"
+            mv "${dir%/}" "${SKILLS}/${name}"
+        fi
+    done
+done
+
+# Fan back out. if/else, not `[[ … ]] && continue`: on a real directory ln -sfn
+# puts the link *inside* it, silently nesting <name>/<name>. Link target is
+# absolute because a relative one hardcodes the harness's depth below $HOME.
+for harness in "${HOME}/.claude/skills" "${HOME}/.codex/skills"; do
+    mkdir -p "$harness"
+    for dir in "$SKILLS"/*/; do
+        name=$(basename "$dir")
+        if [[ -d "$harness/$name" && ! -L "$harness/$name" ]]; then
+            :
+        else
+            ln -sfn "${SKILLS}/${name}" "$harness/$name"
+        fi
+    done
+done
+
 # A skill that is neither locked nor committed exists on this machine only. That
 # is fine for a scratch skill and a silent loss for one meant to be versioned.
 echo
-locked=$(python3 -c 'import json,sys;print("\n".join(json.load(open(sys.argv[1]))["skills"]))' "$LOCK")
 for dir in "$SKILLS"/*/; do
     name=$(basename "$dir")
     grep -qxF "$name" <<<"$locked" && continue
