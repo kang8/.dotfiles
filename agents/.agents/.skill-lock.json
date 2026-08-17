@@ -247,6 +247,15 @@
       "skillFolderHash": "881fc4ac82a25e61a58d332426b5673efe060da0",
       "installedAt": "2026-08-17T02:51:08.329Z",
       "updatedAt": "2026-08-17T03:04:54.747Z"
+    },
+    "visual-explainer": {
+      "source": "nicobailon/visual-explainer",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/nicobailon/visual-explainer.git",
+      "skillPath": "plugins/visual-explainer/SKILL.md",
+      "skillFolderHash": "2e89a94bb6cef89cabc7c5421c4ec70144fc57d6",
+      "installedAt": "2026-08-17T03:16:34.961Z",
+      "updatedAt": "2026-08-17T03:16:34.961Z"
     }
   },
   "dismissed": {

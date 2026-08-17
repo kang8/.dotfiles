@@ -5,8 +5,7 @@
   "enabledPlugins": {
     "ralph-loop@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
-    "view-browser-tab@peek-cli": true,
-    "visual-explainer@visual-explainer-marketplace": true
+    "view-browser-tab@peek-cli": true
   },
   "env": {
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
@@ -18,12 +17,6 @@
     "peek-cli": {
       "source": {
         "repo": "puffinsoft/peek-cli",
-        "source": "github"
-      }
-    },
-    "visual-explainer-marketplace": {
-      "source": {
-        "repo": "nicobailon/visual-explainer",
         "source": "github"
       }
     }
