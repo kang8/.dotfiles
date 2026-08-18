@@ -1,79 +1,5 @@
 #!/bin/bash
 
-# Wrap text in an OSC 8 hyperlink (Cmd+click in kitty/iTerm2/WezTerm).
-# Uses $'...' so real control bytes land in the string — that way the final
-# output still goes through a plain `echo`, and no other component risks having
-# its backslashes reinterpreted the way `printf %b` would.
-osc8_link() {
-  local url=$1 text=$2
-  if [ -n "$url" ]; then
-    printf '%s' $'\033]8;;'"$url"$'\a'"$text"$'\033]8;;\a'
-  else
-    printf '%s' "$text"
-  fi
-}
-
-# Cache location for GitLab MR lookups (see the PR/MR section below).
-mr_cache_file() {
-  local dir="${XDG_CACHE_HOME:-$HOME/.cache}/claude-statusline"
-  mkdir -p "$dir" 2>/dev/null
-  printf '%s/mr-%s' "$dir" "$(printf '%s|%s' "$1" "$2" | cksum | tr -d ' ')"
-}
-
-# Background refresh mode: re-invoked detached by the render path below, never
-# by Claude Code itself. Resolves the branch's open MR via `glab` (~3s) and
-# writes the rendered label to the cache. An empty file means "checked, no MR".
-if [ "$1" = "--refresh-mr" ]; then
-  repo_dir=$2
-  cache=$3
-  # mkdir is atomic: it doubles as a lock so concurrent renders spawn one refresh.
-  mkdir "$cache.lock" 2>/dev/null || exit 0
-  trap 'rmdir "$cache.lock" 2>/dev/null' EXIT
-
-  cd "$repo_dir" 2>/dev/null || exit 0
-  mr=$(glab mr view -F json 2>/dev/null)
-
-  label=""
-  # `glab mr view` also returns merged/closed MRs for the branch, which would
-  # otherwise stick in the status line forever — keep only open ones.
-  url=""
-  IFS=$'\t' read -r iid draft conflicts project_id url <<<"$(printf '%s' "$mr" |
-    jq -r 'select(.state == "opened")
-           | [.iid, (.draft // false), (.has_conflicts // false), .project_id, .web_url]
-           | @tsv' 2>/dev/null)"
-
-  if [ -n "$iid" ]; then
-    # Count actual approvers rather than trusting `.approved`: GitLab reports
-    # approved=true vacuously when a project requires zero approvals.
-    approvers=0
-    if [ -n "$project_id" ]; then
-      approvers=$(glab api "projects/$project_id/merge_requests/$iid/approvals" 2>/dev/null |
-        jq -r '.approved_by | length' 2>/dev/null)
-      [ -n "$approvers" ] || approvers=0
-    fi
-
-    if [ "$draft" = "true" ]; then
-      label="!$iid •"
-    elif [ "$conflicts" = "true" ]; then
-      label="!$iid ✗"
-    elif [ "$approvers" -gt 0 ] 2>/dev/null; then
-      label="!$iid ✓"
-    else
-      label="!$iid"
-    fi
-  fi
-
-  # Cache as "label<TAB>url" — the render path must never call glab itself.
-  # An empty file still means "checked, no open MR".
-  if [ -n "$label" ]; then
-    printf '%s\t%s' "$label" "$url" >"$cache.tmp"
-  else
-    : >"$cache.tmp"
-  fi
-  mv "$cache.tmp" "$cache"
-  exit 0
-fi
-
 # Read JSON input from stdin
 input=$(cat)
 
@@ -99,11 +25,9 @@ if git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
   git_branch=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null || git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
 fi
 
-# Extract PR info. Claude Code fills `.pr` by shelling out to `gh pr view`, so
-# it only ever populates for GitHub remotes — GitLab is handled separately below.
-pr_number=$(echo "$input" | jq -r '.pr.number // empty')
-pr_review_state=$(echo "$input" | jq -r '.pr.review_state // empty')
-repo_host=$(echo "$input" | jq -r '.workspace.repo.host // empty')
+# PR/MR is deliberately absent here: since v2.1.234 Claude Code renders its own
+# footer badge for both GitHub PRs and GitLab MRs (`prStatusFooterEnabled`, on by
+# default), so repeating `.pr` in the status line would just double it up.
 
 # Build status line components
 components=()
@@ -130,40 +54,6 @@ components+=("$short_cwd")
 # Git branch
 if [ -n "$git_branch" ]; then
   components+=("$git_branch")
-fi
-
-# PR / MR indicator. Symbols: ✓ approved, ✗ blocked, • draft, bare = open.
-# GitHub uses "#123", GitLab "!123" — each platform's own shorthand.
-pr_label=""
-pr_url=""
-if [ -n "$pr_number" ]; then
-  case "$pr_review_state" in
-    approved) pr_label="#$pr_number ✓" ;;
-    changes_requested) pr_label="#$pr_number ✗" ;;
-    draft) pr_label="#$pr_number •" ;;
-    *) pr_label="#$pr_number" ;;
-  esac
-  pr_url=$(echo "$input" | jq -r '.pr.url // empty')
-elif [ -n "$git_branch" ] && command -v glab >/dev/null 2>&1; then
-  case "$repo_host" in
-    *gitlab*)
-      # `glab mr view` takes ~3s — far past the render budget. Serve the cached
-      # label immediately and refresh out-of-band (stale-while-revalidate).
-      mr_cache=$(mr_cache_file "$cwd" "$git_branch")
-      if [ -f "$mr_cache" ]; then
-        IFS=$'\t' read -r pr_label pr_url <"$mr_cache"
-      fi
-      if [ ! -f "$mr_cache" ] || [ -n "$(find "$mr_cache" -mmin +2 2>/dev/null)" ]; then
-        # Via `bash`, not a direct exec: the script ships mode 644 (settings.json
-        # also invokes it as `bash ~/.claude/statusline-command.sh`).
-        bash "${BASH_SOURCE[0]}" --refresh-mr "$cwd" "$mr_cache" >/dev/null 2>&1 &
-      fi
-      ;;
-  esac
-fi
-
-if [ -n "$pr_label" ]; then
-  components+=("$(osc8_link "$pr_url" "$pr_label")")
 fi
 
 # Vim mode indicator
