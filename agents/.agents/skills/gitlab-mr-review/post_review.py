@@ -12,9 +12,11 @@ Findings are read as JSON from a file argument or stdin:
   [
     {"file": "path/to/x.sql", "new_line": 11,  "body": "comment on an ADDED line"},
     {"file": "path/to/x.sql", "old_line": 120, "body": "comment on a REMOVED line"},
-    {"file": "path/to/x.sql", "new_line": 50, "old_line": 48, "body": "CONTEXT line"},
-    {"body": "overall MR-level note with no position"}
+    {"file": "path/to/x.sql", "new_line": 50, "old_line": 48, "body": "CONTEXT line"}
   ]
+
+A finding with neither new_line nor old_line is posted as an MR-level note with
+no position; SKILL.md's flow never does this.
 
 Rules for line numbers (GitLab requirement):
   - ADDED line   -> new_line only
