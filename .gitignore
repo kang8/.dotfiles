@@ -37,6 +37,7 @@ codex/.codex/plugins/
 # about any skill that is neither locked nor committed.
 agents/.agents/skills/*
 !agents/.agents/skills/commit/
+!agents/.agents/skills/condense-comments/
 !agents/.agents/skills/gitlab-mr-review/
 !agents/.agents/skills/squash-branch/
 !agents/.agents/skills/web-to-epub/
