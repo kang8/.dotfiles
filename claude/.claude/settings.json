@@ -277,6 +277,10 @@
     }
   },
   "skipDangerousModePermissionPrompt": true,
+  "spellcheck": {
+    "checker": "aspell",
+    "enabled": true
+  },
   "statusLine": {
     "command": "bash ~/.claude/statusline-command.sh",
     "type": "command"
