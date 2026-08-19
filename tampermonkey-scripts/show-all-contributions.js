@@ -2,7 +2,7 @@
 // @name              Show all contributions by year in the GitHub profile
 // @name:zh-CN        在 GitHub profile 页面以年份展示用户所有的贡献
 // @namespace         https://github.com/kang8
-// @version           0.0.6
+// @version           0.0.7
 // @updateURL         https://raw.githubusercontent.com/kang8/.dotfiles/master/tampermonkey-scripts/show-all-contributions.js
 // @downloadURL       https://raw.githubusercontent.com/kang8/.dotfiles/master/tampermonkey-scripts/show-all-contributions.js
 // @description       Show all contributions by year since the user was created in the GitHub profile page
@@ -31,10 +31,17 @@
    * - https://github.com/kang8/
    */
   if (
-    pathArr.length === 2 ||
-    (pathArr.length === 3 && pathArr[2] === '') && pathArr[1] !== ''
+    pathArr[1] !== '' &&
+    (pathArr.length === 2 || (pathArr.length === 3 && pathArr[2] === ''))
   ) {
     const userId = pathArr[1];
+
+    const thisYear = new Date().getFullYear();
+    const totalYearsCreated = await getTotalYears(userId, thisYear);
+
+    if (totalYearsCreated <= 0) {
+      return;
+    }
 
     const contributionsLastYear = document.querySelector(
       contributionsLastYearSelector,
@@ -45,18 +52,12 @@
     contributionsAllYearsDiv.id = 'contributions-all-years';
     contributionsLastYear.after(contributionsAllYearsDiv);
 
-    const totalYearsCreated =
-      document.querySelectorAll('div.js-profile-timeline-year-list > ul > li')
-        .length;
-
     const details = document.createElement('details');
     details.className = 'py-3';
 
     const summary = createSummaryElement(totalYearsCreated, details);
     details.append(summary);
     contributionsAllYearsDiv.append(details);
-
-    const thisYear = new Date().getFullYear();
 
     for (let index = 0; index < totalYearsCreated; index++) {
       const currentYear = thisYear - index;
@@ -90,6 +91,45 @@
     }
   }
 })();
+
+/**
+ * GitHub's redesigned profile no longer renders the year list
+ * (`.js-profile-timeline-year-list`), so derive the span from the account
+ * creation date instead. Cached, since the API is rate limited to 60 req/h.
+ *
+ * @param {string} userId
+ * @param {number} thisYear
+ * @returns {Promise<number>}
+ */
+async function getTotalYears(userId, thisYear) {
+  const cacheKey = `show-all-contributions:created-year:${userId}`;
+  const cached = Number(localStorage.getItem(cacheKey));
+
+  if (cached) {
+    return thisYear - cached + 1;
+  }
+
+  try {
+    const response = await fetch(`https://api.github.com/users/${userId}`);
+
+    if (!response.ok) {
+      throw new Error(`GitHub API responded with ${response.status}`);
+    }
+
+    const createdYear = new Date((await response.json()).created_at)
+      .getFullYear();
+
+    localStorage.setItem(cacheKey, String(createdYear));
+
+    return thisYear - createdYear + 1;
+  } catch (error) {
+    console.warn(
+      '[show-all-contributions] cannot resolve the join year',
+      error,
+    );
+    return 0;
+  }
+}
 
 /**
  * @param {Element} graph
