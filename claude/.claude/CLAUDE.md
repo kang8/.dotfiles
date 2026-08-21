@@ -5,6 +5,11 @@
 Base commit messages solely on **staged changes** — the user stages what they
 want committed. Ignore unstaged modifications.
 
+## Contributing to Third-Party GitHub Projects
+
+Work on any repo we don't own — including upstream dependencies — happens in a
+dedicated clone under `~/github/<repo>`. Use the `upstream-pr` skill.
+
 ## Information Accuracy
 
 When unsure about any technical detail (fact, API, config, version, behavior):
