@@ -42,6 +42,8 @@ export PATH="$PNPM_HOME:$PATH"
 # opam configuration
 [[ ! -r ~/.opam/opam-init/init.zsh ]] || source ~/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
 
+export HOMEBREW_NO_UPGRADE_QUIT_CASKS=1
+
 # llvm
 [[ -d $HOMEBREW_PREFIX/opt/llvm/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/llvm/bin:$PATH"
 # python
