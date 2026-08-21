@@ -9,7 +9,7 @@ mkdir -p ~/.local/bin || true
 # codex runtime data (sqlite, sessions, logs).
 mkdir -p ~/.codex || true
 # Same folding trick for ~/.agents/skills: third-party skills live here as real
-# directories (restored from .skill-lock.json), ours arrive as stow symlinks.
+# directories (restored from the Skillfile), ours arrive as stow symlinks.
 mkdir -p ~/.agents/skills || true
 cp .env.example .env
 

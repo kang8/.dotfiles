@@ -31,10 +31,15 @@ codex/.codex/log/
 codex/.codex/logs_*
 codex/.codex/plugins/
 
+# The skills CLI rewrites a hash and a timestamp for every skill on each daily
+# update, so the lock is machine-local noise. agents/.agents/Skillfile is the
+# tracked list of what is installed, same split as Brewfile / Brewfile.lock.json.
+agents/.agents/.skill-lock.json
+
 # Agent skills: only the ones written here are versioned. Third-party skills are
-# a cache rebuilt by agents/.agents/restore-skills.sh from .skill-lock.json, so
+# a cache rebuilt by agents/.agents/restore-skills.sh from the Skillfile, so
 # adding one of your own means adding it below too - restore-skills.sh warns
-# about any skill that is neither locked nor committed.
+# about any skill that is in neither the Skillfile nor git.
 agents/.agents/skills/*
 !agents/.agents/skills/commit/
 !agents/.agents/skills/condense-comments/
