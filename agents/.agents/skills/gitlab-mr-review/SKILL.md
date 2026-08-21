@@ -39,8 +39,9 @@ which is not the user's style — put the preamble that tempted you into the one
 inline note it belongs to, or drop it. Cross-cutting context (what you skipped
 and why, the overall verdict) goes in your **reply in the conversation**.
 
-GitLab binds an inline note to a position. Get the line _type_ right or the note
-silently degrades to a general comment:
+GitLab **binds** a note to a diff line through a `position`. Get the line _type_
+wrong and the note comes back **unbound** — a general comment on the MR, posted
+with a successful-looking 200:
 
 - **Added line** (`+` in the diff) → `new_line` only. This is the common case
   for reviewing new code.
@@ -64,6 +65,8 @@ threads.
   { "file": "transform/models/.../x.sql", "new_line": 87, "body": "..." }
 ]
 ```
+
+To reword a draft you already created, see Step 5.
 
 Write it to `"$TMPDIR/mr_findings.json"` — easier than escaping a long heredoc.
 
@@ -119,7 +122,7 @@ python3 ~/.claude/skills/gitlab-mr-review/post_review.py "$TMPDIR/mr_findings.js
 ```
 
 The script: resolves project from `git remote` + MR from the branch, fetches the
-MR's `diff_refs`, POSTs each finding as a draft note with a proper JSON
+MR's `diff_refs`, writes each finding as a draft note with a freshly built JSON
 `position`, then **reads each draft back** and prints a table with an `OK` /
 `NOT-BOUND` status per note.
 
@@ -129,7 +132,8 @@ override the project.
 ## Step 5 — Verify and report
 
 Done means: every draft shows a line number _and_ a file path. Read the script's
-status table, then confirm independently:
+status table, then confirm independently — this also catches unbound leftovers
+from an earlier run:
 
 ```bash
 glab api projects/<id>/merge_requests/<iid>/draft_notes | python3 -c "
@@ -140,28 +144,25 @@ for n in sorted(json.load(sys.stdin), key=lambda x: x['id']):
 "
 ```
 
-Print the path, not just the line — a draft that lost its binding shows up as
-`MR-level`, which is invisible if you only look at line numbers. Any `NOT-BOUND`
-or `MR-level` row is a bug, almost always a wrong line type (e.g. `new_line`
-alone for a context line that needs both).
+Judge by `new_path`, not by the line alone: an unbound draft keeps a `position`
+object full of nulls plus a stale `line_code`, so both of those still look
+healthy. An `MR-level` or `NOT-BOUND` row is a bug, almost always a wrong line
+type (`new_line` alone for a context line that needs both).
 
-**To fix or reword an inline draft: delete and recreate — never `PUT`.** Update
-on a draft note is whole-object replacement, not a patch: a
-`PUT .../draft_notes/<id>` carrying only `note` silently drops `position` and
-degrades the draft to MR-level, while returning a successful-looking response.
-(Published discussion notes differ — editing the body there leaves the position
-alone.) So:
+**Reword a draft in place: re-run the script with that draft's `draft_id`,
+keeping its `file` and line keys.**
 
-```bash
-glab api -X DELETE projects/<id>/merge_requests/<iid>/draft_notes/<draft_id>
+```json
+[{ "draft_id": 35458, "file": "...x.sql", "new_line": 11, "body": "reworded" }]
 ```
 
-then re-run `post_review.py` with just that finding — the script attaches a
-fresh `position` — and re-read the draft list to confirm.
+The script `PUT`s instead of `POST`ing and the status table shows `PUT`. Drop
+the line keys and the update unbinds the draft — the script's docstring has the
+mechanism.
 
 Then tell the user:
 
-- The MR (`!<iid>` + url) and how many drafts were created, with the line each
+- The MR (`!<iid>` + url) and how many drafts you wrote, with the line each
   landed on.
 - That they are **drafts** — visible only to the user until submitted.
 - How to publish: Submit review in the MR UI, **or** ask you to re-run with

@@ -18,6 +18,14 @@ Findings are read as JSON from a file argument or stdin:
 A finding with neither new_line nor old_line is posted as an MR-level note with
 no position; SKILL.md's flow never does this.
 
+Add "draft_id": <id> to reword an existing draft in place (PUT) instead of
+creating one. Prefer this over delete+recreate: it keeps the draft's id and its
+reply-to-discussion linkage, which a recreate cannot restore. GitLab's PUT is
+whole-object replacement, so the position must be resent on every update -- a
+PUT carrying only `note` blanks the position out and the draft degrades to
+MR-level. This script always resends a freshly built position, so keep the file
+and line keys on an update finding exactly as on a create.
+
 Rules for line numbers (GitLab requirement):
   - ADDED line   -> new_line only
   - REMOVED line -> old_line only
@@ -121,35 +129,46 @@ def main() -> None:
     iid, refs = mr["iid"], mr["diff_refs"]
     print(f"MR !{iid}  {mr['web_url']}\n")
 
+    endpoint = f"projects/{project_id}/merge_requests/{iid}/draft_notes"
     results = []
     for f in findings:
         body = {"note": f["body"]}
         pos = build_position(refs, f)
         if pos:
             body["position"] = pos
-        d = glab_api(f"projects/{project_id}/merge_requests/{iid}/draft_notes", "POST", body)
+        draft_id = f.get("draft_id")
+        if draft_id and not pos:
+            print(f"  warning: draft {draft_id} has no line; the update will blank its "
+                  "position and turn it into an MR-level note.")
+        if draft_id:
+            d = glab_api(f"{endpoint}/{draft_id}", "PUT", body)
+        else:
+            d = glab_api(endpoint, "POST", body)
+        # A wiped position comes back as a hash of nulls, not as null, so test a
+        # line number -- truthiness of `position` (or a stale line_code) says OK
+        # on a draft that has actually lost its binding.
         rp = d.get("position") or {}
         wanted_inline = pos is not None
         bound = rp.get("new_line") is not None or rp.get("old_line") is not None
         status = "OK" if (not wanted_inline or bound) else "NOT-BOUND"
-        results.append((d.get("id"), f.get("file", "-"),
+        results.append((d.get("id"), "PUT" if draft_id else "POST", f.get("file", "-"),
                         rp.get("new_line") or rp.get("old_line") or "-", status))
 
-    print(f"{'draft':>7}  {'line':>6}  status  file")
-    for did, file, line, status in results:
+    print(f"{'draft':>7}  {'verb':<5} {'line':>6}  status  file")
+    for did, verb, file, line, status in results:
         flag = "  " if status == "OK" else "!!"
-        print(f"{did:>7}  {str(line):>6}  {flag}{status:<9} {file}")
+        print(f"{did:>7}  {verb:<5} {str(line):>6}  {flag}{status:<9} {file}")
 
-    bad = [r for r in results if r[3] != "OK"]
+    bad = [r for r in results if r[4] != "OK"]
     if bad:
         print(f"\n  {len(bad)} note(s) did not bind to a line (check new_line/old_line "
-              "vs added/removed/context rules). They were created as general notes.")
+              "vs added/removed/context rules). They are now general notes.")
 
     if args.publish:
         glab_api(f"projects/{project_id}/merge_requests/{iid}/draft_notes/bulk_publish", "POST", {})
         print("\nPublished the review (all drafts are now live).")
     else:
-        print("\nDrafts created (unpublished). Review them in the MR UI and Submit, "
+        print("\nDrafts written (unpublished). Review them in the MR UI and Submit, "
               "or re-run with --publish.")
 
 
