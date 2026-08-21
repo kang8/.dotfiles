@@ -173,6 +173,7 @@
     ]
   },
   "includeCoAuthoredBy": false,
+  "keybindingFlavor": "readline",
   "model": "claude-opus-5[1m]",
   "permissions": {
     "additionalDirectories": [
