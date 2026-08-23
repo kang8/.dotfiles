@@ -44,6 +44,8 @@ export PATH="$PNPM_HOME:$PATH"
 
 export HOMEBREW_NO_UPGRADE_QUIT_CASKS=1
 
+# imagemagick
+[[ -d $HOMEBREW_PREFIX/opt/imagemagick-full/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/imagemagick-full/bin:$PATH"
 # llvm
 [[ -d $HOMEBREW_PREFIX/opt/llvm/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/llvm/bin:$PATH"
 # python
