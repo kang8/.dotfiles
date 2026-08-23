@@ -1,0 +1,27 @@
+prefix_rule(
+    pattern = ["gh", "auth", "status"],
+    decision = "allow",
+    justification = "Read-only inspection of GitHub authentication status",
+    match = [
+        "gh auth status",
+        "gh auth status --hostname github.com",
+    ],
+    not_match = [
+        "gh auth login",
+        "gh auth logout",
+    ],
+)
+
+prefix_rule(
+    pattern = ["gh", "repo", "view"],
+    decision = "allow",
+    justification = "Read-only inspection of GitHub repository metadata",
+    match = [
+        "gh repo view",
+        "gh repo view openai/codex --json name,visibility",
+    ],
+    not_match = [
+        "gh repo clone openai/codex",
+        "gh repo delete openai/codex",
+    ],
+)
