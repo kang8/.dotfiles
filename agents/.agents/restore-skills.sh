@@ -10,14 +10,14 @@ SKILLS="${HOME}/.agents/skills"
 
 [[ -f $SKILLFILE ]] || { echo "no Skillfile at $SKILLFILE - run \`stow agents\` first" >&2; exit 1; }
 
-# Strip comments and blanks once; every pass below reads "<source> <name>" rows.
+# Strip comments and blanks once; "*" means every skill from that source.
 entries=$(awk 'NF && $1 !~ /^#/ { print $1, $2 }' "$SKILLFILE")
 
 # One npx call per source repo rather than per skill.
 while read -r source; do
     echo "restoring ${source}"
-    # -s takes one skill per flag; a comma- or space-joined list is read as a
-    # single name and silently matches nothing.
+    # -s takes one skill per flag; the CLI treats "*" as all skills from the
+    # source. A comma- or space-joined list is read as one name and matches none.
     args=()
     while read -r name; do args+=(-s "$name"); done \
         < <(awk -v s="$source" '$1 == s { print $2 }' <<<"$entries" | LC_ALL=C sort)
@@ -29,9 +29,17 @@ done < <(awk '{ print $1 }' <<<"$entries" | LC_ALL=C sort -u)
 # without this the harnesses drift apart: Claude Code reads its fresh copy while
 # Codex still reads the older one under ~/.agents. Move each locked copy back to
 # ~/.agents and re-link. A real directory that is *not* locked is a deliberate
-# harness-local skill, so leave it. "Locked" below means "listed in the
-# Skillfile" - the real lock file is machine-local and not consulted here.
-locked=$(awk '{ print $2 }' <<<"$entries")
+# harness-local skill, so leave it. Expand wildcard sources from the lock file
+# the successful install just refreshed, so newly added upstream skills count.
+locked=$(
+    awk '$2 != "*" { print $2 }' <<<"$entries"
+    while read -r source; do
+        jq -r --arg source "$source" \
+            '.skills | to_entries[] | select(.value.source == $source) | .key' \
+            "${HOME}/.agents/.skill-lock.json"
+    done < <(awk '$2 == "*" { print $1 }' <<<"$entries")
+)
+locked=$(LC_ALL=C sort -u <<<"$locked")
 for harness in "${HOME}/.claude/skills" "${HOME}/.codex/skills"; do
     [[ -d $harness ]] || continue
     for dir in "$harness"/*/; do

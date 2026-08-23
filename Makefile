@@ -9,8 +9,16 @@ format:
 	@# the list of what is installed, without the hashes that churn every update.
 	@if [ -f agents/.agents/.skill-lock.json ]; then \
 		{ sed -n '/^#/p' agents/.agents/Skillfile; \
-		  jq -r '.skills | to_entries[] | "\(.value.source) \(.key)"' \
-		    agents/.agents/.skill-lock.json | LC_ALL=C sort; \
+		  { awk 'NF && $$1 !~ /^#/ && $$2 == "*" { print $$1, $$2 }' \
+		      agents/.agents/Skillfile; \
+		    jq -r '.skills | to_entries[] | "\(.value.source) \(.key)"' \
+		      agents/.agents/.skill-lock.json | \
+		      while read -r source name; do \
+		        awk -v source="$$source" \
+		          '$$1 == source && $$2 == "*" { found=1 } END { exit !found }' \
+		          agents/.agents/Skillfile || printf '%s %s\n' "$$source" "$$name"; \
+		      done; \
+		  } | LC_ALL=C sort; \
 		} > agents/.agents/Skillfile.tmp && \
 		mv agents/.agents/Skillfile.tmp agents/.agents/Skillfile; \
 	fi

@@ -1,28 +1,8 @@
-# Third-party agent skills: "<source repo> <skill name>", one per line.
+# Third-party agent skills: "<source repo> <skill name or *>", one per line.
 # Regenerated from ~/.agents/.skill-lock.json by `make format`; installed by
 # restore-skills.sh. The lock file itself is machine-local and gitignored.
 bbenefield89/skills branch-change-explorer
-mattpocock/skills ask-matt
-mattpocock/skills code-review
-mattpocock/skills codebase-design
-mattpocock/skills diagnosing-bugs
-mattpocock/skills domain-modeling
-mattpocock/skills grill-me
-mattpocock/skills grill-with-docs
-mattpocock/skills grilling
-mattpocock/skills handoff
-mattpocock/skills implement
-mattpocock/skills improve-codebase-architecture
-mattpocock/skills prototype
-mattpocock/skills research
-mattpocock/skills setup-matt-pocock-skills
-mattpocock/skills tdd
-mattpocock/skills teach
-mattpocock/skills to-spec
-mattpocock/skills to-tickets
-mattpocock/skills triage
-mattpocock/skills wayfinder
-mattpocock/skills writing-great-skills
+mattpocock/skills *
 nicobailon/visual-explainer visual-explainer
 niekcandaele/skills catchup
 vercel-labs/skills find-skills
