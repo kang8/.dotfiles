@@ -26,12 +26,22 @@ OSC8 = re.compile(
     re.DOTALL,
 )
 
-# Mirrors kitty's url_prefixes. Excluding \x1b stops a trailing SGR reset being
-# swallowed; \x00 pads short screen lines.
+# Mirrors kitty's url_prefixes. The body stops at CJK punctuation (U+3000-303F)
+# and fullwidth forms (U+FF00-FF65) so a URL in Chinese prose ends at the "）";
+# other CJK stays, since 路径 can be a real path segment. Controls are out so a
+# trailing SGR reset isn't swallowed; \x00 pads short screen lines.
 URL = re.compile(
     r'(?:file|ftps?|gemini|git|gopher|https?|ircs?|kitty|mailto|news|sftp|ssh)'
-    r'://[^\s\x00\x1b\x07"\'<>()\[\]`|]+'
+    r'://[^\s\x00-\x20\x7f-\x9f"\'<>()\[\]`|\u3000-\u303f\uff00-\uff65]+'
 )
+
+# An OSC 8 URI is percent-encoded ASCII, and emitters get that wrong: Claude
+# Code pads them with 30 x U+D7BF U+FFFD, which `open` then chokes on.
+URI = re.compile(r'[!-~]+')
+
+# fzf rows are one line, and Claude Code's hyperlinks run past the link text
+# into the sentence after it.
+MAX_LABEL = 120
 
 # as_ansi=True keeps OSC 8, but also every SGR on the line. fzf runs without
 # --ansi, so an unstripped ESC[34m shows up as a literal "[34m" prefix.
@@ -51,6 +61,16 @@ def clean(s):
     return s.replace('\n', '').replace('\x00', '').strip()
 
 
+def clean_uri(s):
+    m = URI.match(clean(s))
+    return m.group() if m else ''
+
+
+def clean_label(s):
+    label = ' '.join(clean(s).split())
+    return label[:MAX_LABEL] + '…' if len(label) > MAX_LABEL else label
+
+
 def collect(text):
     """Return [(display, url)] for every link, newest (lowest) first.
 
@@ -61,10 +81,13 @@ def collect(text):
     covered = []
 
     for m in OSC8.finditer(text):
-        url, label = clean(m.group('url')), clean(m.group('label'))
+        url, label = clean_uri(m.group('url')), clean_label(m.group('label'))
         covered.append((m.start(), m.end()))
-        if url and label:
-            found.append((m.start(), f'{label}  →  {url}', url))
+        if url:
+            # startswith, not ==: that is the shape of an over-long label.
+            noisy = not label or label.startswith(url)
+            display = url if noisy else f'{label}  →  {url}'
+            found.append((m.start(), display, url))
 
     for m in URL.finditer(text):
         start, end = m.span()
