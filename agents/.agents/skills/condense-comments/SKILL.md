@@ -1,77 +1,92 @@
 ---
 name: condense-comments
-description: Shorten long code comments to their smallest useful form, and delete the ones carrying nothing. Use when asked to condense, shorten, trim, or simplify comments, or via `/condense-comments [<path>|all]`.
+description: Shorten long code comments to their smallest useful form, delete the ones restating the code, and cut the ghosts pointing at code the reader cannot see. Use on your own once you finish writing or editing code that left comments behind, when asked to clean up the comments on a diff or a new file, or via `/condense-comments`.
 ---
 
 # Condense Comments
 
-Most comments an agent writes are three times longer than they need to be.
+A comment earns its place by helping the **cold reader** — someone holding only
+this code, with no chat history, no prior versions, no memory of what was tried
+and rejected. An agent writes for the reader it just talked to, and that reader
+is gone. Most of what it leaves behind is three times longer than it needs to
+be.
+
 Rewrite them short. Delete only what survives no rewrite.
 
-## Invocation
+## The bar
 
-| Command                     | Scope                                                                         |
-| --------------------------- | ----------------------------------------------------------------------------- |
-| `/condense-comments`        | Comments in the working-tree diff against `HEAD` — what was just written.     |
-| `/condense-comments <path>` | Every comment under that file or directory.                                   |
-| `/condense-comments all`    | Every comment in the repo's own source (skip vendored, generated, lockfiles). |
+A comment survives only if, without it, the cold reader would have to trace
+**several separate parts of the code** to reconstruct what it says.
 
-Default to the diff. It is where verbose comments are freshest and least
-reviewed.
-
-## The two tests
-
-Apply in order to each comment:
-
-1. **Delete test** — if this comment were gone, would the next person write the
-   same code? Yes → delete it.
-2. **Line test** — what is the one sentence that survives? Everything else goes.
+- **Clears the bar:** external API, SDK, or platform behavior invisible locally;
+  a workaround and the condition that retires it; a trade-off or rejected
+  alternative; a ticket, RFC, or bug reference; a cross-cutting invariant or
+  ordering constraint; a constraint one call site imposes on another.
+- **Local facts are not distant.** The line it sits on, its enclosing function,
+  and the name and signature of the function it calls on the next line are all
+  local. If the point is clear from those, it is restatement.
+- **Greppable facts never clear the bar.** Who calls this, who implements it,
+  how many exist — the reader greps, and grep never goes stale.
+- **Being a _why_ earns nothing on its own.** A why the local code already makes
+  obvious is still noise.
+- **Partial keeps are fine.** Keep the fragment that clears the bar; cut the
+  narration around it.
 
 ## Cut
 
-- **Openers that restate the signature.**
-  `/** Fetch a single issue as IIssue. */` above `getIssue(): Promise<IIssue>`.
-- **Inferable conclusions.** A sentence the reader derives from the sentence
-  before it.
-- **Context the location supplies.** Inside `integration/jira/`, `jira.js v6` is
+**Restated** — the code already says it.
+
+- Openers echoing the signature. `/** Fetch a single issue as IIssue. */` above
+  `getIssue(): Promise<IIssue>`.
+- Values copied out of a constant. Reference it by name instead.
+- Context the location supplies. Inside `integration/jira/`, `jira.js v6` is
   `v6`.
-- **Restated values.** Reference the constant by name; don't copy its number.
-- **Narrative build-up.** "There are three reasons for this. First, …" → the
-  reason.
+- Guarantees the construct already makes — "don't mutate", "keep in sync" — over
+  a `const` or a frozen object. A real invariant names a place the code _could_
+  break it.
+- A census of the codebase: how many other places use this thing, or which ones.
+- Prose narrating a delegate call, above the one line calling a well-named
+  function.
 
-## Keep
+**Ghost** — points at something absent from the code. Ruled-out approaches,
+deleted alternatives, "as requested", a design from earlier in the conversation.
+`// switched from Redux to Zustand`, `// no longer need the wrapper class`. Only
+a reader who watched the code change can use these.
 
-Anything the code cannot carry, at whatever length it genuinely needs:
+Version archaeology is the same smell in past tense: "v6 models this endpoint as
+JSON, so it rejects image bytes" outlives "we used to use v5, which returned a
+buffer, but v6 changed to …". Describe why the code looks the way it does now.
 
-- external API, SDK, or platform behavior that is not visible locally;
-- workarounds, and the condition under which they can be removed;
-- trade-offs and rejected alternatives;
-- ticket, RFC, and bug references;
-- non-obvious invariants and ordering constraints.
+A ghost also hides as a clause inside a comment worth keeping — "unlike X",
+"rather than X", "no longer Y". Excise the clause, keep the rest. Contrastive
+phrasing is the tell.
 
-When a comment mixes both, keep the fact and cut the narration around it.
+**Padding** — the right fact, too many words.
 
-## Prefer present tense over version archaeology
-
-"v6 models this endpoint as JSON, so it rejects image bytes" outlives "we used
-to use v5, which returned a buffer, but v6 changed to …". Describe why the code
-looks the way it does now.
+- Inferable conclusions: a sentence the reader derives from the one before it.
+- Narrative build-up: "There are three reasons for this. First, …" → the reason.
+- Length tracks how non-obvious the target is. When you are defending a
+  paragraph one true sentence at a time, the target is the tell: ordinary code,
+  over-documented. Cut to the line that would surprise a competent reader.
 
 ## Workflow
 
-1. Resolve scope. For the default, read `git diff HEAD` and collect added
-   comment lines.
-2. For each candidate, draft the condensed form before deciding to delete — a
-   comment worth one line is not worth zero.
-3. Apply the rewrites. Do not ask first — the tests above are the approval.
-4. Run the project's formatter, linter, and typecheck.
-5. Report the table below, covering what changed and what was left alone.
+1. Scope the working tree: run `git status --porcelain`, then take the changed
+   lines of tracked files and all of each new file. Untracked files carry the
+   densest fresh comments and `git diff` alone hides them. Delegate the
+   read-only scan to a fast subagent when one is available: ask for path, line,
+   full comment text, and the declaration it sits above.
+2. Classify every comment in scope against the bar.
+3. Draft the condensed form before deciding to delete — a comment worth one line
+   is not worth zero.
+4. Apply the rewrites. Do not ask first: the bar is the approval. Touch only
+   comments; if a cut tempts you to rename a variable or restructure a line,
+   report it instead.
+5. Run the project's formatter, linter, and typecheck.
+6. Report the table below, covering what changed and what was left alone.
 
-Delegate the read-only scan to a fast subagent when one is available: ask for
-path, line, full comment text, and the declaration it sits above.
-
-When the working-tree diff is empty, fall back to the current branch's commits
-against `master`, and say that is what you scoped to.
+Done when every comment in scope is accounted for — condensed, deleted, or
+deliberately kept — none skipped.
 
 ## Required output
 
@@ -89,8 +104,11 @@ reduction is visible. Never report a rewrite you have not actually drafted.
 
 - Comments in files you were not asked to touch stay untouched, even when
   verbose.
-- Never condense a comment into something you are not sure is true. If the
-  original is the only record of why the code exists and you cannot verify it,
-  keep it verbatim.
+- Condense a comment only into something you are sure is true. When the original
+  is the only record of why the code exists and you cannot verify it, keep it
+  verbatim.
 - Leave license headers, `@ts-expect-error` justifications, and eslint-disable
   reasons alone — linters and reviewers depend on their exact wording.
+- Commented-out code is a separate call. Flag it and leave it in place.
+- Condense a comment in the language it is written in. A Chinese comment stays
+  Chinese.
