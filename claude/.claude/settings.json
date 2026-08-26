@@ -105,6 +105,10 @@
       {
         "hooks": [
           {
+            "command": "python3 ~/.claude/gitlab-note-guard.py",
+            "type": "command"
+          },
+          {
             "command": "atuin hook claude-code",
             "type": "command"
           }
