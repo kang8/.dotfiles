@@ -9,18 +9,30 @@ agent: general-purpose
 
 > Runs in a forked subagent (background) on the skill body alone — the live
 > conversation is not inherited. Everything you need comes from git, the active
-> CLAUDE.md files, or `$ARGUMENTS`. When a ticket id or branching hint isn't
-> discoverable there, say so in the final report rather than asking.
+> CLAUDE.md files, or the argument quoted in Step 0. When a ticket id or
+> branching hint isn't discoverable there, say so in the final report rather
+> than asking.
 
 You are creating a git commit from currently staged changes, following the
 active project's conventions.
 
 ## Step 0 — Route on the argument
 
+This run was invoked with the argument between the markers below. Nothing
+between them means it was empty.
+
+<argument>
+$ARGUMENTS
+</argument>
+
+Route on it before running anything:
+
 - **Empty** → carry on with Step 1.
 - **Starts with `amend`** → read `AMEND.md` in this skill's directory and follow
-  it instead; it replaces every step below. Any words after `amend` are the
-  user's intent for the rewrite.
+  it instead; it replaces every step below, so do not run Step 1's checks or
+  Step 5's `git commit` first. Any words after `amend` are the user's intent for
+  the rewrite — carry them with you, `AMEND.md` is read from disk and cannot see
+  the argument itself.
 - **Anything else** → report the argument as unrecognised, name the two accepted
   forms, and stop.
 
@@ -28,10 +40,9 @@ active project's conventions.
 
 Run in parallel:
 
-- `git status`
+- `git status` — the working tree, and the branch you are on
 - `git diff --staged`
 - `git log --oneline -10`
-- `git rev-parse --abbrev-ref HEAD`
 
 Commit exactly what is already staged — the user decides what goes in. If
 `git diff --staged` comes back empty, report that nothing is staged and stop.
@@ -61,8 +72,8 @@ the recoverable mistake.
   another prefix only when the active CLAUDE.md names it.
 - **Ticket**: use a ticket id you actually find (Jira-style — uppercase letters,
   a dash, digits, e.g. `PROJ-123`) in the current branch name, the recent
-  `git log`, or `$ARGUMENTS`. Found none → omit the segment and say so in the
-  report.
+  `git log`, or the Step 0 argument. Found none → omit the segment and say so in
+  the report.
 - **Slug**: 3-7 lowercase kebab-case words naming what the change _does_.
 - **Full format**: `<prefix>/<TICKET>-<slug>`
   - `feature/PROJ-123-add-dark-mode-toggle` — verb-first, describes the action
@@ -93,9 +104,9 @@ EOF
 )"
 ```
 
-Let the hooks and the signing run: `--no-verify`, `--amend`, `--no-gpg-sign`,
-and `-c commit.gpgsign=false` are the user's call, not yours. When a pre-commit
-hook fails, investigate it and put the fix in a **new** commit.
+Let the hooks and the signing run — skipping either is the user's call, not
+yours. When a pre-commit hook fails, investigate it and put the fix in a **new**
+commit.
 
 ## Step 6 — Verify and report
 

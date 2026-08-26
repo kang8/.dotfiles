@@ -1,12 +1,14 @@
 # Amend mode
 
-Reached from Step 0 of `SKILL.md` when `$ARGUMENTS` starts with `amend`. Fold
-the staged changes into `HEAD` and rewrite its message. No branch is created —
-the commit already sits on the current branch, so Steps 2 and 3 do not apply.
+Reached from Step 0 of `SKILL.md` when the argument starts with `amend`. Fold
+the staged changes into `HEAD` and rewrite its message. No branch is created.
+
+This file is read from disk, so it never sees the argument itself — the words
+after `amend` reach you only as Step 0 quoted them.
 
 ## 1 — Read the commit you are rewriting
 
-Run Step 1's four commands, plus:
+Run Step 1's commands, plus:
 
 - `git log -1 --format=%B` — the message you are replacing
 - `git show --stat --format= HEAD` — what the commit already carries
@@ -14,12 +16,10 @@ Run Step 1's four commands, plus:
 
 An empty staged diff is fine here, unlike in Step 1: it means a reword.
 
-Stop and report, leaving `HEAD` untouched, when any of these holds:
-
-- `HEAD` is a merge commit.
-- The repo has no commits yet, so there is nothing to amend.
-- `HEAD` is already contained in a remote branch — amending would rewrite
-  published history, and that call belongs to the user.
+`amend` names a destination — the change lands in `HEAD` — and no state of
+`HEAD` overrides it. Already published, or a merge commit: both amend cleanly,
+the reflog keeps the commit you replaced, and each is a line in the report
+rather than a reason to stop.
 
 ## 2 — Name the shape
 
@@ -41,8 +41,8 @@ rather than two events stitched together.
 
 Rank your sources: the staged diff and `git show --stat HEAD` are ground truth
 for what the commit will contain; the old message supplies the parts still
-accurate; any words after `amend` in `$ARGUMENTS` carry the user's intent, which
-a forked run has no other way to see.
+accurate; any words after `amend` carry the user's intent, which a forked run
+has no other way to see.
 
 The message describes the final state of the change, as if it had been written
 that way the first time.
@@ -63,5 +63,6 @@ re-run the same `git commit --amend`, keeping the history one commit deep.
 
 - The shape — **fixup**, **squash**, or **reword** — and old → new short SHA
 - The rewritten message, and one line on how it differs from the old one
-- That the branch is **unpushed**. If a remote ref still disagrees, say plainly
-  that publishing needs a force-push, and leave that call to the user.
+- Whether the branch is **unpushed**, or has diverged from a remote ref that
+  still carries the old commit — in which case say plainly that publishing needs
+  `git push --force-with-lease`, and leave that call to the user.
