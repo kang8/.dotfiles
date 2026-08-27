@@ -1,6 +1,7 @@
 model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
 personality = "pragmatic"
+approvals_reviewer = "auto_review"
 
 sandbox_mode = "workspace-write"
 
