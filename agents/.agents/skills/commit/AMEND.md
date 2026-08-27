@@ -3,23 +3,22 @@
 Reached from Step 0 of `SKILL.md` when the argument starts with `amend`. Fold
 the staged changes into `HEAD` and rewrite its message. No branch is created.
 
-This file is read from disk, so it never sees the argument itself — the words
-after `amend` reach you only as Step 0 quoted them.
-
 ## 1 — Read the commit you are rewriting
 
 Run Step 1's commands, plus:
 
 - `git log -1 --format=%B` — the message you are replacing
 - `git show --stat --format= HEAD` — what the commit already carries
-- `git branch -r --contains HEAD` — whether it is already published
 
 An empty staged diff is fine here, unlike in Step 1: it means a reword.
 
 `amend` names a destination — the change lands in `HEAD` — and no state of
-`HEAD` overrides it. Already published, or a merge commit: both amend cleanly,
-the reflog keeps the commit you replaced, and each is a line in the report
-rather than a reason to stop.
+`HEAD` overrides it. A merge commit amends as cleanly as any other, and the
+reflog keeps the commit you replaced.
+
+Never offer a separate follow-up commit as the safer alternative to rewriting.
+The user picked the destination; a second commit is a different history than the
+one they asked for.
 
 ## 2 — Name the shape
 
@@ -63,6 +62,6 @@ re-run the same `git commit --amend`, keeping the history one commit deep.
 
 - The shape — **fixup**, **squash**, or **reword** — and old → new short SHA
 - The rewritten message, and one line on how it differs from the old one
-- Whether the branch is **unpushed**, or has diverged from a remote ref that
-  still carries the old commit — in which case say plainly that publishing needs
-  `git push --force-with-lease`, and leave that call to the user.
+
+If a permission rule blocks `git commit --amend`, say that plainly and let the
+user run it themselves.

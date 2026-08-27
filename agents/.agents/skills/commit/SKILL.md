@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Commit staged changes using the project's conventions, branching first when its workflow calls for it. Pass "amend" to fold them into the previous commit instead.
+description: Commit staged changes using the project's conventions, branching first when its workflow calls for it.
 disable-model-invocation: true
 argument-hint: '[amend [intent]]'
 context: fork
@@ -16,6 +16,10 @@ agent: general-purpose
 You are creating a git commit from currently staged changes, following the
 active project's conventions.
 
+The scope is the local commit, in both modes: the run ends once the commit
+exists and the report names its SHA. Publishing is the user's own business —
+leave the remote out of your commands and out of your report.
+
 ## Step 0 — Route on the argument
 
 This run was invoked with the argument between the markers below. Nothing
@@ -28,11 +32,10 @@ $ARGUMENTS
 Route on it before running anything:
 
 - **Empty** → carry on with Step 1.
-- **Starts with `amend`** → read `AMEND.md` in this skill's directory and follow
-  it instead; it replaces every step below, so do not run Step 1's checks or
-  Step 5's `git commit` first. Any words after `amend` are the user's intent for
-  the rewrite — carry them with you, `AMEND.md` is read from disk and cannot see
-  the argument itself.
+- **Starts with `amend`** → `AMEND.md` in this skill's directory is the whole
+  run: read it and follow it in place of every step below. Any words after
+  `amend` are the user's intent for the rewrite — carry them with you, since
+  `AMEND.md` is read from disk and cannot see the argument itself.
 - **Anything else** → report the argument as unrecognised, name the two accepted
   forms, and stop.
 
@@ -76,9 +79,9 @@ the recoverable mistake.
   the report.
 - **Slug**: 3-7 lowercase kebab-case words naming what the change _does_.
 - **Full format**: `<prefix>/<TICKET>-<slug>`
-  - `feature/PROJ-123-add-dark-mode-toggle` — verb-first, describes the action
-  - `feature/PROJ-123-userservice-changes` — names a file, not the change
-  - `feature/PROJ-123-misc-cleanup` — vague, carries no information
+  - ✓ `feature/PROJ-123-add-dark-mode-toggle` — verb-first, describes the action
+  - ✗ `feature/PROJ-123-userservice-changes` — names a file, not the change
+  - ✗ `feature/PROJ-123-misc-cleanup` — vague, carries no information
 
 Create with `git checkout -b <branch>`, and leave existing branches intact.
 
@@ -110,8 +113,7 @@ commit.
 
 ## Step 6 — Verify and report
 
-Run `git status` to confirm the commit landed and to read the working tree
-state.
+Run `git status` to confirm the commit landed.
 
 Return a concise final report — this is the subagent's result, surfaced back to
 the main conversation:
@@ -119,6 +121,3 @@ the main conversation:
 - Short SHA, and the branch name if you created one
 - Any ticket id you could not determine, or a branch/no-branch judgement call
   worth confirming
-- That the commit is **unpushed** — the push is the user's call
-
-Leave pull and merge requests to an explicit request.
