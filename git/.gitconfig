@@ -48,8 +48,6 @@
     version = 2
 [includeIf "gitdir:~/Projects/"]
     path = ~/.gitconfig-work
-[includeIf "gitdir:~/git-email/"]
-    path = ~/git-email/.gitconfig
 [diff]
     renames = true
     colorMoved = default
