@@ -3,8 +3,6 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
   "enabledPlugins": {
-    "ralph-loop@claude-plugins-official": true,
-    "security-guidance@claude-plugins-official": true,
     "view-browser-tab@peek-cli": true
   },
   "env": {
