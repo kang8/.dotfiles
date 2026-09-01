@@ -30,6 +30,8 @@ plugins=(
 
 # zsh-completions setup
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+# sentry, and anything else dropping a completion into the XDG data dir
+fpath+=$HOME/.local/share/zsh/site-functions
 
 . $ZSH/oh-my-zsh.sh
 . $ZDOTDIR/gpg-agent.zsh
