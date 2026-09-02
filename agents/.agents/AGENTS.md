@@ -5,6 +5,22 @@
 Base commit messages solely on **staged changes** — the user stages what they
 want committed. Ignore unstaged modifications.
 
+## Writing Style
+
+Ban these constructions in prose, commit messages, and code comments:
+
+- **Negative parallelism** — "not X, but Y", "it's not just X, it's Y", "X isn't
+  the problem; Y is". Assert Y directly.
+- **Tricolon / polycolon** — three or more parallel clauses used for rhythm
+  ("faster, cleaner, safer"). Keep only the items that carry information.
+- **Superlatives and persuasive framing** — "critical", "powerful",
+  "seamlessly", "robust". Describe the mechanism instead.
+- **Restating the question** before answering it.
+
+Write for a competent colleague who lacks only this project's context. Prefer
+plain language over compressed jargon: shorter is not better if it takes longer
+to decode.
+
 ## Information Accuracy
 
 When unsure about any technical detail (fact, API, config, version, behavior):
