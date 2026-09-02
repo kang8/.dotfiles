@@ -292,5 +292,6 @@
   },
   "syntaxHighlightingDisabled": false,
   "theme": "custom:kang8",
+  "timeFormat": "24-hour",
   "tui": "fullscreen"
 }
