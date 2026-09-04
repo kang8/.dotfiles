@@ -121,20 +121,21 @@ def write_spool(window_id, items):
 
 def picker_script(d):
     q = shlex.quote
-    fzf = shutil.which('fzf') or '/opt/homebrew/bin/fzf'
-    opener = shutil.which('open') or '/usr/bin/open'
-    copy = shutil.which('pbcopy') or '/usr/bin/pbcopy'
     records = q(os.path.join(d, 'records'))
     selected = q(os.path.join(d, 'selected'))
     # --with-nth=1 hides the URL field, --accept-nth=2 hands it back on select.
+    #
+    # Bare command names, never absolute paths: this kitten runs inside kitty,
+    # whose PATH comes from launchd and has no brew prefix in it. The script
+    # itself runs in a launched child, which does get the env from kitty.conf.
     return f'''
-if {q(fzf)} --no-sort --no-mouse --exact -i \\
+if fzf --no-sort --no-mouse --exact -i \\
       --delimiter={q(SEP)} --with-nth=1 --accept-nth=2 \\
       --highlight-line --wrap \\
-      --bind 'ctrl-y:become(printf %s {{2}} | {q(copy)})' \\
+      --bind 'ctrl-y:become(printf %s {{2}} | pbcopy)' \\
       --header='enter: open   ctrl-y: copy' \\
       < {records} > {selected}; then
-  {q(opener)} "$(cat {selected})"
+  open "$(cat {selected})"
 fi
 rm -f {selected}
 '''

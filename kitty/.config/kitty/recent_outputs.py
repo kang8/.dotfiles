@@ -73,9 +73,6 @@ def write_spool(w, items):
 
 def picker_script(d):
     q = shlex.quote
-    fzf = shutil.which('fzf') or '/opt/homebrew/bin/fzf'
-    copy = shutil.which('pbcopy') or '/usr/bin/pbcopy'
-    editor = shutil.which('nvim') or 'nvim'
     records = q(os.path.join(d, 'records'))
     selected = q(os.path.join(d, 'selected'))
     edited = q(os.path.join(d, 'output.txt'))
@@ -83,15 +80,19 @@ def picker_script(d):
     # how much of an item is rendered, --accept-nth=2.. drops the header.
     # ctrl-o must use execute() not become(), or nvim would inherit fzf's
     # stdout redirection. {f} still has the header, hence sed 1d.
+    #
+    # Bare command names, never absolute paths: this kitten runs inside kitty,
+    # whose PATH comes from launchd and has no brew prefix in it. The script
+    # itself runs in a launched child, which does get the env from kitty.conf.
     return f'''
-if {q(fzf)} --read0 --print0 --no-sort --no-mouse --exact -i \\
+if fzf --read0 --print0 --no-sort --no-mouse --exact -i \\
       --delimiter='\\n' --with-nth=.. --accept-nth=2.. \\
       --gap --gap-line='─' --highlight-line --wrap \\
       --bind 'ctrl-e:change-with-nth(1..{DISPLAY_LINES}|..)' \\
-      --bind 'ctrl-o:execute(sed 1d {{f}} > {edited}; {q(editor)} {edited})' \\
+      --bind 'ctrl-o:execute(sed 1d {{f}} > {edited}; nvim {edited})' \\
       --header='enter: copy   ctrl-o: nvim   ctrl-e: collapse/expand' \\
       < {records} > {selected}; then
-  tr -d '\\000' < {selected} | {q(copy)}
+  tr -d '\\000' < {selected} | pbcopy
 fi
 rm -f {selected} {edited}
 '''
