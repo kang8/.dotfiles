@@ -22,7 +22,11 @@ while read -r source; do
     while read -r name; do args+=(-s "$name"); done \
         < <(awk -v s="$source" '$1 == s { print $2 }' <<<"$entries" | LC_ALL=C sort)
     # -a claude-code only: init.sh fans ~/.agents/skills out to every harness.
-    npx -y skills@latest add "$source" -g "${args[@]}" -a claude-code -y </dev/null
+    # --full-depth keeps the CLI matching the one-skill-per-line model this file
+    # is written in: without it a repo that grows a root SKILL.md collapses into
+    # a single bundle and every name here stops resolving. A no-op for repos
+    # that have no root SKILL.md, so it is safe to pass unconditionally.
+    npx -y skills@latest add "$source" -g "${args[@]}" -a claude-code --full-depth -y </dev/null
 done < <(awk '{ print $1 }' <<<"$entries" | LC_ALL=C sort -u)
 
 # The CLI copies into the agent directory and replaces any symlink there, so
