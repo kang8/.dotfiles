@@ -6,7 +6,6 @@ plugins=(
     git
     fast-syntax-highlighting
     zsh-autosuggestions
-    fzf
     docker
     docker-compose
     sudo
@@ -25,7 +24,6 @@ plugins=(
     you-should-use
     kubectl
     direnv
-    starship
 )
 
 # zsh-completions setup
@@ -33,7 +31,17 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 # sentry, and anything else dropping a completion into the XDG data dir
 fpath+=$HOME/.local/share/zsh/site-functions
 
+. $ZDOTDIR/omz-speedups.zsh
 . $ZSH/oh-my-zsh.sh
+
+# Dropped from `plugins` above so their init can be cached: for fzf >= 0.48 the
+# plugin is just `eval "$(fzf --zsh)"`, and starship's is `starship init zsh`.
+_evalcache fzf --zsh
+enable-fzf-tab # fzf --zsh binds TAB; in the plugin list fzf-tab took it back
+
+unset ZSH_THEME # starship replaces the oh-my-zsh theme
+_evalcache starship init zsh
+
 . $ZDOTDIR/gpg-agent.zsh
 . $ZDOTDIR/vim-mode.zsh
 . $ZDOTDIR/vim-switch.zsh
@@ -45,7 +53,7 @@ fpath+=$HOME/.local/share/zsh/site-functions
 # TODO: send a PR to oh-my-zsh for support atuin
 # atuin setup
 export ATUIN_NOBIND="true"
-eval "$(atuin init zsh)"
+_evalcache atuin init zsh
 
 # https://github.com/hchbaw/zce.zsh
 . $ZDOTDIR/zce.zsh
@@ -53,7 +61,7 @@ zstyle ':zce:*' search-case smartcase
 
 # TODO: send a PR to oh-my-zsh for support navi
 # navi setup
-eval "$(navi widget zsh)"
+_evalcache navi widget zsh
 
 # wt https://github.com/max-sixty/worktrunk
-if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+_evalcache wt config shell init zsh
