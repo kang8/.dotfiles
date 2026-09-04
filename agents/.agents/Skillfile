@@ -2,8 +2,7 @@
 # Regenerated from ~/.agents/.skill-lock.json by `make format`; installed by
 # restore-skills.sh. The lock file itself is machine-local and gitignored.
 bbenefield89/skills branch-change-explorer
-datadog-labs/agent-skills dd-logs
-datadog-labs/agent-skills dd-pup
+datadog-labs/agent-skills agent-skills
 mattpocock/skills *
 nicobailon/visual-explainer visual-explainer
 niekcandaele/skills catchup
