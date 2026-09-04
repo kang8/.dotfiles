@@ -23,9 +23,27 @@ function debug(data) {
   }
 }
 
+// Bark relays through APNs, which rejects payloads over 4 KB. One CJK
+// character costs three UTF-8 bytes, so budget in bytes, not characters.
+function truncateBytes(text, maxBytes) {
+  const buf = Buffer.from(text);
+  if (buf.length <= maxBytes) {
+    return text;
+  }
+
+  // Back off to a character boundary: UTF-8 continuation bytes start with 10.
+  let end = maxBytes - 3;
+  while (end > 0 && (buf[end] & 0xc0) === 0x80) {
+    end--;
+  }
+
+  return buf.subarray(0, end).toString().trimEnd() + '…';
+}
+
 // Notification bodies are plain text: drop the decorations that only make
-// sense in a terminal, and cap the length so the push stays glanceable.
-function summarize(text, limit = 400) {
+// sense in a terminal. The watch truncates what it shows, but the full text
+// still reaches the Bark app, so keep as much of it as the payload allows.
+function summarize(text, maxBytes = 3000) {
   if (!text) {
     return '';
   }
@@ -40,9 +58,7 @@ function summarize(text, limit = 400) {
     .replace(/\n{2,}/g, '\n')
     .trim();
 
-  return cleaned.length > limit
-    ? cleaned.slice(0, limit - 1).trimEnd() + '…'
-    : cleaned;
+  return truncateBytes(cleaned, maxBytes);
 }
 
 async function main() {
@@ -74,10 +90,12 @@ async function main() {
       call: '1',
     },
     // Stop carries no `message`; the reply text lives in last_assistant_message.
+    // Archive it so a reply the watch truncates is still readable in the app.
     'Stop': {
       body: summarize(last_assistant_message) || 'Done',
       group: 'Claude Code',
       sound: 'chime',
+      isArchive: '1',
     },
   };
 
