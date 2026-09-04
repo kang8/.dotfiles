@@ -5,6 +5,7 @@ bbenefield89/skills branch-change-explorer
 datadog-labs/agent-skills dd-docs
 datadog-labs/agent-skills dd-logs
 datadog-labs/agent-skills dd-pup
+humanlayer/skills show-me
 mattpocock/skills *
 nicobailon/visual-explainer visual-explainer
 niekcandaele/skills catchup
