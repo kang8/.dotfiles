@@ -23,7 +23,10 @@
 # in ~ instead of / (matching the native kitty.app behaviour).
 cd "$HOME" || exit 1
 
+# launchd starts Raycast with a bare PATH that has no Homebrew on it.
+eval "$("$HOME/.local/bin/brew-shellenv")"
+
 # Raycast leaks its Node runtime env (NODE_ENV=production, NODE_PATH) into
 # launched apps (github.com/raycast/extensions/issues/229). Strip them so
 # shells inside the panel don't run dev tooling in production mode.
-exec /usr/bin/env -u NODE_ENV -u NODE_PATH /opt/homebrew/bin/kitten quick-access-terminal
+exec /usr/bin/env -u NODE_ENV -u NODE_PATH kitten quick-access-terminal

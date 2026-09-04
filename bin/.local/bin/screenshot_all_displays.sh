@@ -3,7 +3,7 @@
 SAVE_DIR="$HOME/kang8/screenshots"
 
 if [ ! -d "$SAVE_DIR" ]; then
-    mkdir --parents "$SAVE_DIR"
+    mkdir -p "$SAVE_DIR"
 fi
 
 DISPLAY_COUNT=$(/usr/sbin/system_profiler SPDisplaysDataType -json | /usr/bin/jq '.SPDisplaysDataType[].spdisplays_ndrvs | length')
