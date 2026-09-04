@@ -40,6 +40,23 @@ locked=$(
     done < <(awk '$2 == "*" { print $1 }' <<<"$entries")
 )
 locked=$(LC_ALL=C sort -u <<<"$locked")
+
+# The lock file only grows: installing never drops the entry for a skill the
+# Skillfile stopped asking for, so an upstream rename or regroup leaves a stale
+# copy behind forever. Whatever the lock knows and $locked does not is exactly
+# that. Safe to delete unprompted: only CLI installs reach the lock, so a
+# hand-written or scratch skill can never land in here.
+orphans=$(comm -23 \
+    <(jq -r '.skills | keys[]' "${HOME}/.agents/.skill-lock.json" | LC_ALL=C sort -u) \
+    <(cat <<<"$locked"))
+if [[ -n $orphans ]]; then
+    echo "removing $(wc -l <<<"$orphans" | tr -d ' ') skill(s) dropped from the Skillfile"
+    # Unquoted: one argument per name. remove clears the lock entry, the copy
+    # under ~/.agents and every harness link, so nothing is left to relink below.
+    # shellcheck disable=SC2086
+    npx -y skills@latest remove $orphans -g -y </dev/null
+fi
+
 for harness in "${HOME}/.claude/skills" "${HOME}/.codex/skills"; do
     [[ -d $harness ]] || continue
     for dir in "$harness"/*/; do
