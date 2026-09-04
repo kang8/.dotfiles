@@ -1,11 +1,16 @@
+# cron hands these a bare PATH with no Homebrew on it, so every line that needs
+# brew (or anything brew installed) sources the prefix itself. The prefix
+# differs per machine, hence the helper rather than a literal path.
+
 # Run at 10:00 every day
-0 10 * * * /opt/homebrew/bin/brew update && /opt/homebrew/bin/brew upgrade
+# Homebrew knobs repeated from env.zsh, which cron does not read.
+0 10 * * * /bin/zsh -c 'eval "$($HOME/.local/bin/brew-shellenv)" && brew update && HOMEBREW_NO_UPGRADE_AUTO_UPDATES_CASKS=1 brew upgrade --no-quit'
 
 # Run at 10:05 every day
 5 10 * * * ~/.local/bin/cleanup-merged-branches.sh
 
 # Run at 11:00 every day
-0 11 * * * /bin/zsh -c 'eval "$(/opt/homebrew/bin/brew shellenv)" && cd ~/.dotfiles && brew bundle dump --no-restart --no-vscode --no-go --no-npm --no-describe --force && make format'
+0 11 * * * /bin/zsh -c 'eval "$($HOME/.local/bin/brew-shellenv)" && cd ~/.dotfiles && brew bundle dump --no-restart --no-vscode --no-go --no-npm --no-describe --force && make format'
 
 # Run at 11:05 every day
 5 11 * * * cd ~/Library/Rime && git pull
@@ -20,4 +25,4 @@
 31 11 * * 2 cd ~/.config/nvim && git fetch && git rebase origin/master && ~/.local/share/bob/nvim-bin/nvim --headless "+Lazy! restore" +qa
 
 # Run at 10:30 every day
-30 10 * * * /bin/zsh -c 'eval "$(/opt/homebrew/bin/brew shellenv)" && npx -y skills@latest update -g -y'
+30 10 * * * /bin/zsh -c 'eval "$($HOME/.local/bin/brew-shellenv)" && npx -y skills@latest update -g -y'

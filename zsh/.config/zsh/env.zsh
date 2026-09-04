@@ -43,6 +43,7 @@ export PATH="$PNPM_HOME:$PATH"
 [[ ! -r ~/.opam/opam-init/init.zsh ]] || source ~/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
 
 export HOMEBREW_NO_UPGRADE_QUIT_CASKS=1
+export HOMEBREW_NO_UPGRADE_AUTO_UPDATES_CASKS=1
 
 # imagemagick
 [[ -d $HOMEBREW_PREFIX/opt/imagemagick-full/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/imagemagick-full/bin:$PATH"

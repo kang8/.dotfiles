@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Print the `brew shellenv` block for whichever Homebrew this machine has:
+# /opt/homebrew on Apple Silicon, /usr/local on Intel. Meant to be eval'd.
+#
+# For anything cron or launchd starts. Those get a bare PATH with no Homebrew
+# prefix on it and none of zsh's exports, and they cannot borrow ~/.zshrc's
+# probe either: zsh reads .zshrc only when interactive, so `zsh -l -c` skips it.
+#
+#   eval "$($HOME/.local/bin/brew-shellenv)"
+
+for brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    if [ -x "$brew" ]; then
+        exec "$brew" shellenv
+    fi
+done
+
+echo "brew-shellenv: no brew at /opt/homebrew/bin or /usr/local/bin" >&2
+exit 1
