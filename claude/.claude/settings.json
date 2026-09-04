@@ -261,6 +261,9 @@
     "deny": []
   },
   "sandbox": {
+    "excludedCommands": [
+      "open"
+    ],
     "filesystem": {
       "allowWrite": [
         "~/.cache/node/corepack/",
