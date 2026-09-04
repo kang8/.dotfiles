@@ -60,13 +60,31 @@ async function main() {
 
   const projectName = cwd?.split('/').pop() || 'Unknown Project';
 
-  const eventMessages = {
-    'Notification':
-      message?.replace('Claude needs your permission to use ', '') ||
-      'Awaiting your input',
+  // Two classes of push: one blocks on an answer, the other just reports.
+  // Only the blocking one is a critical alert, which rings through silent mode
+  // and Do Not Disturb. Bark reads `volume` as a string on a 0-10 scale.
+  const events = {
+    'Notification': {
+      body: message?.replace('Claude needs your permission to use ', '') ||
+        'Awaiting your input',
+      group: 'Claude Code · Action Needed',
+      level: 'critical',
+      volume: '5',
+      sound: 'alarm',
+      call: '1',
+    },
     // Stop carries no `message`; the reply text lives in last_assistant_message.
-    'Stop': summarize(last_assistant_message) || 'Done',
+    'Stop': {
+      body: summarize(last_assistant_message) || 'Done',
+      group: 'Claude Code',
+      sound: 'chime',
+    },
   };
+
+  const event = events[hook_event_name];
+  if (!event) {
+    return;
+  }
 
   try {
     await fetch('https://api.day.app/push', {
@@ -77,9 +95,8 @@ async function main() {
       body: JSON.stringify({
         device_key: process.env.BARK_KEY,
         title: projectName,
-        body: eventMessages[hook_event_name],
-        group: 'Claude Code',
         icon: 'https://wpforms.com/wp-content/uploads/2024/08/claude-logo.png',
+        ...event,
       }),
       signal: AbortSignal.timeout(8000),
     });
