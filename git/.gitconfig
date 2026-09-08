@@ -106,3 +106,6 @@
     detachedHead = false
 [diff "pandoc"]
     textconv = pandoc --sandbox --to=markdown
+[merge "lockfile"]
+	name = keep ours, regenerate from the manifest
+	driver = sh -c 'echo \"merge: kept OUR $1 — regenerate it from the manifest before committing\" >&2' -- %P

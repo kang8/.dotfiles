@@ -1,3 +1,25 @@
 * merge=mergiraf
 *.odt diff=pandoc
 *.docx diff=pandoc
+
+# Lockfiles are generated, so merging them — structurally or by line — can only
+# produce an internally inconsistent resolution. Keep one side, then regenerate
+# from the manifest. Must stay below `* merge=mergiraf`: last match wins.
+pnpm-lock.yaml merge=lockfile
+package-lock.json merge=lockfile
+npm-shrinkwrap.json merge=lockfile
+yarn.lock merge=lockfile
+bun.lock merge=lockfile
+bun.lockb merge=lockfile -text
+uv.lock merge=lockfile
+poetry.lock merge=lockfile
+pdm.lock merge=lockfile
+Pipfile.lock merge=lockfile
+Cargo.lock merge=lockfile
+composer.lock merge=lockfile
+Gemfile.lock merge=lockfile
+.terraform.lock.hcl merge=lockfile
+
+# go.sum is an append-only sorted line set, so the union of both sides is valid;
+# `go mod tidy` prunes the extras. go.mod is hand-edited and stays merged.
+go.sum merge=union
