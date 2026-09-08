@@ -1,16 +1,5 @@
 {
   "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "node ~/.codex/hooks/codex-notify.mjs",
-            "type": "command",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "hooks": [
@@ -42,6 +31,28 @@
           }
         ],
         "matcher": "^Bash$"
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bash '/Users/kang/.codex/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "node ~/.codex/hooks/codex-notify.mjs",
+            "timeout": 10,
+            "type": "command"
+          }
+        ]
       }
     ]
   }

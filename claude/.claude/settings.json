@@ -134,6 +134,16 @@
           }
         ],
         "matcher": "startup|resume|clear|fork"
+      },
+      {
+        "hooks": [
+          {
+            "command": "bash '/Users/kang/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
       }
     ],
     "Stop": [
