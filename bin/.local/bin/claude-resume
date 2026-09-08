@@ -69,6 +69,19 @@ def tildify(path)
   path.start_with?(HOME) ? path.sub(HOME, '~') : path
 end
 
+def directory?(path)
+  (@directories ||= Hash.new { |h, p| h[p] = File.directory?(p) })[path]
+end
+
+# History is append-only, so a session's project may be long gone — a worktree
+# torn down after its branch merged, most often. `cd` into it would fail and
+# `&&` would swallow the resume, so fall back to wherever the picker was
+# invoked, the same way the bare-UUID path below does.
+def resume_command(project, session)
+  resume = "exec claude -r #{session}"
+  directory?(project) ? "cd #{project.shellescape} && #{resume}" : resume
+end
+
 # `history.jsonl` records no branch, but every message in a session transcript
 # (`~/.claude/projects/<slug>/<session>.jsonl`) carries a `gitBranch`. The slug
 # is a lossy encoding of the project path, so index by file name instead of
@@ -256,8 +269,6 @@ if ARGV.delete('--list')
   rows.each do |entry|
     entry => { sessionId: session, project:, timestamp:, display:, offset: }
 
-    command = "cd #{project.shellescape} && exec claude -r #{session}"
-
     cells = [format_time(timestamp).cyan,
              session[0, SESSION_ID_WIDTH].fg(color_for(session))]
     unless branch_scope
@@ -265,9 +276,13 @@ if ARGV.delete('--list')
       pad = project_scope ? 0 : branch_width - [branch.length, 1].max
       cells << (branch.empty? ? '-'.dim : branch.yellow) + (' ' * pad)
     end
-    cells << tildify(project).blue unless project_scope
+    # Dimmed means the directory is gone and the session resumes in place.
+    unless project_scope
+      cells << (directory?(project) ? tildify(project).blue : tildify(project).dim)
+    end
 
-    $stdout.print [command, session, project, offset].map { it.to_s + ZWSP }.join
+    $stdout.print [resume_command(project, session), session, project, offset]
+                  .map { it.to_s + ZWSP }.join
     $stdout.print cells.map { it + ZWSP }.join('  ')
     $stdout.print "\n"
     display.each_line { $stdout.print "  #{it.italic}" }
