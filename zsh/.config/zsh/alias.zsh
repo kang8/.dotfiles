@@ -98,4 +98,5 @@ alias tldrf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-win
 alias c='claude'
 alias continue='claude --continue'
 alias resume='claude-resume'
+alias r='claude-resume'
 alias commit='claude commit'
