@@ -25,3 +25,9 @@ prefix_rule(
         "gh repo delete openai/codex",
     ],
 )
+
+prefix_rule(
+    pattern = ["uv", "run", "scripts/fetch_mail.py"],
+    decision = "allow",
+    justification = "Reading Apple Mail requires execution outside the sandbox",
+)
