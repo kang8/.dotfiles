@@ -38,8 +38,11 @@ done < <(awk '{ print $1 }' <<<"$entries" | LC_ALL=C sort -u)
 locked=$(
     awk '$2 != "*" { print $2 }' <<<"$entries"
     while read -r source; do
+        # A well-known source is written here with its scheme, locked without it.
+        # Unmatched, it expands to nothing and the orphan step below deletes the lot.
         jq -r --arg source "$source" \
-            '.skills | to_entries[] | select(.value.source == $source) | .key' \
+            '.skills | to_entries[]
+             | select(.value.source == ($source | ltrimstr("https://"))) | .key' \
             "${HOME}/.agents/.skill-lock.json"
     done < <(awk '$2 == "*" { print $1 }' <<<"$entries")
 )

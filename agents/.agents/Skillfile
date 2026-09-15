@@ -1,9 +1,11 @@
 # Third-party agent skills: "<source repo> <skill name or *>", one per line.
 # Regenerated from ~/.agents/.skill-lock.json by `make format`; installed by
 # restore-skills.sh. The lock file itself is machine-local and gitignored.
+# A source can also be a URL, not a repo: https://cli.sentry.dev.
 datadog-labs/agent-skills dd-docs
 datadog-labs/agent-skills dd-logs
 datadog-labs/agent-skills dd-pup
+https://cli.sentry.dev sentry-cli
 humanlayer/skills show-me
 mattpocock/skills *
 nicobailon/visual-explainer visual-explainer
