@@ -44,5 +44,4 @@ agents/.agents/skills/*
 !agents/.agents/skills/gitlab-mr-description/
 !agents/.agents/skills/gitlab-mr-review/
 !agents/.agents/skills/squash-branch/
-!agents/.agents/skills/upstream-pr/
 !agents/.agents/skills/web-to-epub/

@@ -1,6 +1,7 @@
 ---
 name: web-to-epub
 description: 将在线书籍网站（每章一个页面）转换为 EPUB 电子书。提供网站 URL 即可自动抓取、提取正文、生成带目录的 EPUB。
+disable-model-invocation: true
 allowed-tools: Bash, Read, Write, WebFetch, Grep, Glob
 argument-hint: [book-url]
 ---

@@ -1,6 +1,7 @@
 ---
 name: condense-comments
-description: Shorten long code comments to their smallest useful form, delete the ones restating the code, and cut the ghosts pointing at code the reader cannot see. Use on your own once you finish writing or editing code that left comments behind, when asked to clean up the comments on a diff or a new file, or via `/condense-comments`.
+description: Shorten long code comments to their smallest useful form, delete the ones restating the code, and cut the ghosts pointing at code the reader cannot see.
+disable-model-invocation: true
 ---
 
 # Condense Comments
