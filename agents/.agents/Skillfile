@@ -1,7 +1,6 @@
 # Third-party agent skills: "<source repo> <skill name or *>", one per line.
 # Regenerated from ~/.agents/.skill-lock.json by `make format`; installed by
 # restore-skills.sh. The lock file itself is machine-local and gitignored.
-bbenefield89/skills branch-change-explorer
 datadog-labs/agent-skills dd-docs
 datadog-labs/agent-skills dd-logs
 datadog-labs/agent-skills dd-pup
