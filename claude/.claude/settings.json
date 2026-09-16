@@ -201,6 +201,7 @@
       "Bash(git config --get:*)",
       "Bash(git config --list:*)",
       "Bash(git config -l:*)",
+      "Bash(git commit --amend:*)",
       "Bash(gh pr view *)",
       "Bash(gh pr checks *)",
       "Bash(gh pr list *)",
@@ -274,7 +275,8 @@
         "~/.gnupg-sandbox/S.gpg-agent"
       ],
       "allowedDomains": [
-        "api.day.app"
+        "api.day.app",
+        "api.pnpm.io"
       ]
     }
   },
