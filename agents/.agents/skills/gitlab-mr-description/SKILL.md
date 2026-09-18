@@ -36,13 +36,19 @@ Done when every changed file is accounted for in your model of the change.
 
 ## Step 3 — Keep and cut
 
-Terse is the bar. Keep what the reviewer cannot derive from the diff:
+Terse is the bar, and an inherited draft is where it slips: the sections you did
+not come here to fix are **sediment** until they re-earn their place. Put every
+section — kept, rewritten, or new — through one sentence said aloud: _the
+reviewer cannot get this from the diff, because ___._ No ending to that sentence
+is a cut.
+
+Keep what survives it:
 
 - measured numbers, and the sample they came from
 - the **composed artifact** the source does not show literally — a generated CEL
   expression, the final SQL, the rendered payload — as a before/after
 - **silent-failure traps**: what breaks with no error if someone changes it back
-- what is deliberately unchanged, and why
+- deliberately unchanged, where the reviewer would otherwise expect a change
 
 Cut:
 
@@ -51,8 +57,14 @@ Cut:
   not taken
 - rationale that already lives in a code comment
 - numbered rollout checklists — one line if it matters
+- a visual plus the paragraph it was supposed to replace
+- a section whose _because_ is a rewording of one already spoken
 
 Write in the language of the existing description; these are often Chinese.
+
+Done when every surviving section has said its _because_, and the body fits a
+screen — 50 lines. Past that, say what the extra lines carry that the diff does
+not.
 
 ## Step 4 — Visuals
 
