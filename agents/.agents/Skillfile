@@ -5,6 +5,7 @@
 datadog-labs/agent-skills dd-docs
 datadog-labs/agent-skills dd-logs
 datadog-labs/agent-skills dd-pup
+everyinc/compound-engineering-plugin ce-resolve-pr-feedback
 https://cli.sentry.dev sentry-cli
 humanlayer/skills show-me
 mattpocock/skills *
