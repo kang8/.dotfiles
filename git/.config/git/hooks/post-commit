@@ -1,7 +1,11 @@
 #!/bin/sh
 
 if [ "$(uname)" = "Darwin" ]; then
-    open raycast://extensions/raycast/raycast/confetti
+    # Confetti() lives in ~/.hammerspoon/confetti.lua; unlike a TUI it paints
+    # over the whole screen, so it works from editors and GUI clients too.
+    if command -v hs >/dev/null 2>&1; then
+        hs -c "Confetti()" >/dev/null 2>&1 &
+    fi
 
     # If we're in the main kitty installation, open the main Kitty app
     if [ "$KITTY_INSTALLATION_DIR" = "/Applications/kitty.app/Contents/Resources/kitty" ]; then

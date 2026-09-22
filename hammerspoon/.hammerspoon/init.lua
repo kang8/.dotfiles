@@ -1,3 +1,5 @@
+require("hs.ipc") -- lets the `hs` CLI talk to this config
+
 hs.loadSpoon("SpoonInstall")
 Install=spoon.SpoonInstall
 
@@ -38,6 +40,9 @@ end)
 
 -- Toggle Chrome's vertical tab strip (cmd+shift+,) -- see the file's header for config
 require("chrome-sidebar-toggle")
+
+-- Defines the global Confetti(), fired by the git post-commit hook
+require("confetti")
 
 -- https://github.com/dzirtusss/vifari
 hs.loadSpoon("Vifari")
