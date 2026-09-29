@@ -84,6 +84,10 @@ the recoverable mistake.
   - ✗ `feature/PROJ-123-misc-cleanup` — vague, carries no information
 
 Create with `git checkout -b <branch>`, and leave existing branches intact.
+Starting from a remote ref instead of `HEAD` takes `--no-track`
+(`git switch -c <branch> --no-track origin/master`): the default sets the base
+as the new branch's upstream, so a later `git pull` merges it into the work in
+progress. Leave the upstream unset — `git push -u` is the user's to run.
 
 ## Step 4 — Draft the commit message
 
