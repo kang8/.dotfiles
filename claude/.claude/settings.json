@@ -92,6 +92,10 @@
       {
         "hooks": [
           {
+            "command": "bash ~/.claude/hooks/block-dangerous-git.sh",
+            "type": "command"
+          },
+          {
             "command": "python3 ~/.claude/gitlab-note-guard.py",
             "type": "command"
           },
@@ -174,6 +178,11 @@
     ]
   },
   "model": "claude-opus-5-5[1m]",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  },
   "permissions": {
     "additionalDirectories": [
       "/Users/kang/Projects"
@@ -255,11 +264,15 @@
       "Bash(pnpm install *)",
       "WebFetch"
     ],
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "deny": [
+      "Bash(git push:*)"
+    ]
   },
   "sandbox": {
     "excludedCommands": [
-      "open"
+      "open",
+      "open *"
     ],
     "filesystem": {
       "allowWrite": [
