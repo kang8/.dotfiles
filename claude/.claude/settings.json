@@ -272,7 +272,11 @@
   "sandbox": {
     "excludedCommands": [
       "open",
-      "open *"
+      "open *",
+      "glab",
+      "glab *",
+      "jira",
+      "jira *"
     ],
     "filesystem": {
       "allowWrite": [
