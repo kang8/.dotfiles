@@ -280,7 +280,9 @@
         "~/Library/pnpm/",
         "~/.cache/prek/",
         "~/.cache/uv/",
-        "~/.gnupg-sandbox/"
+        "~/.gnupg-sandbox/",
+        "~/.local/share/uv/tools/",
+        "~/.snowflake/logs/"
       ]
     },
     "network": {
