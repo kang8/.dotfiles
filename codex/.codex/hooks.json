@@ -33,17 +33,6 @@
         "matcher": "^Bash$"
       }
     ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/kang/.codex/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "hooks": [
