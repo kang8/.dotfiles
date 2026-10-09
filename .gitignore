@@ -43,5 +43,6 @@ agents/.agents/skills/*
 !agents/.agents/skills/condense-comments/
 !agents/.agents/skills/gitlab-mr-description/
 !agents/.agents/skills/gitlab-mr-review/
+!agents/.agents/skills/rebase/
 !agents/.agents/skills/squash-branch/
 !agents/.agents/skills/web-to-epub/
