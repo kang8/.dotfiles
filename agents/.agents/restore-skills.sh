@@ -13,6 +13,10 @@ SKILLS="${HOME}/.agents/skills"
 # Strip comments and blanks once; "*" means every skill from that source.
 entries=$(awk 'NF && $1 !~ /^#/ { print $1, $2 }' "$SKILLFILE")
 
+# No trailing Z: as a strict prefix it sorts before any lock timestamp from the
+# same second, where "…26Z" would sort after "…26.386Z".
+started=$(date -u +%Y-%m-%dT%H:%M:%S)
+
 # One npx call per source repo rather than per skill.
 while read -r source; do
     echo "restoring ${source}"
@@ -35,14 +39,17 @@ done < <(awk '{ print $1 }' <<<"$entries" | LC_ALL=C sort -u)
 # ~/.agents and re-link. A real directory that is *not* locked is a deliberate
 # harness-local skill, so leave it. Expand wildcard sources from the lock file
 # the successful install just refreshed, so newly added upstream skills count.
+# The CLI stamps updatedAt on every skill it installs, changed or not, so an
+# older stamp means upstream no longer has that skill.
 locked=$(
     awk '$2 != "*" { print $2 }' <<<"$entries"
     while read -r source; do
         # A well-known source is written here with its scheme, locked without it.
         # Unmatched, it expands to nothing and the orphan step below deletes the lot.
-        jq -r --arg source "$source" \
+        jq -r --arg source "$source" --arg started "$started" \
             '.skills | to_entries[]
-             | select(.value.source == ($source | ltrimstr("https://"))) | .key' \
+             | select(.value.source == ($source | ltrimstr("https://")))
+             | select(.value.updatedAt >= $started) | .key' \
             "${HOME}/.agents/.skill-lock.json"
     done < <(awk '$2 == "*" { print $1 }' <<<"$entries")
 )
@@ -57,7 +64,7 @@ orphans=$(comm -23 \
     <(jq -r '.skills | keys[]' "${HOME}/.agents/.skill-lock.json" | LC_ALL=C sort -u) \
     <(cat <<<"$locked"))
 if [[ -n $orphans ]]; then
-    echo "removing $(wc -l <<<"$orphans" | tr -d ' ') skill(s) dropped from the Skillfile"
+    echo "removing $(wc -l <<<"$orphans" | tr -d ' ') skill(s) dropped from the Skillfile or upstream"
     # Unquoted: one argument per name. remove clears the lock entry, the copy
     # under ~/.agents and every harness link, so nothing is left to relink below.
     # shellcheck disable=SC2086
