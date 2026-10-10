@@ -100,7 +100,6 @@ install_zsh_plugin zsh-autosuggestions https://github.com/zsh-users/zsh-autosugg
 install_zsh_plugin fzf-tab https://github.com/Aloxaf/fzf-tab.git
 install_zsh_plugin z.lua https://github.com/skywind3000/z.lua.git
 install_zsh_plugin zsh-autopair https://github.com/hlissner/zsh-autopair
-install_zsh_plugin you-should-use https://github.com/MichaelAquilina/zsh-you-should-use.git
 install_zsh_plugin fast-syntax-highlighting https://github.com/zdharma-continuum/fast-syntax-highlighting.git
 install_zsh_plugin zsh-completions https://github.com/zsh-users/zsh-completions.git
 

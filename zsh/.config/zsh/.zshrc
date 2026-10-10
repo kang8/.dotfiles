@@ -21,7 +21,6 @@ plugins=(
     python
     command-not-found
     terraform
-    you-should-use
     kubectl
     direnv
 )

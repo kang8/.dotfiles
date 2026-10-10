@@ -98,11 +98,6 @@ export NAVI_CONFIG="$HOME/.config/navi/config.yaml"
 # V2rays
 export V2RAYA_ADDRESS=2017
 
-# zsh-you-should-use
-export YSU_MESSAGE_POSITION="after"
-export YSU_IGNORED_ALIASES=("ll")
-export YSU_MODE=ALL
-
 # Added by OrbStack: command-line tools and integration
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
