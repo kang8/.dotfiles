@@ -1,27 +1,24 @@
 #!/bin/bash
-# set-title-status.sh - Terminal title with Claude Code status
+# set-session-context.sh - Publish "dir: topic" of a Claude Code session to kitty
 #
-# Usage: echo '<hook_json>' | bash set-title-status.sh <action>
+# Usage: echo '<hook_json>' | bash set-session-context.sh <action>
 #
 # Actions:
-#   session  ● ready      (SessionStart)
-#   run      ⏳ working    (UserPromptSubmit, PostToolUse*, PermissionDenied)
-#   alert    🔴 + bell     (Notification: permission_prompt|elicitation_dialog)
-#   done     ✅ finished   (Stop, StopFailure)
-#   release  clear title  (SessionEnd)
+#   set      publish the context  (SessionStart, UserPromptSubmit)
+#   release  clear the context    (SessionEnd)
 #
-# Design notes:
-#   State and rendering are separated. Per-session state lives in a cache file
-#   ($tty, $seq, $status, $dir, $topic); hooks only mutate status, and a single
-#   render step composes the title. That keeps the hot path (PostToolUse fires
-#   on every tool call and *blocks* Claude) down to one jq + one file read.
+# The context goes into the kitty user variable `claude_context`
+# (OSC 1337 SetUserVar), which kitty/.config/kitty/tab_bar.py shows as the tab
+# title. The window title stays with Claude Code, and the working/blocked/done
+# status comes from Claude Code itself over OSC 7501. Both need
+# CLAUDE_CODE_DISABLE_TERMINAL_TITLE unset.
 
 set -eu
 
-STATUS="${1:-done}"
+ACTION="${1:-set}"
 input=$(cat)
 
-state_dir="${TMPDIR:-/tmp}/claude-title"
+state_dir="${TMPDIR:-/tmp}/claude-context"
 
 # ---------------------------------------------------------------------------
 # Parse payload (single jq pass)
@@ -49,7 +46,7 @@ fields=$(printf '%s' "$input" | jq -r "$jq_clean"'
       (.cwd // ""),
       (.transcript_path // ""),
       (.prompt | clean)
-    ] | join("")' 2>/dev/null) || fields=""
+    ] | join("\u001f")' 2>/dev/null) || fields=""
 
 # Unit separator, not tab: tab is an IFS *whitespace* character, so bash would
 # collapse runs of empty fields and shift every value left. Payload strings are
@@ -58,56 +55,27 @@ IFS=$'\037' read -r session_id agent_id hook_event cwd transcript_path payload_p
     <<< "${fields:-}" || true
 
 [ -n "${session_id:-}" ] || exit 0
-
-# Subagent hooks carry agent_id and describe the subagent's lifecycle, not the
-# main turn's. SubagentStop in particular is a *completion* event that can fire
-# after the main turn already stopped - never let it revive a finished session.
 [ -z "${agent_id:-}" ] || exit 0
-[ "${hook_event:-}" != "SubagentStop" ] || exit 0
 
 # ---------------------------------------------------------------------------
 # Load cached session state
 # ---------------------------------------------------------------------------
 
 state_file="$state_dir/$session_id"
-c_tty="" c_seq="0" c_status="" c_dir="" c_topic=""
+c_tty="" c_dir="" c_topic=""
 if [ -r "$state_file" ]; then
     {
         IFS= read -r c_tty
-        IFS= read -r c_seq
-        IFS= read -r c_status
         IFS= read -r c_dir
         IFS= read -r c_topic
     } < "$state_file" 2>/dev/null || true
 fi
-case "${c_seq:-}" in ''|*[!0-9]*) c_seq=0 ;; esac
 
-if [ "$STATUS" = "release" ]; then
+if [ "$ACTION" = "release" ]; then
     rm -f "$state_file" 2>/dev/null || true
-    [ -n "$c_tty" ] && [ -w "$c_tty" ] && printf '\033]0;\007' > "$c_tty" 2>/dev/null || true
-    exit 0
-fi
-
-# ---------------------------------------------------------------------------
-# Ordering guard
-# ---------------------------------------------------------------------------
-
-# Hooks are independent processes and can overlap; a slow `run` must not
-# overwrite a `done` that was emitted after it. EPOCHREALTIME is bash>=5 and
-# needs no fork. The decimal separator is locale-dependent, hence [.,].
-now=""
-if [ -n "${EPOCHREALTIME:-}" ]; then
-    now="${EPOCHREALTIME/[.,]/}"
-    case "$now" in
-        ''|*[!0-9]*) now="" ;;
-        *) [ "$now" -ge "$c_seq" ] || exit 0 ;;
-    esac
-fi
-[ -n "$now" ] || now=$(( c_seq + 1 ))
-
-# Hot path: PostToolUse fires per tool call and almost always finds us already
-# in `run`. Nothing to render, so stop before touching the tty.
-if [ "$STATUS" = "$c_status" ] && [ "$hook_event" != "UserPromptSubmit" ]; then
+    # SetUserVar without "=value" deletes the variable
+    [ -n "$c_tty" ] && [ -w "$c_tty" ] && \
+        printf '\033]1337;SetUserVar=claude_context\007' > "$c_tty" 2>/dev/null || true
     exit 0
 fi
 
@@ -142,8 +110,8 @@ if [ "$hook_event" = "UserPromptSubmit" ] || [ -z "$topic" ]; then
     fi
 fi
 
-# Payload cwd is authoritative (it tracks CwdChanged); fall back to the cached
-# value before $PWD so the title stays stable across events that omit cwd.
+# Payload cwd is authoritative; fall back to the cached value before $PWD so
+# the context stays stable across events that omit cwd.
 if [ -n "${cwd:-}" ]; then
     dir=$(basename "$cwd")
 else
@@ -173,13 +141,12 @@ if [ -z "$target" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# Persist, then render
+# Persist, then publish
 # ---------------------------------------------------------------------------
 
 mkdir -p "$state_dir" 2>/dev/null || true
 tmp="$state_file.$$"
-if printf '%s\n%s\n%s\n%s\n%s\n' "$target" "$now" "$STATUS" "$dir" "$topic" \
-        > "$tmp" 2>/dev/null; then
+if printf '%s\n%s\n%s\n' "$target" "$dir" "$topic" > "$tmp" 2>/dev/null; then
     mv -f "$tmp" "$state_file" 2>/dev/null || rm -f "$tmp" 2>/dev/null || true
 fi
 
@@ -187,21 +154,11 @@ fi
 [ "$hook_event" = "SessionStart" ] && \
     find "$state_dir" -type f -mtime +7 -delete 2>/dev/null || true
 
-[ -n "$topic" ] && base="$dir: $topic" || base="$dir"
+[ -n "$topic" ] && context="$dir: $topic" || context="$dir"
 
-case "$STATUS" in
-    run)     title="⏳ $base" ;;
-    alert)   title="🔴 $base" ;;
-    done)    title="✅ $base" ;;
-    session) title="● $base" ;;
-    *)       title="● $base" ;;
-esac
+# GNU base64 wraps at 76 columns and may shadow the BSD one on PATH
+encoded=$(printf '%s' "$context" | base64 | tr -d '\n')
 
 if [ -n "$target" ] && [ -w "$target" ]; then
-    printf '\033]0;%s\007' "$title" > "$target" 2>/dev/null || true
-    # alert: ring the terminal bell so kitty marks the tab (bell_on_tab "🔔")
-    # and bounces the Dock icon when unfocused (window_alert_on_bell)
-    if [ "$STATUS" = "alert" ]; then
-        printf '\a' > "$target" 2>/dev/null || true
-    fi
+    printf '\033]1337;SetUserVar=claude_context=%s\007' "$encoded" > "$target" 2>/dev/null || true
 fi
