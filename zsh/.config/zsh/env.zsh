@@ -15,10 +15,16 @@ zstyle ':fzf-tab:*' use-fzf-default-opts yes
 zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
 export LESSOPEN='|~/.config/zsh/.fzf-tab-preview %s'
 
-export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude ".git"'
+_fzf_fd='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND=$_fzf_fd
+# ctrl-t inside the picker toggles whether .gitignore'd files are listed
 export FZF_CTRL_T_OPTS="
   --preview 'bat -n --color=always {}'
-  --bind 'ctrl-/:change-preview-window(hidden|)'"
+  --bind 'ctrl-/:change-preview-window(hidden|)'
+  --bind 'ctrl-t:transform:[[ \$FZF_PROMPT == \"all> \" ]] &&
+    echo \"change-prompt(> )+reload($_fzf_fd)\" ||
+    echo \"change-prompt(all> )+reload($_fzf_fd --no-ignore)\"'"
+unset _fzf_fd
 
 export FZF_ALT_C_OPTS="
     --preview 'tree -C {}'
