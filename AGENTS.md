@@ -1,8 +1,5 @@
 # AGENTS.md
 
-`CLAUDE.md` is a git-ignored one-line import of this file, so project
-instructions belong here.
-
 ## Layout
 
 Every top-level directory is a GNU Stow package laid out as
