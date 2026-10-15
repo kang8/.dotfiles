@@ -84,6 +84,14 @@ for harness in "${HOME}/.claude/skills" "${HOME}/.codex/skills"; do
     done
 done
 
+# Claude Code loads a skill folder holding .claude-plugin/plugin.json as a
+# plugin: its commands/ become extra skills, and plugin skills ignore
+# skillOverrides, so disabling the extras disables the main skill too. Without
+# the manifest the folder loads as a plain skill and commands/ is not read.
+while read -r name; do
+    rm -rf "${SKILLS:?}/${name}/.claude-plugin"
+done <<<"$locked"
+
 # Fan back out. if/else, not `[[ … ]] && continue`: on a real directory ln -sfn
 # puts the link *inside* it, silently nesting <name>/<name>. Link target is
 # absolute because a relative one hardcodes the harness's depth below $HOME.
