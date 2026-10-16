@@ -29,4 +29,8 @@ eval "$("$HOME/.local/bin/brew-shellenv")"
 # Raycast leaks its Node runtime env (NODE_ENV=production, NODE_PATH) into
 # launched apps (github.com/raycast/extensions/issues/229). Strip them so
 # shells inside the panel don't run dev tooling in production mode.
-exec /usr/bin/env -u NODE_ENV -u NODE_PATH kitten quick-access-terminal
+# Run the panel on the kitty master build when it exists, so it matches the
+# main kitty: tab_bar.py imports kitty.program_status, which releases lack.
+kitten=$HOME/Projects/kitty/kitty/launcher/kitty.app/Contents/MacOS/kitten
+[[ -x $kitten ]] || kitten=kitten
+exec /usr/bin/env -u NODE_ENV -u NODE_PATH "$kitten" quick-access-terminal
