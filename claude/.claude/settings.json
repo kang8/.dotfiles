@@ -209,7 +209,9 @@
       "glab",
       "glab *",
       "jira",
-      "jira *"
+      "jira *",
+      "git commit",
+      "git commit *"
     ],
     "filesystem": {
       "allowWrite": [
