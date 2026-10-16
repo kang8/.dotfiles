@@ -29,3 +29,10 @@ When unsure about any technical detail (fact, API, config, version, behavior):
 - **Look it up** with available tools (docs, web search, codebase).
 - **Cite the source** (docs URL, file path, man page) so the user can verify.
 - **Cross-reference** at least two independent sources when possible.
+
+## Links
+
+Link every remote object you name in a reply (MR, note, commit, pipeline,
+ticket, Slack message) as `[label](web URL)`, and every local file as a
+repo-relative `path:line`. When an object has no URL yet (an unpushed commit, an
+unpublished draft note), say so and link its nearest parent.
