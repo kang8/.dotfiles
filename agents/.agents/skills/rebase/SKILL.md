@@ -1,6 +1,6 @@
 ---
 name: rebase
-description: Rebase the current branch onto a freshly fetched remote base (default origin's default branch), resolve conflicts, and stop before pushing.
+description: Rebase the current branch onto a freshly fetched remote base (default its MR's target, else origin's default branch), resolve conflicts, and stop before pushing.
 argument-hint: '[target ref, e.g. origin/master]'
 disable-model-invocation: true
 ---
@@ -20,10 +20,22 @@ Run in parallel:
 **Bail (touch nothing)** on a dirty working tree, a rebase already in progress
 (ask: continue or abort?), or `master`/`main` checked out.
 
-## Step 2: Fetch the target
+## Step 2: Pick and fetch the target
 
-The target is the argument, else `origin/HEAD`'s branch, else `origin/master`,
-else `origin/main`. Fetch that one ref as a standalone command:
+The target is the first of:
+
+1. The argument.
+2. The **stack parent**: the target branch of the branch's open MR/PR
+   (`glab mr list --source-branch <branch> -F json` → `.target_branch`, or
+   `gh pr view --json baseRefName`). Git keeps no record of a parent branch; the
+   MR is the only place a stack is written down.
+3. `origin/HEAD`'s branch, else `origin/master`, else `origin/main`.
+
+With no MR, check `git branch --no-merged <default>`: a branch for which
+`git cherry -v <it> HEAD <default>` marks the bottom commits `-` is a likely
+stack parent; ask before using it.
+
+Fetch the target as a standalone command:
 
 ```bash
 git fetch <remote> <branch>
@@ -38,7 +50,15 @@ sandbox blocking SSH with no violation report: retry once unsandboxed.
 - `git rev-parse HEAD` → `OLD_HEAD`, the **recovery point**
 - `git rev-list --count HEAD..<target>` → upstream commits to pick up; `0` means
   already current: report and stop
-- `git log --oneline <target>..HEAD` → the branch's own commits
+- `git cherry -v <target> HEAD` → `+` rows are the branch's own commits; `-`
+  rows already exist in the target by patch-id (e.g. the old copy of an amended
+  stack parent), and the rebase drops them
+
+A stack parent amended with code changes leaves old copies whose patch-id
+matches nothing, so they show `+` and would replay into conflicts against their
+new versions. When a `+` subject matches a commit in
+`$(git merge-base <target> HEAD)..<target>`, stop and propose
+`git rebase --onto <target> <newest such commit>` instead of Step 4's command.
 
 ## Step 4: Rebase and resolve
 
@@ -59,13 +79,14 @@ resolved with a one-line reason or handed to the user.
 
 ## Step 5: Verify
 
-- `git rev-list --count <target>..HEAD` matches the Step 3 branch commit count;
-  name any commit that went missing (dropped as empty, or skipped).
+- `git rev-list --count <target>..HEAD` matches the Step 3 `+` count; name any
+  commit that went missing (dropped as empty, or skipped).
 - After any resolution, `git range-diff <target> OLD_HEAD HEAD`: `=` rows are
   unchanged, and each `!` row differs only at a resolved conflict.
 
 ## Step 6: Report
 
+- Target and where it came from (argument, MR link, or default branch).
 - Old → new HEAD, and upstream commits picked up.
 - Each resolved conflict: file and reason.
 - Divergence from the branch's remote (`git status -sb`); publishing needs
