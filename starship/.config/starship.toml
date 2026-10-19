@@ -64,9 +64,34 @@ command = '''
 base=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo 'origin/master')
 
 current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+# stacked branch: show position like GitLab's "1 of 2", compare against the parent
+# recorded by `git stack-parent`
+label=''
+if [[ -n $current_branch ]]; then
+  read -r pos total < <(git config --get-regexp '^branch\..*\.stackparent$' | awk -v cur="$current_branch" '
+    { b = substr($1, 8, length($1) - 19); parent[b] = $2; child[$2] = b }
+    END {
+      u = 0; b = cur; while ((b in parent) && u < 20) { b = parent[b]; u++ }
+      d = 0; b = cur; while ((b in child) && d < 20) { b = child[b]; d++ }
+      print u + 1, u + 1 + d
+    }')
+  [[ $total -gt 1 ]] && label=$'\uebd2'" $pos/$total "
+fi
+parent=$([[ -n $current_branch ]] && git config "branch.$current_branch.stackParent")
+if [[ -n $parent ]]; then
+  # remote branch deleted after fetch --prune: the parent was likely merged
+  if ! git rev-parse -q --verify "refs/remotes/origin/$parent" >/dev/null; then
+    echo "${label}gone"
+    exit 0
+  fi
+  base=$parent
+  git rev-parse -q --verify "refs/heads/$parent" >/dev/null || base="origin/$parent"
+fi
+
 if [[ -n $current_branch && $current_branch != "${base#origin/}" ]]; then
   if git merge-base --is-ancestor HEAD "$base" 2>/dev/null; then
-    echo "merged"
+    echo "${label}merged"
     exit 0
   fi
 fi
@@ -75,13 +100,13 @@ ahead=$(git rev-list --count "$base"..HEAD 2>/dev/null || echo "0")
 behind=$(git rev-list --count HEAD.."$base" 2>/dev/null || echo "0")
 
 if [[ $ahead -gt 0 && $behind -gt 0 ]]; then
-  echo "⇡$ahead⇣$behind"
+  echo "$label⇡$ahead⇣$behind"
 elif [[ $ahead -gt 0 ]]; then
-  echo "⇡$ahead"
+  echo "$label⇡$ahead"
 elif [[ $behind -gt 0 ]]; then
-  echo "⇣$behind"
+  echo "$label⇣$behind"
 else
-  echo ""
+  echo "$label"
 fi
 '''
 format = '[$output]($style) '

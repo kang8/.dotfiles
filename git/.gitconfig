@@ -64,6 +64,8 @@
 [alias]
     cleanup = !zsh -c --interactive 'gbda' # use onmyzsh function
     fixup = "!git log -n 15 --pretty=format:'%h %cs |%aL| %s' --no-merges | fzf | cut -c -7 | xargs -o git history fixup"
+    # record the stack parent read by starship: `git stack-parent [<branch>]`, no arg = the MR's target via glab
+    stack-parent = "!f() { b=$(git symbolic-ref --short HEAD) || return; d=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null); d=${d#origin/}; p=${1:-$(glab mr list --source-branch \"$b\" -F json | jq -r '.[0].target_branch // empty')}; if [ -n \"$p\" ] && [ \"$p\" != \"${d:-master}\" ]; then git config \"branch.$b.stackParent\" \"$p\" && echo \"$b -> $p\"; else git config --unset \"branch.$b.stackParent\"; echo \"$b: no stack parent\"; fi; }; f"
 [hook "commit-confetti"]
     event = post-commit
     command = ~/.config/git/hooks/post-commit
