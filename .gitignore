@@ -33,6 +33,8 @@ codex/.codex/plugins/
 # update, so the lock is machine-local noise. agents/.agents/Skillfile is the
 # tracked list of what is installed, same split as Brewfile / Brewfile.lock.json.
 agents/.agents/.skill-lock.json
+# Skillfile lines that make format leaves out; names private repos.
+agents/.agents/.skill-ignore
 
 # Agent skills: only the ones written here are versioned. Third-party skills are
 # a cache rebuilt by agents/.agents/restore-skills.sh from the Skillfile, so

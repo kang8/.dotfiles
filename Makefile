@@ -8,6 +8,7 @@ format:
 	@# Skillfile is to .skill-lock.json what Brewfile is to Brewfile.lock.json:
 	@# the list of what is installed, without the hashes that churn every update.
 	@# The lock stores a well-known source bare; `skills add` needs the scheme.
+	@# Lines listed in the gitignored .skill-ignore (private repos) stay out.
 	@if [ -f agents/.agents/.skill-lock.json ]; then \
 		{ sed -n '/^#/p' agents/.agents/Skillfile; \
 		  { awk 'NF && $$1 !~ /^#/ && $$2 == "*" { print $$1, $$2 }' \
@@ -20,7 +21,9 @@ format:
 		          '$$1 == source && $$2 == "*" { found=1 } END { exit !found }' \
 		          agents/.agents/Skillfile || printf '%s %s\n' "$$source" "$$name"; \
 		      done; \
-		  } | LC_ALL=C sort; \
+		  } | if [ -f agents/.agents/.skill-ignore ]; then \
+		        grep -vxF -f agents/.agents/.skill-ignore; \
+		      else cat; fi | LC_ALL=C sort; \
 		} > agents/.agents/Skillfile.tmp && \
 		mv agents/.agents/Skillfile.tmp agents/.agents/Skillfile; \
 	fi
