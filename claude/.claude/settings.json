@@ -1,9 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "askUserQuestionTimeout": "never",
   "attribution": {
     "commit": "",
     "pr": ""
   },
+  "autoCompactEnabled": true,
+  "autoContinueAtUsageLimit": true,
+  "editorMode": "normal",
   "effortLevel": "medium",
   "env": {
     "CLAUDE_CODE_SCROLL_SPEED": "2",
@@ -201,6 +205,13 @@
       "Bash(git push:*)"
     ]
   },
+  "pluginConfigs": {
+    "cc-plugin-agents-md@builtin": {
+      "options": {
+        "instructionFiles": "claude-md-and-agents-md"
+      }
+    }
+  },
   "preferredNotifChannel": "terminal_bell",
   "sandbox": {
     "excludedCommands": [
@@ -243,7 +254,12 @@
     "command": "bash ~/.claude/statusline-command.sh",
     "type": "command"
   },
+  "switchModelsOnFlag": false,
   "theme": "custom:kang8",
   "timeFormat": "24-hour",
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "verbose": false,
+  "worktree": {
+    "baseRef": "fresh"
+  }
 }
