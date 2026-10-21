@@ -1,0 +1,5 @@
+{
+  "name": "branch-copy-id",
+  "version": "0.1.0",
+  "description": "Copy the original session id to the clipboard after /branch"
+}
