@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+// Render a mermaid diagram with pele and show it inline in kitty.
+// Usage: mmd file.mmd | pbpaste | mmd | mmd < file      (MMD_OUT=out.png to save instead)
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { homedir, tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const PELE = '1.8.0';
+const cache = join(homedir(), '.local/share/mmd');
+const lib = join(cache, `pele-${PELE}.js`);
+
+// dist/pele.js is a single bundle with no imports, so one cached file replaces node_modules.
+if (!existsSync(lib)) {
+  mkdirSync(cache, { recursive: true });
+  const url = `https://cdn.jsdelivr.net/npm/pele@${PELE}/dist/pele.js`;
+  execFileSync('curl', ['-fsSL', '-o', `${lib}.tmp`, url], { stdio: 'inherit' });
+  renameSync(`${lib}.tmp`, lib);
+}
+const { render } = await import(pathToFileURL(lib));
+
+// librsvg ignores CSS custom properties, and pele colors everything through them.
+function inlineVars(svg) {
+  const vars = {};
+  for (const [, style] of svg.matchAll(/style="([^"]*)"/g)) {
+    for (const [, name, value] of style.matchAll(/(--[\w-]+):([^;]+)/g)) vars[name] = value;
+  }
+  for (let prev; prev !== svg;) {
+    prev = svg;
+    svg = svg.replace(/var\((--[\w-]+)(?:,([^()]*))?\)/g, (_, name, fallback) => vars[name] ?? fallback ?? '');
+  }
+  return svg;
+}
+
+const src = readFileSync(process.argv[2] ?? 0, 'utf8').replace(/^```.*\n?/gm, ''); // tolerate ```mermaid fences
+let svg;
+try {
+  svg = render(src).svg;
+} catch (e) {
+  console.error(`mmd: ${e.message}`);
+  process.exit(1);
+}
+const png = execFileSync('rsvg-convert', ['--zoom=2', '--background-color=white'], {
+  input: inlineVars(svg),
+  maxBuffer: 1 << 28,
+});
+
+if (process.env.MMD_OUT) {
+  writeFileSync(process.env.MMD_OUT, png);
+} else {
+  const dir = mkdtempSync(join(tmpdir(), 'mmd-'));
+  try {
+    writeFileSync(join(dir, 'out.png'), png);
+    execFileSync('kitten', ['icat', join(dir, 'out.png')], { stdio: 'inherit' });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}

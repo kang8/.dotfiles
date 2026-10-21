@@ -2,21 +2,21 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title Mermaid Live Editor
+# @raycast.title Pele Playground
 # @raycast.mode silent
-# @raycast.description Open mermaid.live with the given diagram, the clipboard, or an empty editor
+# @raycast.description Open pele.run's playground with the given diagram, the clipboard, or its example
 #
 # Optional parameters:
 # @raycast.packageName Customized
-# @raycast.icon 🧜
+# @raycast.icon 🌋
 # @raycast.argument1 { "type": "text", "placeholder": "diagram (\\n for newline, empty = clipboard)", "optional": true }
 
-import base64
-import json
 import re
 import subprocess
 import sys
-import zlib
+import urllib.parse
+
+PLAYGROUND = "https://pele.run/playground"
 
 DIAGRAM_START = re.compile(
     r"""^\s*(%%|---|
@@ -33,14 +33,8 @@ def clipboard() -> str:
 
 
 def editor_url(code: str) -> str:
-    state = {
-        "code": code,
-        "mermaid": json.dumps({"theme": "default"}),
-        "autoSync": True,
-        "updateDiagram": True,
-    }
-    packed = zlib.compress(json.dumps(state).encode("utf-8"), 9)
-    return "https://mermaid.live/edit#pako:" + base64.urlsafe_b64encode(packed).decode().rstrip("=")
+    # The playground reads the hash with URLSearchParams, the same encoding as urlencode.
+    return PLAYGROUND + "#" + urllib.parse.urlencode({"source": code})
 
 
 def restore_newlines(code: str) -> str:
@@ -65,6 +59,6 @@ if __name__ == "__main__":
         code = restore_newlines(code)
 
     # A clipboard holding something else should not become a broken diagram.
-    url = editor_url(code.strip()) if DIAGRAM_START.match(code) else "https://mermaid.live/"
+    url = editor_url(code.strip()) if DIAGRAM_START.match(code) else PLAYGROUND
 
     subprocess.run(["open", url])
