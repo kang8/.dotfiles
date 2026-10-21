@@ -14,7 +14,8 @@
     "CLAUDE_CODE_SCROLL_SPEED": "2",
     "DISABLE_ERROR_REPORTING": "1",
     "DISABLE_TELEMETRY": "1",
-    "GNUPGHOME": "/Users/kang/.gnupg-sandbox"
+    "GNUPGHOME": "/Users/kang/.gnupg-sandbox",
+    "npm_config_manage_package_manager_versions": "false"
   },
   "hooks": {
     "Notification": [
