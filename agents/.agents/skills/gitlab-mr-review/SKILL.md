@@ -158,7 +158,14 @@ keeping its `file` and line keys.**
 
 The script `PUT`s instead of `POST`ing and the status table shows `PUT`. Drop
 the line keys and the update unbinds the draft — the script's docstring has the
-mechanism.
+mechanism. `PUT` never refreshes `line_code`, and the UI places a draft by
+`line_code`, so a draft moved to another line by `PUT` still renders on the old
+one. To move a draft, post it as a new finding without `draft_id`, then
+`glab api -X DELETE projects/<id>/merge_requests/<iid>/draft_notes/<draft_id>`.
+
+Verify only the drafts you just created. The current draft list is
+authoritative: a draft missing on read-back was deleted by the user on purpose,
+so leave it gone.
 
 Then tell the user:
 
