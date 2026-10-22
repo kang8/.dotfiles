@@ -224,7 +224,11 @@
       "jira",
       "jira *",
       "git commit",
-      "git commit *"
+      "git commit *",
+      "git fetch",
+      "git fetch *",
+      "git pull",
+      "git pull *"
     ],
     "filesystem": {
       "allowWrite": [
