@@ -10,6 +10,10 @@ import json
 import re
 import sys
 
+# The note paths below also exist on other APIs (Sentry: /issues/:id/notes/),
+# so only commands that name GitLab are checked at all.
+GITLAB = re.compile(r"\bglab\b|gitlab|/api/v4/|PRIVATE-TOKEN", re.IGNORECASE)
+
 # Endpoints that make text visible the instant they are called.
 PUBLISHES = re.compile(
     r"""
@@ -57,7 +61,7 @@ def main() -> int:
         return 0  # never break the session on a malformed event
 
     command = payload.get("tool_input", {}).get("command", "")
-    if not isinstance(command, str) or not command:
+    if not isinstance(command, str) or not GITLAB.search(command):
         return 0
 
     publishes = bool(PUBLISHES.search(command))
