@@ -14,7 +14,6 @@
     "CLAUDE_CODE_SCROLL_SPEED": "2",
     "DISABLE_ERROR_REPORTING": "1",
     "DISABLE_TELEMETRY": "1",
-    "GNUPGHOME": "/Users/kang/.gnupg-sandbox",
     "npm_config_manage_package_manager_versions": "false"
   },
   "hooks": {
@@ -236,14 +235,13 @@
         "~/Library/pnpm/",
         "~/.cache/prek/",
         "~/.cache/uv/",
-        "~/.gnupg-sandbox/",
         "~/.local/share/uv/tools/",
         "~/.snowflake/logs/"
       ]
     },
     "network": {
       "allowUnixSockets": [
-        "~/.gnupg-sandbox/S.gpg-agent"
+        "~/.ssh/agent/"
       ],
       "allowedDomains": [
         "api.day.app",

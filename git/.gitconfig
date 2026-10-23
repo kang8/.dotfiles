@@ -1,7 +1,7 @@
 [user]
     name = kang
     email = yi1115610574@gmail.com
-    signingkey = 716B162E703DA80C
+    signingkey = ~/.ssh/id_ed25519.pub
 [color]
     ui = auto
 [core]
@@ -38,7 +38,9 @@
     gpgsign = true
     verbose = true
 [gpg]
-    program = gpg
+    format = ssh
+[gpg "ssh"]
+    allowedSignersFile = ~/.config/git/allowed_signers
 [filter "lfs"]
     process = git-lfs filter-process
     required = true
