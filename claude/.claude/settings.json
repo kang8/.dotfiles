@@ -236,7 +236,8 @@
         "~/.cache/prek/",
         "~/.cache/uv/",
         "~/.local/share/uv/tools/",
-        "~/.snowflake/logs/"
+        "~/.snowflake/logs/",
+        "~/.sentry/"
       ]
     },
     "network": {
@@ -245,7 +246,9 @@
       ],
       "allowedDomains": [
         "api.day.app",
-        "api.pnpm.io"
+        "api.pnpm.io",
+        "sentry.io",
+        "*.sentry.io"
       ]
     }
   },
