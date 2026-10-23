@@ -17,7 +17,7 @@ the order of `Brewfile`, `agents/.agents/Skillfile`, and
 
 - Anything cron or launchd starts, or a script reaching a brew-installed binary
   — [`docs/agents/homebrew-paths.md`](docs/agents/homebrew-paths.md): bare
-  `PATH`, `$HOMEBREW_PREFIX`, and the GNU-versus-BSD coreutils trap.
+  `PATH`, `$HOMEBREW_PREFIX`, and the `g`-prefixed GNU tools.
 - zsh startup: the `plugins=()` list, `.zshrc` ordering, init caching —
   [`docs/agents/zsh-startup.md`](docs/agents/zsh-startup.md): how to measure it,
   which keybindings to re-check, which slowdowns are expected.

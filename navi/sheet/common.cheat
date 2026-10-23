@@ -4,7 +4,7 @@
 du -a | cut -d/ -f2 | sort | uniq -c | sort
 
 # Random usernames
-shuf -n 1 /usr/share/dict/words
+gshuf -n 1 /usr/share/dict/words
 
 # Password generate
 openssl rand -base64 24

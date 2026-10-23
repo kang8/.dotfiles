@@ -13,7 +13,8 @@ those configs put the prefix on `PATH` themselves by sourcing
 because it runs before anything is on `PATH`; it is also unreachable from cron,
 since zsh reads `.zshrc` only when interactive.
 
-A brew-installed GNU coreutils shadows the BSD tools in an interactive shell, so
-GNU-only syntax (`mkdir --parents`, `date -d`) works when you test it by hand
-and fails under cron or launchd, where only `/bin` and `/usr/bin` are visible.
-Stick to the portable flags in anything those start.
+GNU coreutils, findutils, grep, sed and tar are on `PATH` only under a `g`
+prefix (`gsed`, `gdate`, `gtimeout`), so a bare `sed` or `date` is the BSD one
+in an interactive shell and under cron alike. GNU `diff` is the exception:
+diffutils links unprefixed into `$HOMEBREW_PREFIX/bin` and shadows
+`/usr/bin/diff` wherever brew is on `PATH`.
