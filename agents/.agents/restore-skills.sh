@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
-# Reinstall every third-party skill listed in the Skillfile.
+# Reinstall every third-party skill listed in the Skillfile and .private-skills.
 #
 # Only skills written here are versioned; third-party ones are a cache that this
 # script rebuilds, so a fresh machine needs `stow agents` and then this.
 set -Eeuo pipefail
 
 SKILLFILE="${HOME}/.agents/Skillfile"
+# Same format as the Skillfile, for private repos; gitignored, so it is optional.
+PRIVATE_SKILLS="${HOME}/.agents/.private-skills"
 SKILLS="${HOME}/.agents/skills"
 
 [[ -f $SKILLFILE ]] || { echo "no Skillfile at $SKILLFILE - run \`stow agents\` first" >&2; exit 1; }
+lists=("$SKILLFILE")
+[[ -f $PRIVATE_SKILLS ]] && lists+=("$PRIVATE_SKILLS")
 
 # Strip comments and blanks once; "*" means every skill from that source.
-entries=$(awk 'NF && $1 !~ /^#/ { print $1, $2 }' "$SKILLFILE")
+entries=$(awk 'NF && $1 !~ /^#/ { print $1, $2 }' "${lists[@]}")
 
 # No trailing Z: as a strict prefix it sorts before any lock timestamp from the
 # same second, where "…26Z" would sort after "…26.386Z".
@@ -64,7 +68,8 @@ orphans=$(comm -23 \
     <(jq -r '.skills | keys[]' "${HOME}/.agents/.skill-lock.json" | LC_ALL=C sort -u) \
     <(cat <<<"$locked"))
 if [[ -n $orphans ]]; then
-    echo "removing $(wc -l <<<"$orphans" | tr -d ' ') skill(s) dropped from the Skillfile or upstream"
+    echo "removing skill(s) dropped from the Skillfile or upstream:"
+    while read -r name; do echo "  ${name}"; done <<<"$orphans"
     # Unquoted: one argument per name. remove clears the lock entry, the copy
     # under ~/.agents and every harness link, so nothing is left to relink below.
     # shellcheck disable=SC2086
