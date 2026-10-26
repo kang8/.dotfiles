@@ -2,8 +2,8 @@
 // Render a mermaid diagram with pele and show it inline in kitty.
 // Usage: mmd file.mmd | pbpaste | mmd | mmd < file      (MMD_OUT=out.png to save instead)
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
-import { homedir, tmpdir } from 'node:os';
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -49,11 +49,6 @@ const png = execFileSync('rsvg-convert', ['--zoom=2', '--background-color=white'
 if (process.env.MMD_OUT) {
   writeFileSync(process.env.MMD_OUT, png);
 } else {
-  const dir = mkdtempSync(join(tmpdir(), 'mmd-'));
-  try {
-    writeFileSync(join(dir, 'out.png'), png);
-    execFileSync('kitten', ['icat', join(dir, 'out.png')], { stdio: 'inherit' });
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
-  }
+  // Piped instead of a temp path: kitty reads the file after icat exits, and deleting it here could drop the image.
+  execFileSync('kitten', ['icat'], { input: png, stdio: ['pipe', 'inherit', 'inherit'] });
 }
