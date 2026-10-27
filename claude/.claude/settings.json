@@ -7,6 +7,7 @@
   },
   "autoCompactEnabled": true,
   "autoContinueAtUsageLimit": true,
+  "crossSessionInbound": "accept",
   "editorMode": "normal",
   "effortLevel": "medium",
   "env": {
