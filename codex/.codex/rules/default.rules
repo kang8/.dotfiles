@@ -31,3 +31,17 @@ prefix_rule(
     decision = "allow",
     justification = "Reading Apple Mail requires execution outside the sandbox",
 )
+
+prefix_rule(
+    pattern = ["git", "commit"],
+    decision = "allow",
+    justification = "Git commits require access to the host SSH signing agent",
+    match = [
+        "git commit",
+        "git commit -m example",
+    ],
+    not_match = [
+        "git status",
+        "git push",
+    ],
+)
