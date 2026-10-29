@@ -54,6 +54,12 @@ Line numbers are 1-based and refer to the file _as it appears in the diff_
 When in doubt for a touched file, `git diff master...HEAD -- <file>` and read
 the hunk headers to confirm which side a line lives on.
 
+Always give lines in that local `master...HEAD` numbering, even when the MR page
+shows different numbers. The Changes tab defaults to the merge-ref diff (the MR
+merged into the current target HEAD), so once master changes a touched file its
+numbers drift from yours. The script detects this and re-maps each line onto the
+merge ref itself.
+
 ## Step 3 — Write the findings JSON
 
 Build a JSON array, mirroring the language of the existing MR description and
@@ -148,6 +154,13 @@ Judge by `new_path`, not by the line alone: an unbound draft keeps a `position`
 object full of nulls plus a stale `line_code`, so both of those still look
 healthy. An `MR-level` or `NOT-BOUND` row is a bug, almost always a wrong line
 type (`new_line` alone for a context line that needs both).
+
+A `HIDDEN` row bound fine, but the UI places drafts by `line_code`, and that
+code points at a different row than the one the page displays: "Your review N"
+counts it, yet no line shows it. GitLab stores `position` normalized back to the
+MR's `diff_refs`, so this check reads `line_code`, not `position`. A `PUT` on a
+draft created before master moved stays `HIDDEN`; re-post it without `draft_id`
+and delete the old one.
 
 **Reword a draft in place: re-run the script with that draft's `draft_id`,
 keeping its `file` and line keys.**
