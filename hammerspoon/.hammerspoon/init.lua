@@ -38,9 +38,6 @@ hs.hotkey.bind({"alt"}, "w", function()
   print(hs.application.frontmostApplication():name())
 end)
 
--- Toggle Chrome's vertical tab strip (cmd+shift+,) -- see the file's header for config
-require("chrome-sidebar-toggle")
-
 -- Defines the global Confetti(), fired by the git post-commit hook
 require("confetti")
 
