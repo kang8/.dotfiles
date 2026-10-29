@@ -19,6 +19,13 @@ cost_usd=$(echo "$input" | jq -r '.cost.total_cost_usd // empty')
 # Reasoning effort: absent when the model does not support the effort parameter
 effort=$(echo "$input" | jq -r '.effort.level // empty')
 
+# SendMessage address of this session: absent from the status line JSON, so read
+# it from the per-process registry Claude Code keeps in ~/.claude/sessions
+msg_name=""
+if [ -n "$session_id" ]; then
+  msg_name=$(jq -r --arg id "$session_id" 'select(.sessionId == $id) | .name // empty' "$HOME"/.claude/sessions/*.json 2>/dev/null | head -1)
+fi
+
 # Get git branch if in a git repo (skip optional locks for performance)
 git_branch=""
 if git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
@@ -31,6 +38,16 @@ fi
 
 # Build status line components
 components=()
+
+# Message name (skipped when /rename already made it the session name)
+if [ -n "$msg_name" ] && [ "$msg_name" != "$session_name" ]; then
+  components+=("[msg:$msg_name]")
+fi
+
+# Current session id (.session_id)
+if [ -n "$session_id" ]; then
+  components+=("$session_id")
+fi
 
 # Session name (if set via /rename)
 if [ -n "$session_name" ]; then
@@ -91,11 +108,6 @@ if [ -n "$effort" ]; then
   components+=("$model_short $effort")
 else
   components+=("$model_short")
-fi
-
-# Current session id (.session_id)
-if [ -n "$session_id" ]; then
-  components+=("$session_id")
 fi
 
 # Join components with space separator
