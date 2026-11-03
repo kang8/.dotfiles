@@ -25,4 +25,6 @@
 31 11 * * 2 cd ~/.config/nvim && git fetch && git rebase origin/master && ~/.local/share/bob/nvim-bin/nvim --headless "+Lazy! restore" +qa
 
 # Run at 10:30 every day
-30 10 * * * /bin/zsh -c 'eval "$($HOME/.local/bin/brew-shellenv)" && npx -y skills@latest update -g -y'
+# restore-skills.sh re-adds every source, then strips .claude-plugin manifests
+# and relinks the harnesses; `skills update` stops after the first step.
+30 10 * * * /bin/zsh -c 'eval "$($HOME/.local/bin/brew-shellenv)" && ~/.agents/restore-skills.sh'
