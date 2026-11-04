@@ -242,12 +242,17 @@
       ]
     },
     "network": {
+      "allowMachLookup": [
+        "com.apple.trustd.agent"
+      ],
       "allowUnixSockets": [
         "~/.ssh/agent/"
       ],
       "allowedDomains": [
         "api.day.app",
         "api.pnpm.io",
+        "gitlab.rightcapital.io",
+        "right.atlassian.net",
         "sentry.io",
         "*.sentry.io"
       ]
