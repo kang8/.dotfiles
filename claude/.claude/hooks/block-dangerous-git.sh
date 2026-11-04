@@ -12,13 +12,12 @@ args='([[:space:]]+[^;&|]*)?'
 end='([[:space:]]|$|[\"'\'';&|)])'
 
 block() {
-  echo "BLOCKED: this destructive git command (push, reset --hard, clean -f, branch -D, checkout ., restore .) is disabled for Claude Code.$1 The user has prevented you from doing this; stop and tell them what you wanted to run." >&2
+  echo "BLOCKED: this destructive git command (push, clean -f, branch -D, checkout ., restore .) is disabled for Claude Code.$1 The user has prevented you from doing this; stop and tell them what you wanted to run." >&2
   exit 2
 }
 
 patterns=(
   "push$end"
-  "reset$args[[:space:]]--hard$end"
   "clean$args[[:space:]](-[[:alnum:]]*f[[:alnum:]]*|--force)$end"
   "branch$args[[:space:]]-[[:alnum:]]*D[[:alnum:]]*$end"
 )
