@@ -7,7 +7,8 @@ set -Eeuo pipefail
 
 SKILLFILE="${HOME}/.agents/Skillfile"
 # Same format as the Skillfile, for private repos; gitignored, so it is optional.
-PRIVATE_SKILLS="${HOME}/.agents/.private-skills"
+# Read from the repo: a file created after the last `stow agents` has no link.
+PRIVATE_SKILLS="$(dirname "$(readlink -f "$SKILLFILE")")/.private-skills"
 SKILLS="${HOME}/.agents/skills"
 
 [[ -f $SKILLFILE ]] || { echo "no Skillfile at $SKILLFILE - run \`stow agents\` first" >&2; exit 1; }
