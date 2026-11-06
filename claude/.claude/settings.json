@@ -202,10 +202,7 @@
       "Bash(pnpm install *)",
       "WebFetch"
     ],
-    "defaultMode": "auto",
-    "deny": [
-      "Bash(git push:*)"
-    ]
+    "defaultMode": "auto"
   },
   "pluginConfigs": {
     "cc-plugin-agents-md@builtin": {
