@@ -125,7 +125,6 @@ brew "starship"
 brew "stow"
 brew "stripe/stripe-cli/stripe", trusted: true
 brew "stylua"
-brew "tailscale"
 brew "texinfo"
 brew "tig"
 brew "tree"
