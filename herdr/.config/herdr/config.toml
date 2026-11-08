@@ -8,4 +8,29 @@ status_indicators = "symbols"
 
 show_agent_labels_on_pane_borders = true
 [ui.toast]
-delivery = "system"
+delivery = "terminal"
+
+[keys]
+# ctrl+b is backward-char in zsh and Claude Code
+prefix = "ctrl+q"
+
+# alt+h/j/k/l: same keys as kitty's neighboring_window; see navigate.sh
+[[keys.command]]
+key = "alt+h"
+type = "shell"
+command = "$HOME/.config/herdr/navigate.sh left"
+
+[[keys.command]]
+key = "alt+j"
+type = "shell"
+command = "$HOME/.config/herdr/navigate.sh down"
+
+[[keys.command]]
+key = "alt+k"
+type = "shell"
+command = "$HOME/.config/herdr/navigate.sh up"
+
+[[keys.command]]
+key = "alt+l"
+type = "shell"
+command = "$HOME/.config/herdr/navigate.sh right"

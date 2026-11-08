@@ -19,6 +19,19 @@ command -v nvim &> /dev/null && alias vim='nvim'
 # kitty ssh
 command -v kitty &> /dev/null && alias ssh='kitty +kitten ssh'
 
+# Tag the kitty window so kitty.conf passes alt+h/j/k/l through to herdr.
+# herdr does not forward its panes' user vars, so the tag has to come from here.
+# Over ssh the escape travels back to the local kitty; plain ssh still sends
+# TERM even when KITTY_WINDOW_ID is not forwarded.
+herdr() {
+    if [[ -n $HERDR_ENV || ( -z $KITTY_WINDOW_ID && $TERM != xterm-kitty ) ]]; then
+        command herdr "$@"
+        return
+    fi
+    printf '\e]1337;SetUserVar=IS_HERDR=%s\a' "$(printf true | base64)"
+    { command herdr "$@" } always { printf '\e]1337;SetUserVar=IS_HERDR\a' }
+}
+
 # rg
 alias rga='rg --no-ignore --hidden'
 
