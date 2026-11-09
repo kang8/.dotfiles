@@ -13,6 +13,29 @@ delivery = "terminal"
 [keys]
 # ctrl+b is backward-char in zsh and Claude Code
 prefix = "ctrl+q"
+# kitty.conf passes the cmd keys through while IS_HERDR is set
+split_vertical = ["prefix+v", "cmd+n"]
+zoom = ["prefix+z", "cmd+a"]
+switch_tab = ["prefix+1..9", "cmd+1..9"]
+
+# Sequences that kitty.conf sends with send_text
+[[keys.command]]
+key = "ctrl+shift+f"
+type = "shell"
+command = '$HOME/.config/herdr/send-text.sh "\033[102;6u"'
+description = "fzf_rg in zsh"
+
+[[keys.command]]
+key = "ctrl+shift+m"
+type = "shell"
+command = '$HOME/.config/herdr/send-text.sh "\033[109;6u"'
+description = "fzf_man in zsh"
+
+[[keys.command]]
+key = "cmd+alt+k"
+type = "shell"
+command = '$HOME/.config/herdr/send-text.sh "\033[107;11u"'
+description = "send Claude Code status in nvim"
 
 # alt+h/j/k/l: same keys as kitty's neighboring_window; see navigate.sh
 [[keys.command]]
