@@ -6,6 +6,7 @@
 datadog-labs/agent-skills dd-docs
 datadog-labs/agent-skills dd-logs
 datadog-labs/agent-skills dd-pup
+herdrdev/herdr herdr
 https://cli.sentry.dev sentry-cli
 humanlayer/skills show-me
 mattpocock/skills *
