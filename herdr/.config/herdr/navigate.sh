@@ -28,9 +28,4 @@ if [ "$(printf '%s' "$edges" | jq -r ".result.edges.$dir")" = false ]; then
   exec herdr pane focus --pane "$pane" --direction "$dir"
 fi
 
-# kitty appends its pid to listen_on, and the herdr server outlives kitty
-# restarts, so look the socket up instead of trusting an inherited one.
-for sock in /tmp/mykitty-*; do
-  kill -0 "${sock##*-}" 2>/dev/null &&
-    exec kitty @ --to "unix:$sock" action neighboring_window "$dir"
-done
+exec "$(dirname "$0")/kitty-neighbor.sh" "$dir"
