@@ -3,6 +3,10 @@ export MANPAGER='nvim +Man!'
 export LC_ALL=en_US.UTF-8
 export ZSH=~/.config/zsh/.oh-my-zsh
 
+# herdr renders OSC 8 links, but TERM_PROGRAM=herdr is on no hyperlink
+# allowlist, so Claude Code would print "text (url)" instead
+[[ $TERM_PROGRAM == herdr ]] && export FORCE_HYPERLINK=1
+
 # Drop oh-my-zsh's hostname from the dump path: Bonjour renames orphan the cache
 export ZSH_COMPDUMP="$ZDOTDIR/.zcompdump-$ZSH_VERSION"
 

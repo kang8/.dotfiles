@@ -5,6 +5,7 @@ name = "catppuccin-latte"
 [ui]
 agent_panel_sort = "priority"
 status_indicators = "symbols"
+prompt_new_tab_name = false
 
 show_agent_labels_on_pane_borders = true
 [ui.toast]
@@ -17,6 +18,7 @@ prefix = "ctrl+q"
 split_vertical = ["prefix+v", "cmd+n"]
 zoom = ["prefix+z", "cmd+a"]
 switch_tab = ["prefix+1..9", "cmd+1..9"]
+new_tab = ["prefix+c", "cmd+t"]
 
 # Sequences that kitty.conf sends with send_text
 [[keys.command]]
