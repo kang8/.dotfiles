@@ -253,6 +253,7 @@
         "com.apple.trustd.agent"
       ],
       "allowUnixSockets": [
+        "~/.config/herdr/herdr.sock",
         "~/.ssh/agent/"
       ],
       "allowedDomains": [
