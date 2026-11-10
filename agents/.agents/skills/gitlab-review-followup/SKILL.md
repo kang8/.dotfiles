@@ -70,13 +70,14 @@ fetch output. The user's own reply shape:
   `~/.agents/skills/gitlab-mr-review/SKILL.md`: verdict, then the single most
   fundamental reason.
 
-## 5. Commit and post, on the user's word
+## 5. Ship and post, on the user's word
 
-Ask whether to fold the changes into the existing commit or add a new one, then
-follow the `commit` skill. Once the commit is pushed, fill in `<sha>`.
+Fold the changes into the MR's commit and publish by following
+`~/.agents/skills/ship/SKILL.md`: it amends, rebases, pushes, rewrites the MR
+description, and fills `<sha>` into the replies.
 
-Offer to post the replies as **draft notes**, visible only to the user until
-they submit the review in the MR page:
+The replies go up as **draft notes**, visible only to the user until they submit
+the review in the MR page:
 
 ```bash
 glab api -X POST "projects/:fullpath/merge_requests/<iid>/draft_notes" \

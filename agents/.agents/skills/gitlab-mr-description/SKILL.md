@@ -15,30 +15,32 @@ Use the `glab` CLI for every GitLab call, never raw `curl`.
 Run in parallel:
 
 - `git rev-parse --abbrev-ref HEAD`
-- `glab mr view [iid] 2>&1 | head -80` — omit the iid to resolve from the
-  branch; a pasted MR URL ends in the iid
+- `glab mr view [iid] -F json | jq '{iid, web_url, target_branch, sha}'` — omit
+  the iid to resolve from the branch; a pasted MR URL ends in the iid
 
-`glab mr view` prints the current description below the `--` line. Read it: you
-are usually editing a draft, not starting blank. No MR for the branch → ask for
-the iid rather than guessing.
+This keeps the current description out of context until Step 3, so the diff, not
+the old structure, shapes what you write. No MR for the branch → ask for the iid
+rather than guessing.
 
-## Step 2 — Read the diff, not the prose
+## Step 2 — Read the diff
 
 `git show --stat <sha>` for a single-commit branch, `git diff master...HEAD`
 otherwise, then read the hunks of every changed file.
 
-The existing description is a _claim_ about the diff. Verify each number, each
-file reference, and especially each "unchanged" claim against what you just
-read. Rewriting from the prose alone produces a description that reads better
-and says the same wrong things.
-
 Done when every changed file is accounted for in your model of the change.
 
-## Step 3 — Keep and cut
+## Step 3 — Write fresh, then harvest
 
-Terse is the bar, and an inherited draft is where it slips: the sections you did
-not come here to fix are **sediment** until they re-earn their place. Put every
-section — kept, rewritten, or new — through one sentence said aloud: _the
+Write the whole description from your model of the change alone, as if the MR
+had none.
+
+Then read the current one (`glab mr view <iid>`, below the `--` line) as a
+**fact source**. A measured number, a verification result, a link or a decision
+the diff cannot show earns a place in your draft once you have checked it
+against the code. Everything else in it is **sediment** and stays behind,
+however much of the old wording that drops.
+
+Terse is the bar. Put every section through one sentence said aloud: _the
 reviewer cannot get this from the diff, because ___._ No ending to that sentence
 is a cut.
 
