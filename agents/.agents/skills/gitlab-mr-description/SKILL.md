@@ -4,9 +4,9 @@ description: Write or tighten a GitLab MR description from the branch's actual d
 disable-model-invocation: true
 ---
 
-You are writing the description of an existing GitLab MR. The reviewer reads the
-diff too — the description earns its space only by carrying what the diff
-cannot.
+You are writing the description of a GitLab MR; Step 1 opens it if the branch
+has none. The reviewer reads the diff too — the description earns its space only
+by carrying what the diff cannot.
 
 Use the `glab` CLI for every GitLab call, never raw `curl`.
 
@@ -19,8 +19,19 @@ Run in parallel:
   the iid to resolve from the branch; a pasted MR URL ends in the iid
 
 This keeps the current description out of context until Step 3, so the diff, not
-the old structure, shapes what you write. No MR for the branch → ask for the iid
-rather than guessing.
+the old structure, shapes what you write.
+
+No MR for the branch → open one. The branch must be on the remote
+(`git ls-remote --exit-code origin <branch>`); if it is not, ask before pushing.
+
+```bash
+glab mr create --target-branch "$(glab api projects/:fullpath | jq -r .default_branch)" \
+  --title "$(git log -1 --format=%s)" \
+  --assignee "$(glab api user | jq -r .username)" --remove-source-branch --yes
+```
+
+Target the default branch unless the user named another. "Another open merge
+request already exists" means one appeared meanwhile: use the iid in that error.
 
 ## Step 2 — Read the diff
 
@@ -34,11 +45,12 @@ Done when every changed file is accounted for in your model of the change.
 Write the whole description from your model of the change alone, as if the MR
 had none.
 
-Then read the current one (`glab mr view <iid>`, below the `--` line) as a
-**fact source**. A measured number, a verification result, a link or a decision
-the diff cannot show earns a place in your draft once you have checked it
-against the code. Everything else in it is **sediment** and stays behind,
-however much of the old wording that drops.
+Then, if the MR already had a description, read it (`glab mr view <iid>`, below
+the `--` line) as a **fact source**; an MR opened in Step 1 has none, so skip
+the harvest. A measured number, a verification result, a link or a decision the
+diff cannot show earns a place in your draft once you have checked it against
+the code. Everything else in it is **sediment** and stays behind, however much
+of the old wording that drops.
 
 Terse is the bar. Put every section through one sentence said aloud: _the
 reviewer cannot get this from the diff, because ___._ No ending to that sentence
@@ -62,7 +74,8 @@ Cut:
 - a visual plus the paragraph it was supposed to replace
 - a section whose _because_ is a rewording of one already spoken
 
-Write in the language of the existing description; these are often Chinese.
+Write in the language of the existing description; these are often Chinese. With
+no existing description, write in English.
 
 Done when every surviving section has said its _because_, and the body fits a
 screen — 50 lines. Past that, say what the extra lines carry that the diff does
@@ -98,8 +111,8 @@ otherwise describe it.
 
 ## Step 5 — Push
 
-Heredoc the body to a file first; passing markdown inline mangles backticks and
-`$`:
+The MR exists after Step 1, so this is always an update. Heredoc the body to a
+file first; passing markdown inline mangles backticks and `$`:
 
 ```bash
 cat > "$TMPDIR/mr<iid>.md" <<'MDEOF'

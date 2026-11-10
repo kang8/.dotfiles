@@ -33,7 +33,10 @@ Run in parallel:
 
 `source_branch` must equal the current branch; a mismatch means the iid came
 from some other MR in the conversation (one under review, a linked one), so drop
-it and resolve from the branch. No MR either way → ask for the iid.
+it and resolve from the branch. No MR either way → the branch has none yet: take
+the project's default branch as the target
+(`glab api projects/:fullpath | jq -r .default_branch`) unless the user named
+another, skip the `sha` check below, and open the MR in Step 4.
 
 Then fetch the target as its own command and read `origin/<target>` only after
 it exits 0: `git fetch origin <target>`.
@@ -78,6 +81,16 @@ Done when `git merge-base --is-ancestor origin/<target> HEAD` exits 0.
 ## Step 4 — Push
 
 `git push --force-with-lease origin <branch>`.
+
+No MR yet (Step 1) → open it now, titled with the commit subject:
+
+```bash
+glab mr create --target-branch <target> --title "$(git log -1 --format=%s)" \
+  --assignee "$(glab api user | jq -r .username)" --remove-source-branch --yes
+```
+
+"Another open merge request already exists" means one appeared since Step 1 (a
+push hook, a teammate): continue with the iid in that error.
 
 Done when the MR's `sha` (`glab mr view <iid> -F json | jq -r .sha`) equals
 `git rev-parse HEAD`.
