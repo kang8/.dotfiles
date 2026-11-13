@@ -19,6 +19,7 @@ split_vertical = ["prefix+v", "cmd+n"]
 zoom = ["prefix+z", "cmd+a"]
 switch_tab = ["prefix+1..9", "cmd+1..9"]
 new_tab = ["prefix+c", "cmd+t"]
+goto = ["prefix+g", "cmd+shift+u"]
 
 # Sequences that kitty.conf sends with send_text
 [[keys.command]]
