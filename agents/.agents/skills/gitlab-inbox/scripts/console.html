@@ -1,0 +1,1650 @@
+<!doctype html>
+<!-- gitlab-inbox review console. Three layouts on one page, switch with ?variant=A|B|C (bottom bar or ← →). -->
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <title>gitlab-inbox · review console</title>
+    <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #fff;
+      --fg: #1f2328;
+      --muted: #656d76;
+      --line: #d8dee4;
+      --accent: #2f6feb;
+      --add: #e6ffec;
+      --addn: #ccffd8;
+      --del: #ffebe9;
+      --deln: #ffd7d5;
+      --hl: #fff8c5;
+      --warn: #bf3989;
+      --ok: #1a7f37;
+      --code: #f6f8fa;
+    }
+    @media (prefers-color-scheme:dark) {
+      :root {
+        --bg: #0d1117;
+        --panel: #161b22;
+        --fg: #e6edf3;
+        --muted: #8d96a0;
+        --line: #30363d;
+        --accent: #4493f8;
+        --add: #12261e;
+        --addn: #1b4721;
+        --del: #25171c;
+        --deln: #542426;
+        --hl: #3b2e00;
+        --warn: #f778ba;
+        --ok: #3fb950;
+        --code: #1c2128;
+      }
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font: 14px/1.55
+        -apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--fg);
+      border-radius: 6px;
+      padding: 3px 10px;
+    }
+    button:hover {
+      border-color: var(--accent);
+    }
+    button.on {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    button.danger.on {
+      background: var(--warn);
+      border-color: var(--warn);
+    }
+    /* reviewer's suggestion: a hint only, never pre-selected */
+    button.hint:not(.on) {
+      border-style: dashed;
+      border-color: var(--accent);
+    }
+    button.hint:not(.on)::after {
+      content: " · 建议";
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .todo-txt {
+      color: #9a6700;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0 6px;
+      border-radius: 9px;
+      font-size: 11px;
+      line-height: 17px;
+    }
+    .badge.todo {
+      background: #fff1c2;
+      color: #7a5200;
+      font-weight: 600;
+    }
+    .badge.done {
+      background: #dcf5e3;
+      color: #1a7f37;
+    }
+    .badge.later {
+      background: var(--code);
+      color: var(--muted);
+    }
+    textarea,
+    input[type=text] {
+      font: inherit;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 8px;
+      background: var(--panel);
+      color: var(--fg);
+    }
+    textarea {
+      min-height: 110px;
+      font-family: ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-size: 12.5px;
+    }
+    .muted {
+      color: var(--muted);
+    }
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 0 6px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      margin-left: 4px;
+      color: var(--muted);
+    }
+    .tag.block {
+      color: var(--warn);
+      border-color: var(--warn);
+    }
+    .tag.unv {
+      color: #9a6700;
+      border-color: #d4a72c;
+    }
+    .tag.dup {
+      color: var(--warn);
+      border-color: var(--warn);
+    }
+    .tag.ok {
+      color: var(--ok);
+      border-color: var(--ok);
+    }
+    /* code */
+    .code {
+      font: 12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: auto;
+      background: var(--panel);
+    }
+    .code .row {
+      display: grid;
+      grid-template-columns: 42px 42px 1fr;
+      white-space: pre;
+    }
+    .code .n {
+      color: var(--muted);
+      text-align: right;
+      padding-right: 8px;
+      user-select: none;
+    }
+    .code .add {
+      background: var(--add);
+    }
+    .code .del {
+      background: var(--del);
+    }
+    .code .hunk {
+      color: var(--muted);
+      background: var(--code);
+      padding: 2px 8px;
+      white-space: pre;
+    }
+    .code .target {
+      background: var(--hl)!important;
+      box-shadow: inset 3px 0 var(--accent);
+    }
+    .code .t {
+      padding-right: 12px;
+    }
+    .filebar {
+      font: 12px ui-monospace,Menlo,monospace;
+      padding: 4px 8px;
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: 6px 6px 0 0;
+    }
+    .filebar + .code {
+      border-radius: 0 0 6px 6px;
+    }
+    /* markdown */
+    .md p {
+      margin: .35em 0;
+    }
+    .md blockquote {
+      margin: .4em 0;
+      padding: .1em .8em;
+      border-left: 3px solid var(--line);
+      color: var(--muted);
+    }
+    .md code {
+      font: 12px ui-monospace,Menlo,monospace;
+      background: var(--code);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+    .md pre {
+      background: var(--code);
+      padding: 8px;
+      border-radius: 6px;
+      overflow: auto;
+    }
+    .md pre code {
+      background: none;
+      padding: 0;
+    }
+    .md h1,
+    .md h2,
+    .md h3 {
+      font-size: 14px;
+      margin: .8em 0 .3em;
+    }
+    .md ul {
+      margin: .3em 0;
+      padding-left: 1.4em;
+    }
+    /* chat */
+    .msg {
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin: 6px 0;
+      border: 1px solid var(--line);
+    }
+    .msg.user {
+      background: var(--code);
+    }
+    .msg.agent {
+      background: var(--panel);
+    }
+    .msg .who {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 6px 0;
+    }
+    .chips button {
+      font-size: 12px;
+      padding: 1px 8px;
+      border-radius: 12px;
+    }
+    .spin {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 2px solid var(--muted);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: s 1s linear infinite;
+      vertical-align: -1px;
+    }
+    @keyframes s {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    /* change detection */
+    .chg {
+      border: 1px solid #d4a72c;
+      background: color-mix(in srgb,#d4a72c 10%,var(--panel));
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin: 8px 0;
+      font-size: 13px;
+    }
+    .chg.merged {
+      border-color: var(--line);
+      background: var(--code);
+    }
+    .chg.ok {
+      border-color: var(--ok);
+      background: color-mix(in srgb,var(--ok) 8%,var(--panel));
+    }
+    .chg summary {
+      cursor: pointer;
+    }
+    .locked {
+      opacity: .5;
+      pointer-events: none;
+    }
+    /* plan */
+    .plan {
+      font: 12.5px/1.6 ui-monospace,Menlo,monospace;
+      white-space: pre-wrap;
+    }
+    /* switcher */
+    #sw {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      background: #111;
+      color: #fff;
+      border-radius: 999px;
+      padding: 6px 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      box-shadow: 0 4px 18px rgba(0,0,0,.35);
+      z-index: 99;
+      font-size: 13px;
+    }
+    #sw button {
+      background: #333;
+      color: #fff;
+      border: 0;
+      border-radius: 999px;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+    }
+    #sw span {
+      min-width: 180px;
+      text-align: center;
+    }
+
+    /* ===== Variant A: three-pane inbox ===== */
+    .A {
+      display: grid;
+      grid-template-columns: 270px 1fr 400px;
+      height: 100vh;
+    }
+    .A .col {
+      overflow: auto;
+      border-right: 1px solid var(--line);
+    }
+    .A .left {
+      background: var(--panel);
+    }
+    .A .grp {
+      padding: 10px 12px 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .A .mr {
+      padding: 8px 12px;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+    }
+    .A .mr:hover {
+      background: var(--code);
+    }
+    .A .mr.sel {
+      border-left-color: var(--accent);
+      background: var(--code);
+    }
+    .A .mr.has-todo:not(.sel) {
+      border-left-color: #e3b341;
+    }
+    .A .mr.later .t {
+      color: var(--muted);
+    }
+    .A .todo-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 12px 6px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: #fff8e1;
+      font-size: 12px;
+    }
+    .A .mr .t {
+      font-size: 13px;
+    }
+    .A .mid {
+      padding: 14px 18px 45vh;
+    }
+    .A .tabs {
+      display: flex;
+      gap: 4px;
+      margin: 10px 0;
+    }
+    .A .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 10px 0;
+    }
+    .A .card.sel {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .A .card.dropped {
+      opacity: .45;
+    }
+    .A .card.todo {
+      border-left: 3px solid #d4a72c;
+    }
+    .A .scope {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .A .right {
+      display: flex;
+      flex-direction: column;
+      background: var(--panel);
+    }
+    .A .right .msgs {
+      flex: 1;
+      overflow: auto;
+      padding: 10px 12px;
+    }
+    .A .right .box {
+      padding: 10px 12px;
+      border-top: 1px solid var(--line);
+    }
+    .A .plandock {
+      position: fixed;
+      left: 270px;
+      right: 400px;
+      bottom: 0;
+      background: var(--panel);
+      border-top: 1px solid var(--line);
+      padding: 6px 18px;
+      max-height: 40vh;
+      overflow: auto;
+    }
+
+    /* ===== Variant B: GitLab-style inline diff, one long document ===== */
+    .B {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 18px 18px 120px;
+    }
+    .B .top {
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      padding: 8px 0;
+      z-index: 5;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .B section {
+      margin: 22px 0;
+    }
+    .B .mrh {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .B .thread {
+      margin: 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: var(--bg);
+      padding: 10px 14px 10px 92px;
+      white-space: normal;
+      font: 14px/1.55 -apple-system,"PingFang SC",sans-serif;
+    }
+    .B .note {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin: 6px 0;
+    }
+    .B details {
+      margin: 8px 0;
+    }
+    .B .file {
+      margin: 12px 0;
+    }
+
+    /* ===== Variant C: one finding per screen, keyboard driven ===== */
+    .C {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .C .bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .C .prog {
+      flex: 1;
+      height: 6px;
+      background: var(--line);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .C .prog i {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+    }
+    .C .body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      min-height: 0;
+    }
+    .C .lp {
+      overflow: auto;
+      padding: 16px 18px;
+      border-right: 1px solid var(--line);
+    }
+    .C .rp {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .C .dec {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .C .big {
+      display: flex;
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .C .big button {
+      flex: 1;
+      padding: 8px;
+      font-size: 15px;
+    }
+    .C kbd {
+      font: 11px ui-monospace,Menlo,monospace;
+      border: 1px solid var(--line);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      padding: 0 4px;
+      margin-left: 4px;
+      color: var(--muted);
+    }
+    .C .chat {
+      flex: 1;
+      overflow: auto;
+      padding: 10px 18px;
+    }
+    .C .ask {
+      padding: 10px 18px 60px;
+      border-top: 1px solid var(--line);
+    }
+    .C .sum {
+      max-width: 860px;
+      margin: 30px auto;
+      padding: 0 18px;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="app">加载中…</div>
+    <div
+      id="sw"><button id="prev">←</button><span id="swl"></span><button id="next">→</button></div>
+    <script>
+    const VARIANTS = {
+      A: '三栏收件箱',
+      B: 'GitLab 式内联 diff',
+      C: '逐条聚焦（键盘）',
+    };
+    const keyOf = (x) => `${x.project}!${x.iid}`;
+    let D,
+      S = {
+        reply: {},
+        submitted: null,
+        dec: {},
+        body: {},
+        mr: {},
+        chat: {},
+        inputs: {},
+        selMr: null,
+        selF: null,
+        tabA: 'f',
+        idxC: 0,
+        status: null,
+        polling: false,
+        recheck: {},
+        line: {},
+        mrc: {},
+        mrcDec: {},
+        askMr: {},
+        later: {},
+      };
+    // Survive reloads and server restarts; keyed by the session build.
+    const PERSIST = [
+      'reply',
+      'dec',
+      'body',
+      'mr',
+      'chat',
+      'recheck',
+      'line',
+      'mrc',
+      'mrcDec',
+      'later',
+    ];
+    const storeKey = () => 'gitlab-inbox:' + D.session + ':' + D.built_at;
+    function save() {
+      if (!D) return;
+      const o = {};
+      for (const k of PERSIST) o[k] = S[k];
+      try {
+        localStorage.setItem(storeKey(), JSON.stringify(o));
+      } catch {}
+    }
+    const $ = (s, el = document) => el.querySelector(s);
+    const esc = (s) =>
+      String(s ?? '').replace(
+        /[&<>"]/g,
+        (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]),
+      );
+    const variant = () =>
+      new URLSearchParams(location.search).get('variant') || 'A';
+
+    function md(src) {
+      const blocks = String(src ?? '').split(/```(\w*)\n([\s\S]*?)```/g);
+      let out = '';
+      for (let i = 0; i < blocks.length; i++) {
+        if (i % 3 === 1) continue;
+        if (i % 3 === 2) {
+          out += `<pre><code>${esc(blocks[i])}</code></pre>`;
+          continue;
+        }
+        out += blocks[i].split(/\n{2,}/).map((p) => {
+          p = p.trim();
+          if (!p) return '';
+          const inline = (t) =>
+            esc(t).replace(
+              /``\s?(.+?)\s?``|`([^`]+)`/g,
+              (_, a, b) => `<code>${a ?? b}</code>`,
+            ).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(
+              /\[([^\]]+)\]\((https?:[^)]+)\)/g,
+              '<a href="$2" target="_blank">$1</a>',
+            );
+          if (/^#{1,3} /.test(p)) {
+            return `<h3>${inline(p.replace(/^#+ /, ''))}</h3>`;
+          }
+          if (p.startsWith('>')) {
+            return `<blockquote>${inline(p.replace(/^> ?/gm, ''))}</blockquote>`;
+          }
+          if (
+            /^[-*] /m.test(p) &&
+            p.split('\n').every((l) => /^\s*([-*] |\s)/.test(l))
+          ) {
+            return '<ul>' + p.split(/\n(?=\s*[-*] )/).map((l) =>
+              `<li>${inline(l.replace(/^\s*[-*] /, ''))}</li>`
+            ).join('') + '</ul>';
+          }
+          return `<p>${inline(p).replace(/\n/g, '<br>')}</p>`;
+        }).join('');
+      }
+      return `<div class="md">${out}</div>`;
+    }
+
+    function code(f, { inlineThread } = {}) {
+      const rows = f.code.map((r) => {
+        if (r.kind === 'hunk') return `<div class="hunk">${esc(r.text)}</div>`;
+        const tgt = r.new === f.new_line &&
+          (f.old_line == null || r.old === f.old_line);
+        const row = `<div class="row ${r.kind}${
+          tgt ? ' target' : ''
+        }"><span class="n">${r.old ?? ''}</span><span class="n">${
+          r.new ?? ''
+        }</span><span class="t">${esc(r.text) || ' '}</span></div>`;
+        return tgt && inlineThread ? row + inlineThread : row;
+      }).join('');
+      return `<div class="filebar">${
+        esc(f.file)
+      }:${f.new_line}</div><div class="code">${rows}</div>`;
+    }
+    function related(f) {
+      return f.related.map((r) =>
+        `<div style="margin-top:10px"><div class="filebar">引用：${
+          esc(r.file)
+        }（源分支）</div><div class="code">${
+          r.lines.map((l) =>
+            `<div class="row ctx"><span class="n"></span><span class="n">${l.new}</span><span class="t">${
+              esc(l.text) || ' '
+            }</span></div>`
+          ).join('')
+        }</div></div>`
+      ).join('');
+    }
+    const tags = (f) =>
+      (f.blocking
+        ? '<span class="tag block">阻塞</span>'
+        : '<span class="tag">不阻塞</span>') +
+      (f.verified === 'orchestrator'
+        ? '<span class="tag ok">已复核</span>'
+        : f.verified === 'unverified'
+        ? '<span class="tag unv">未复核</span>'
+        : '') +
+      (f.note
+        ? `<span class="tag ${/重复/.test(f.note) ? 'dup' : 'unv'}">${
+          esc(f.note)
+        }</span>`
+        : '');
+    const mrOf = (f) => D.mrs.find((m) => keyOf(m) === keyOf(f));
+    const fsOf = (m) => D.findings.filter((f) => keyOf(f) === keyOf(m));
+    const label = (id) => '#' + id;
+
+    // ---- decisions ----
+    // Nothing is pre-decided: every finding, MR action and MR comment starts null until the user clicks.
+    function defaults() {
+      for (const f of D.findings) {
+        S.dec[f.id] = null;
+        S.body[f.id] = f.body;
+        S.chat[f.id] = [];
+      }
+      for (const m of D.mrs) S.mr[keyOf(m)] = null;
+      let saved = null;
+      try {
+        saved = JSON.parse(localStorage.getItem(storeKey()) || 'null');
+      } catch {}
+      if (saved) { for (const k of PERSIST) Object.assign(S[k], saved[k] || {}); }
+      for (const k of Object.keys(S.chat)) {
+        S.chat[k] = S.chat[k].filter((x) => !x.pending);
+      }
+    }
+    const DEC = { send: '发送', drop: '丢弃' };
+    const MRACT = { none: '不动', approve: 'approve', merge: 'approve + merge' };
+    // Reviewer's lean, shown as a dashed hint; null = no suggestion.
+    const sugF = (f) => f.verified === 'no' ? null : 'send';
+    const sugMr = (m) =>
+      m.verdict === 'changes' || fsOf(m).some((f) => f.blocking)
+        ? 'none'
+        : 'approve';
+    const short = (m) => `${m.project.split('/')[1]}!${m.iid}`;
+    const hasMrc = (m) => !!(S.mrc[keyOf(m)] || '').trim();
+    // 暂缓: skipped by execute and left out of state.json, so the next triage brings it back.
+    const isLater = (m) => !!S.later[keyOf(m)];
+    function todoOf(m) {
+      if (S.status && isClosed(m)) return [];
+      if (isLater(m)) return [];
+      const t = fsOf(m).filter((f) => !S.dec[f.id]).map((f) => label(f.id));
+      if (hasMrc(m) && !S.mrcDec[keyOf(m)]) t.push('MR 评论');
+      if (!S.mr[keyOf(m)]) t.push('MR 动作');
+      return t;
+    }
+    function plan() {
+      return D.mrs.map((m) => {
+        const fs = fsOf(m), parts = [];
+        const st = stOf(m);
+        if (st && isClosed(m)) {
+          return `${short(m)}  已被 ${st.merged_by || '别人'} ${
+            st.state === 'merged' ? '合并' : '关闭'
+          }，跳过`;
+        }
+        if (isLater(m)) return `${short(m)}  暂缓，这次跳过`;
+        const send = fs.filter((f) => S.dec[f.id] === 'send').map((f) =>
+          label(f.id) + (S.body[f.id] !== f.body ? '（已改写）' : '')
+        );
+        const drop = fs.filter((f) => S.dec[f.id] === 'drop').map((f) =>
+          label(f.id)
+        );
+        if (send.length) parts.push('发送 ' + send.join(' '));
+        if (drop.length) parts.push('丢弃 ' + drop.join(' '));
+        if (hasMrc(m) && S.mrcDec[keyOf(m)]) {
+          parts.push(`MR 评论${S.mrcDec[keyOf(m)] === 'send' ? '发送' : '丢弃'}`);
+        }
+        fs.filter((f) => S.reply[f.id] && S.dec[f.id] === 'send').forEach((f) =>
+          parts.push(`${label(f.id)} 作为回复`)
+        );
+        fs.filter((f) => S.line[f.id] && S.dec[f.id] === 'send').forEach((f) =>
+          parts.push(`${label(f.id)} 改挂第 ${S.line[f.id]} 行`)
+        );
+        if (S.mr[keyOf(m)]) parts.push(MRACT[S.mr[keyOf(m)]]);
+        const todo = todoOf(m);
+        const head = (st?.head || m.reviewed_sha).slice(0, 8);
+        const unchecked = st?.push && !st.push.rebase_only &&
+          fs.some((f) =>
+            S.dec[f.id] === 'send' && !S.recheck[f.id]?.applied &&
+            st.findings?.[f.id]?.state !== 'same'
+          );
+        return `${todo.length ? '⏸ ' : ''}${short(m)} @${head}  ${
+          parts.join('；')
+        }${
+          todo.length ? `${parts.length ? '；' : ''}未决定：${todo.join(' ')}` : ''
+        }${unchecked ? '  ⚠ 有新代码未复核' : ''}`;
+      }).join('\n') +
+        '\n\n（⏸ = 还有没决定的项，执行时整个 MR 跳过。点“提交决定”后回终端说一声；执行前会逐个比对 head，和 @ 后的 commit 不一致就停下。）' +
+        '\n\n' +
+        D.findings.filter((f) => S.dec[f.id] === 'send' && S.body[f.id] !== f.body)
+          .map((f) => `--- ${label(f.id)} 改写后正文 ---\n${S.body[f.id]}`).concat(
+            D.mrs.filter((m) => hasMrc(m) && S.mrcDec[keyOf(m)] === 'send').map((
+              m,
+            ) => `--- ${short(m)} MR 评论 ---\n${S.mrc[keyOf(m)]}`),
+          ).join('\n\n');
+    }
+    // Clicking the chosen button again clears it back to undecided.
+    function setDec(id, d) {
+      S.dec[id] = S.dec[id] === d ? null : d;
+      render();
+    }
+    function setMr(k, a) {
+      S.mr[k] = S.mr[k] === a ? null : a;
+      render();
+    }
+    function setMrc(k, d) {
+      S.mrcDec[k] = S.mrcDec[k] === d ? null : d;
+      render();
+    }
+    function decButtons(f) {
+      return ['send', 'drop'].map((d) =>
+        `<button class="${S.dec[f.id] === d ? 'on' : ''} ${
+          d === 'drop' ? 'danger' : ''
+        } ${
+          !S.dec[f.id] && sugF(f) === d ? 'hint' : ''
+        }" onclick="setDec('${f.id}','${d}')">${DEC[d]}</button>`
+      ).join(' ') +
+        (S.dec[f.id]
+          ? ''
+          : ' <span class="todo-txt" style="font-size:12px">未决定</span>');
+    }
+    function toggleLater(k) {
+      S.later[k] = !S.later[k];
+      render();
+    }
+    function mrButtons(m) {
+      if (S.status && isClosed(m)) return '<span class="muted">已合并/关闭</span>';
+      const k = keyOf(m);
+      if (isLater(m)) {
+        return `<span class="badge later">已暂缓，这次执行跳过</span> <button onclick="toggleLater('${k}')">取消暂缓</button>`;
+      }
+      const cur = S.mr[k], sug = sugMr(m);
+      return Object.entries(MRACT).map(([a, v]) =>
+        `<button class="${cur === a ? 'on' : ''} ${
+          !cur && sug === a ? 'hint' : ''
+        }" onclick="setMr('${k}','${a}')">${v}</button>`
+      ).join(' ') +
+        ` <button title="这次先不看：执行时跳过，下次 triage 还会出现" onclick="toggleLater('${k}')">暂缓</button>`;
+    }
+    // Next MR (after the selected one, wrapping) that still has undecided items.
+    function nextTodo() {
+      const shown = D.mrs.filter((x) => fsOf(x).length).concat(
+        D.mrs.filter((x) => !fsOf(x).length),
+      );
+      const i = shown.findIndex((x) => keyOf(x) === S.selMr);
+      const order = shown.slice(i + 1).concat(shown.slice(0, i + 1));
+      const n = order.find((x) => todoOf(x).length);
+      if (!n) return;
+      S.selMr = keyOf(n);
+      S.selF = fsOf(n).find((f) => !S.dec[f.id])?.id ?? null;
+      S.tabA = 'f';
+      render();
+    }
+    function editor(f, rows = 7) {
+      return `<textarea id="ed-${f.id}" rows="${rows}" oninput="S.body['${f.id}']=this.value;save();refreshPlan()">${
+        esc(S.body[f.id])
+      }</textarea>`;
+    }
+    // MR-level comment: a general note to the author, not anchored to a line.
+    function mrComment(m) {
+      const k = keyOf(m), d = S.mrcDec[k];
+      if (!hasMrc(m) && !S.inputs['mrc-open-' + k]) {
+        return `<div style="margin:10px 0"><button onclick="S.inputs['mrc-open-${k}']=true;S.askMr['${k}']=true;render()">+ 写一条 MR 评论（不挂行，发给作者）</button></div>`;
+      }
+      return `<div class="card ${hasMrc(m) && !d ? 'todo' : ''} ${
+        d === 'drop' ? 'dropped' : ''
+      }" style="margin:10px 0"><b>MR 评论</b> <span class="muted">不挂行，作为 MR 下的一条普通评论发出；右栏“MR 整体”里可以让 agent 起草或改写</span>
+        <textarea id="mrc-${
+        k.replace(/\W/g, '-')
+      }" rows="6" style="margin-top:8px" placeholder="写给作者的话，例如：这段逻辑能不能拆成两个 MR？" oninput="S.mrc['${k}']=this.value;save();refreshPlan()">${
+        esc(S.mrc[k] || '')
+      }</textarea>
+        <div style="margin-top:8px">${
+        ['send', 'drop'].map((x) =>
+          `<button class="${d === x ? 'on' : ''} ${
+            x === 'drop' ? 'danger' : ''
+          }" onclick="setMrc('${k}','${x}')">${DEC[x]}</button>`
+        ).join(' ')
+      }${
+        hasMrc(m) && !d
+          ? ' <span class="todo-txt" style="font-size:12px">未决定</span>'
+          : ''
+      }</div></div>`;
+    }
+
+    // ---- agent calls ----
+    const QUICK = [
+      '为什么这算问题？给我看触发它的具体路径',
+      '如果不改，最坏会发生什么？',
+      '讨论区里有人提过吗？',
+      '这条你有多大把握？哪些没核实？',
+    ];
+    const QUICK_MR = [
+      '这个方案有没有更省事或更便宜的做法？',
+      '描述里的说法和代码对得上吗？',
+      '上线和回滚步骤完整吗？漏了什么？',
+      '最大的风险在哪？',
+    ];
+    // Chat ids: a finding id, or 'mr:<group/repo!iid>' for questions about the whole MR.
+    const target = (id) =>
+      id.startsWith('mr:') ? { mr: id.slice(3) } : { finding: id };
+    const chatOf = (id) => S.chat[id] ||= [];
+    async function ask(id, q) {
+      if (!q.trim()) return;
+      chatOf(id).push({ role: 'user', text: q }, { role: 'agent', pending: true });
+      S.inputs['q-' + id] = '';
+      render();
+      const r = await fetch('/api/ask', {
+        method: 'POST',
+        body: JSON.stringify({ ...target(id), question: q }),
+      }).then((r) => r.json()).catch((e) => ({ error: String(e) }));
+      chatOf(id).pop();
+      chatOf(id).push({
+        role: 'agent',
+        text: r.answer ?? ('出错：' + r.error),
+        cost: r.cost,
+      });
+      render();
+    }
+    async function draftMr(k, ins) {
+      if (!ins.trim()) return;
+      const id = 'mr:' + k;
+      chatOf(id).push({ role: 'user', text: '起草 MR 评论：' + ins }, {
+        role: 'agent',
+        pending: true,
+      });
+      S.inputs['rw-' + id] = '';
+      render();
+      const r = await fetch('/api/draft_mr', {
+        method: 'POST',
+        body: JSON.stringify({ mr: k, instruction: ins, current: S.mrc[k] || '' }),
+      }).then((r) => r.json()).catch((e) => ({ error: String(e) }));
+      chatOf(id).pop();
+      if (r.body) {
+        S.mrc[k] = r.body;
+        S.inputs['mrc-open-' + k] = true;
+        chatOf(id).push({
+          role: 'agent',
+          text: '已写进中栏的“MR 评论”，发不发由你决定：\n\n' + r.body,
+          cost: r.cost,
+        });
+      } else chatOf(id).push({ role: 'agent', text: '出错：' + r.error });
+      render();
+    }
+    async function rewrite(id, ins) {
+      if (!ins.trim()) return;
+      S.chat[id].push({ role: 'user', text: '改写：' + ins }, {
+        role: 'agent',
+        pending: true,
+      });
+      S.inputs['rw-' + id] = '';
+      render();
+      const r = await fetch('/api/rewrite', {
+        method: 'POST',
+        body: JSON.stringify({
+          finding: id,
+          instruction: ins,
+          current: S.body[id],
+        }),
+      }).then((r) => r.json()).catch((e) => ({ error: String(e) }));
+      S.chat[id].pop();
+      if (r.body) {
+        S.body[id] = r.body;
+        S.chat[id].push({
+          role: 'agent',
+          text: '已改写，草稿已替换为（发不发仍由你决定）：\n\n' + r.body,
+        });
+      } else S.chat[id].push({ role: 'agent', text: '出错：' + r.error });
+      render();
+    }
+    function chatLog(id) {
+      return chatOf(id).map((m) =>
+        `<div class="msg ${m.role}"><div class="who">${
+          m.role === 'user' ? '你' : 'reviewer agent（fork）'
+        }${m.cost ? ` · $${m.cost.toFixed(3)}` : ''}</div>${
+          m.pending
+            ? '<span class="spin"></span> 思考中（fork 当时的 reviewer session，可能要一两分钟）'
+            : md(m.text)
+        }</div>`
+      ).join('') ||
+        (id.startsWith('mr:')
+          ? '<div class="muted">还没有追问。这里问的是整个 MR：agent 读过 MR 描述、讨论区、reviewer 报告，需要时去翻代码。想问作者的话，用下面第二个框让它起草一条 MR 评论。</div>'
+          : '<div class="muted">还没有追问。追问会从当时 review 这条的 agent session fork 出来，它记得读过的代码。</div>');
+    }
+    function askBoxMr(k) {
+      const id = 'mr:' + k;
+      return `<div class="chips">${
+        QUICK_MR.map((q) =>
+          `<button onclick="ask('${id}',this.textContent)">${q}</button>`
+        ).join('')
+      }</div>
+      <input type="text" id="q-${id}" placeholder="问 agent 关于这个 MR 的问题…（回车发送，只发给 agent）" value="${
+        esc(S.inputs['q-' + id] || '')
+      }" oninput="S.inputs['q-${id}']=this.value" onkeydown="if(event.key==='Enter'&&!event.isComposing)ask('${id}',this.value)">
+      <input type="text" id="rw-${id}" style="margin-top:6px" placeholder="让 agent 起草/改写给作者的 MR 评论，例如：问能否先补一个测试再合（回车）" value="${
+        esc(S.inputs['rw-' + id] || '')
+      }" oninput="S.inputs['rw-${id}']=this.value" onkeydown="if(event.key==='Enter'&&!event.isComposing)draftMr('${k}',this.value)">`;
+    }
+    function askBox(id) {
+      return `<div class="chips">${
+        QUICK.map((q) =>
+          `<button onclick="ask('${id}',this.textContent)">${q}</button>`
+        ).join('')
+      }</div>
+      <input type="text" id="q-${id}" placeholder="追问这条 finding…（回车发送）" value="${
+        esc(S.inputs['q-' + id] || '')
+      }" oninput="S.inputs['q-${id}']=this.value" onkeydown="if(event.key==='Enter'&&!event.isComposing)ask('${id}',this.value)">
+      <input type="text" id="rw-${id}" style="margin-top:6px" placeholder="让 agent 改写评论，例如：改成先 merge，后续开 MR（回车）" value="${
+        esc(S.inputs['rw-' + id] || '')
+      }" oninput="S.inputs['rw-${id}']=this.value" onkeydown="if(event.key==='Enter'&&!event.isComposing)rewrite('${id}',this.value)">`;
+    }
+    function lineFor(f) {
+      if (S.line[f.id]) return S.line[f.id];
+      const a = stOf(mrOf(f))?.findings?.[f.id];
+      return a?.state === 'same' && a.new_line ? a.new_line : f.new_line;
+    }
+    async function copyPlan() {
+      const todo = D.mrs.filter((m) => todoOf(m).length);
+      if (
+        todo.length &&
+        !confirm(
+          `还有 ${todo.length} 个 MR 没决定完，执行时会整个跳过：\n\n${
+            todo.map((m) => `${short(m)}：${todoOf(m).join(' ')}`).join('\n')
+          }\n\n仍然提交？`,
+        )
+      ) return;
+      const body = {
+        plan: plan(),
+        mrs: D.mrs.map((m) => {
+          const st = stOf(m);
+          return {
+            project: m.project,
+            iid: m.iid,
+            key: keyOf(m),
+            reviewed_sha: m.reviewed_sha,
+            pinned_head: st?.head || m.reviewed_sha,
+            closed: !!(st && isClosed(m)),
+            deferred: isLater(m),
+            undecided: todoOf(m),
+            action: S.mr[keyOf(m)] || null,
+            comment: hasMrc(m)
+              ? { body: S.mrc[keyOf(m)], decision: S.mrcDec[keyOf(m)] || null }
+              : null,
+            findings: fsOf(m).map((f) => ({
+              id: f.id,
+              file: f.file,
+              new_line: f.new_line ? lineFor(f) : null,
+              old_line: f.new_line ? null : f.old_line,
+              body: S.body[f.id],
+              decision: S.dec[f.id] || null,
+              reply_to: S.reply[f.id] || null,
+              rechecked: !!S.recheck[f.id]?.applied,
+              position_state: st?.findings?.[f.id]?.state || null,
+            })),
+          };
+        }),
+      };
+      const r = await fetch('/api/decisions', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }).then((r) => r.json()).catch((e) => ({ error: String(e) }));
+      S.submitted = r.ok
+        ? `已提交 ${new Date().toLocaleTimeString()}，回终端告诉 agent 执行`
+        : '提交失败：' + r.error;
+      render();
+    }
+    function refreshPlan() {
+      document.querySelectorAll('.plan').forEach((el) => el.textContent = plan());
+    }
+
+    // ---- change detection ----
+    const stOf = (m) => S.status?.[keyOf(m)];
+    const isClosed = (m) => ['merged', 'closed'].includes(stOf(m)?.state);
+    async function poll(force) {
+      S.polling = true;
+      render();
+      const r = await fetch('/api/status' + (force ? '?force=1' : '')).then((r) =>
+        r.json()
+      ).catch(() => null);
+      if (r) S.status = r;
+      S.polling = false;
+      render();
+    }
+    setInterval(() => poll(), 60000);
+    window.addEventListener('focus', () => poll());
+    function pollBar() {
+      return `<span class="muted" style="font-size:12px">${
+        S.polling
+          ? '<span class="spin"></span> 正在检查 MR 变化…'
+          : S.status
+          ? `上次检查 ${S.status._checked_at}`
+          : '尚未检查'
+      }</span> <button style="font-size:12px" onclick="poll(true)">立即检查</button>`;
+    }
+    function changeCount(m) {
+      const st = stOf(m);
+      if (!st) return 0;
+      return (isClosed(m) ? 1 : 0) + (st.push && !st.push.rebase_only ? 1 : 0) +
+        st.new_notes.length + st.new_approvals.length;
+    }
+    function mrBanner(m) {
+      const st = stOf(m);
+      if (!st || st.error) return '';
+      if (isClosed(m)) {
+        return `<div class="chg merged">这个 MR 已${
+          st.state === 'merged'
+            ? `被 <b>${st.merged_by}</b> 合并（${st.merged_at} (UTC+8)）`
+            : '关闭'
+        }，你的决定会跳过它。</div>`;
+      }
+      const parts = [];
+      if (st.push) {
+        parts.push(
+          st.push.rebase_only
+            ? `<div>作者推了新代码，<b>只是 rebase</b>，改动和你 review 的一致（patch-id 相同）。</div>`
+            : `<details id="det-push-${
+              keyOf(m)
+            }"><summary>作者推了新代码，<b>改了 ${st.push.files.length} 个文件</b>，review 之后有 ${st.push.commits.length} 个新 commit</summary><div class="plan">${
+              esc(st.push.commits.join('\n'))
+            }</div></details>`,
+        );
+      }
+      if (st.new_notes.length) {
+        parts.push(
+          `<details id="det-notes-${
+            keyOf(m)
+          }"><summary>review 之后别人发了 <b>${st.new_notes.length} 条评论</b></summary>${
+            st.new_notes.map((n) =>
+              `<div class="msg"><div class="who">${n.author} · ${n.at}${
+                n.path ? ` · ${esc(n.path)}:${n.line}` : ''
+              }</div>${md(n.body)}</div>`
+            ).join('')
+          }</details>`,
+        );
+      }
+      if (st.new_approvals.length) {
+        parts.push(`<div>新 approve：${st.new_approvals.join(', ')}</div>`);
+      }
+      return parts.length ? `<div class="chg">${parts.join('')}</div>` : '';
+    }
+    function interdiffHtml(rows) {
+      return `<div class="code" style="margin-top:6px">${
+        rows.map((r) =>
+          r.kind === 'hunk'
+            ? `<div class="hunk">${esc(r.text)}</div>`
+            : `<div class="row ${r.kind}"><span class="n">${
+              r.old ?? ''
+            }</span><span class="n">${r.new ?? ''}</span><span class="t">${
+              esc(r.text) || ' '
+            }</span></div>`
+        ).join('')
+      }</div>`;
+    }
+    const VERDICT = {
+      still_valid: '仍然成立',
+      fixed: '作者已修复',
+      obsolete: '已不适用',
+      duplicate: '别人已提过',
+      unknown: '无法判断',
+    };
+    function staleBox(f) {
+      const m = mrOf(f), st = stOf(m);
+      if (!st || isClosed(m)) return '';
+      const a = st.findings?.[f.id], rc = S.recheck[f.id];
+      const hasNotes = st.new_notes.length > 0;
+      if ((!a || a.state === 'same') && !hasNotes && !rc) {
+        return a?.state === 'same' && a.new_line !== f.new_line
+          ? `<div class="chg ok">代码有更新，这条所在位置没变，现在在第 ${a.new_line} 行。</div>`
+          : '';
+      }
+      let h = '';
+      if (a && a.state !== 'same') {
+        h += `<div><b>这条可能过时：</b>${esc(a.why || a.state)}${
+          a.new_line ? `（新代码里在第 ${a.new_line} 行附近）` : ''
+        }</div>${
+          a.interdiff?.length
+            ? `<details id="det-int-${f.id}"><summary>这个文件 review 之后的改动</summary>${
+              interdiffHtml(a.interdiff)
+            }</details>`
+            : ''
+        }`;
+      }
+      if (hasNotes) {
+        h +=
+          `<div>review 之后别人发了 ${st.new_notes.length} 条评论，可能已经提过同样的问题。</div>`;
+      }
+      if (rc?.pending) {
+        h +=
+          `<div><span class="spin"></span> agent 正在对照新代码和新评论重新检查…</div>`;
+      } else if (rc) {
+        h += `<div style="margin-top:6px"><b>agent 结论：${
+          VERDICT[rc.status] || rc.status
+        }</b>${rc.new_line ? `，应挂到第 ${rc.new_line} 行` : ''}。${
+          esc(rc.reason || rc.error || '')
+        }${
+          rc.cost ? ` <span class="muted">$${rc.cost.toFixed(3)}</span>` : ''
+        }</div>
+          ${
+          rc.reply_to_discussion_id
+            ? '<div>建议改成在已有 thread 下回复。</div>'
+            : ''
+        }${
+          rc.suggested_body
+            ? `<details id="det-sug-${f.id}"><summary>建议改写为</summary>${
+              md(rc.suggested_body)
+            }</details>`
+            : ''
+        }<button onclick="applyVerdict('${f.id}')">采用这个结论</button>`;
+      }
+      if (!rc?.pending) {
+        h += ` <button onclick="recheck('${f.id}')">${
+          rc ? '再检查一次' : '让 agent 重新检查'
+        }</button>`;
+      }
+      return `<div class="chg">${h}</div>`;
+    }
+    async function recheck(id) {
+      S.recheck[id] = { pending: true };
+      render();
+      S.recheck[id] = await fetch('/api/recheck', {
+        method: 'POST',
+        body: JSON.stringify({ finding: id }),
+      }).then((r) => r.json()).catch((e) => ({ error: String(e) }));
+      render();
+    }
+    function applyVerdict(id) {
+      const v = S.recheck[id];
+      if (!v) return;
+      if (['fixed', 'obsolete', 'duplicate'].includes(v.status)) S.dec[id] = 'drop';
+      if (v.suggested_body) {
+        S.body[id] = v.suggested_body;
+        S.dec[id] = 'send';
+      }
+      if (v.new_line) S.line[id] = v.new_line;
+      if (v.reply_to_discussion_id) S.reply[id] = v.reply_to_discussion_id;
+      v.applied = true;
+      render();
+    }
+
+    // ===== Variant A =====
+    function A() {
+      const m = D.mrs.find((x) => keyOf(x) === S.selMr) || D.mrs[0];
+      S.selMr = keyOf(m);
+      const fs = fsOf(m);
+      if (!fs.find((f) => f.id === S.selF)) S.selF = fs[0]?.id ?? null;
+      const askMr = !fs.length || !!S.askMr[keyOf(m)];
+      const row = (x) => {
+        const fx = fsOf(x),
+          n = fx.length,
+          sent = fx.filter((f) => S.dec[f.id] === 'send').length,
+          todo = todoOf(x),
+          act = S.mr[keyOf(x)];
+        // Status shows the undecided count even after the MR action is picked.
+        const status = isClosed(x)
+          ? '已合并'
+          : isLater(x)
+          ? '<span class="badge later">暂缓</span>'
+          : (act ? MRACT[act] + ' ' : '') +
+            (todo.length
+              ? `<span class="badge todo" title="${
+                esc(todo.join(' '))
+              }">待决定 ${todo.length}</span>`
+              : '<span class="badge done">✓ 已决定</span>');
+        return `<div class="mr ${keyOf(x) === keyOf(m) ? 'sel' : ''} ${
+          todo.length ? 'has-todo' : ''
+        } ${isLater(x) ? 'later' : ''}" onclick="S.selMr='${
+          keyOf(x)
+        }';S.selF=null;render()"><div class="t">${
+          x.project.split('/').pop()
+        }!${x.iid} ${
+          esc(x.title)
+        }</div><div class="muted" style="font-size:12px">${x.author} · ${
+          n ? `发送 ${sent}/${n}` : '无 finding'
+        } · ${status}${
+          changeCount(x) && !isClosed(x)
+            ? ' · <b style="color:#9a6700">有变化</b>'
+            : ''
+        }</div></div>`;
+      };
+      const tabs = {
+        f: `Findings (${fs.length})`,
+        d: `讨论区 (${m.discussions.length})`,
+        r: 'Reviewer 报告',
+        s: 'MR 描述',
+      };
+      let mid = '';
+      if (S.tabA === 'f') {
+        mid = fs.map((f) =>
+          `<div class="card ${f.id === S.selF && !askMr ? 'sel' : ''} ${
+            S.dec[f.id] === 'drop' ? 'dropped' : ''
+          } ${
+            S.dec[f.id] ? '' : 'todo'
+          }" onclick="if(S.selF!=='${f.id}'||S.askMr['${
+            keyOf(m)
+          }']){S.selF='${f.id}';S.askMr['${keyOf(m)}']=false;render()}">
+          <div style="display:flex;justify-content:space-between;align-items:center"><b>${
+            label(f.id)
+          }</b><span>${tags(f)}</span></div>
+          ${staleBox(f)}<div style="margin:8px 0">${code(f)}</div>${related(f)}
+          <div style="margin-top:10px">${
+            S.dec[f.id] === 'drop' ? md(S.body[f.id]) : editor(f)
+          }</div>
+          <div style="margin-top:8px">${decButtons(f)}</div></div>`
+        ).join('') ||
+          '<div class="muted" style="margin-top:20px">reviewer 没有提出需要评论的问题。想问 agent 或作者，用右栏或下面的 MR 评论。</div>';
+        mid += mrComment(m);
+      }
+      if (S.tabA === 'd') {
+        mid = m.discussions.map((n) =>
+          `<div class="card"><div class="muted">${n.author} · ${n.at}${
+            n.path ? ` · ${esc(n.path)}:${n.line}` : ''
+          }</div>${md(n.body)}</div>`
+        ).join('') || '<div class="muted">没有讨论。</div>';
+      }
+      if (S.tabA === 'r') mid = `<div class="card">${md(m.report)}</div>`;
+      if (S.tabA === 's') mid = `<div class="card">${md(m.description)}</div>`;
+      const f = askMr ? null : D.findings.find((x) => x.id === S.selF);
+      // Groups stay put while deciding (no jumping rows); only 暂缓 moves an MR to the bottom.
+      const active = D.mrs.filter((x) => !isLater(x)),
+        withF = active.filter((x) => fsOf(x).length),
+        noF = active.filter((x) => !fsOf(x).length),
+        later = D.mrs.filter(isLater);
+      const todoMrs = D.mrs.filter((x) => todoOf(x).length);
+      const todoBar = todoMrs.length
+        ? `<div class="todo-bar"><span>还有 <b>${todoMrs.length}</b> 个 MR 没决定完</span><button onclick="nextTodo()">下一个 ↓</button></div>`
+        : '<div class="todo-bar" style="background:#dcf5e3">全部决定完了，可以提交</div>';
+      const scope = `<div class="scope"><button class="${
+        askMr ? 'on' : ''
+      }" onclick="S.askMr['${keyOf(m)}']=true;render()">MR 整体</button>${
+        fs.map((x) =>
+          `<button class="${
+            !askMr && x.id === S.selF ? 'on' : ''
+          }" onclick="S.selF='${x.id}';S.askMr['${keyOf(m)}']=false;render()">${
+            label(x.id)
+          }</button>`
+        ).join('')
+      }</div>`;
+      const chatId = f ? f.id : 'mr:' + keyOf(m);
+      return `<div class="A">
+        <div class="col left" id="sc-left" data-keep="left"><div style="padding:8px 12px">${pollBar()}</div>${todoBar}<div class="grp">有 finding 要决定</div>${
+        withF.map(row).join('')
+      }<div class="grp">没有 finding</div>${noF.map(row).join('')}${
+        later.length
+          ? `<div class="grp">暂缓（这次跳过）</div>${later.map(row).join('')}`
+          : ''
+      }</div>
+        <div class="col mid" id="sc-mid" data-keep="mid:${keyOf(m)}:${S.tabA}">
+          <div style="display:flex;justify-content:space-between;gap:10px"><div><a href="${m.url}" target="_blank"><b>${m.project}!${m.iid}</b></a> ${
+        esc(m.title)
+      }<div class="muted">${m.author} · reviewer 结论：${esc(m.verdict)}${
+        m.summary ? '（' + esc(m.summary) + '）' : ''
+      } · 已 approve：${
+        m.approved_by.join(', ') || '无'
+      }</div></div><div style="white-space:nowrap">${mrButtons(m)}</div></div>
+          ${mrBanner(m)}<div class="tabs">${
+        Object.entries(tabs).map(([k, v]) =>
+          `<button class="${
+            S.tabA === k ? 'on' : ''
+          }" onclick="S.tabA='${k}';render()">${v}</button>`
+        ).join('')
+      }</div>${mid}</div>
+        <div class="right"><div class="box" style="border-top:0;border-bottom:1px solid var(--line)"><b>追问 ${
+        f ? label(f.id) : 'MR 整体'
+      }</b> <span class="muted">${
+        f ? `${esc(f.file.split('/').pop())}:${f.new_line}` : esc(short(m))
+      }</span>${scope}</div><div class="msgs" id="sc-msgs" data-keep="msgs:${chatId}:${
+        chatOf(chatId).length
+      }" data-stick="bottom">${chatLog(chatId)}</div><div class="box">${
+        f ? askBox(f.id) : askBoxMr(keyOf(m))
+      }</div></div>
+        <div class="plandock" id="sc-plan" data-keep="plan"><details open id="det-plan"><summary><b>执行计划</b> ${
+        S.submitted ? `<span class="muted">${esc(S.submitted)}</span>` : ''
+      } <button onclick="event.preventDefault();copyPlan()">提交决定</button></summary><div class="plan">${
+        esc(plan())
+      }</div></details></div>
+      </div>`;
+    }
+
+    // ===== Variant B =====
+    function B() {
+      const sec = (m) => {
+        const fs = fsOf(m);
+        const files = fs.map((f) => {
+          const thread = `<div class="thread">${staleBox(f)}
+            <div class="note" style="${
+            S.dec[f.id] === 'drop' ? 'opacity:.45' : ''
+          }"><div class="muted" style="font-size:12px">你的草稿 ${label(f.id)} ${
+            tags(f)
+          }</div>${S.inputs['open-' + f.id] ? editor(f, 6) : md(S.body[f.id])}
+              <div style="margin-top:6px">${
+            decButtons(f)
+          } <button onclick="S.inputs['open-${f.id}']=!S.inputs['open-${f.id}'];render()">${
+            S.inputs['open-' + f.id] ? '完成编辑' : '手动编辑'
+          }</button></div></div>
+            ${
+            chatOf(f.id).map((x) =>
+              `<div class="note"><div class="muted" style="font-size:12px">${
+                x.role === 'user'
+                  ? '你（只发给 agent，不进 GitLab）'
+                  : 'reviewer agent'
+              }</div>${
+                x.pending ? '<span class="spin"></span> 思考中…' : md(x.text)
+              }</div>`
+            ).join('')
+          }
+            ${askBox(f.id)}${
+            f.related.length
+              ? `<details id="det-brel-${f.id}"><summary class="muted">评论引用的其他代码</summary>${
+                related(f)
+              }</details>`
+              : ''
+          }</div>`;
+          return `<div class="file">${code(f, { inlineThread: thread })}</div>`;
+        }).join('');
+        return `<section id="mr-${
+          m.project.replace(/\W/g, '-')
+        }-${m.iid}"><div class="mrh"><div><a href="${m.url}" target="_blank"><b>${m.project}!${m.iid}</b></a> ${
+          esc(m.title)
+        }<div class="muted">${m.author} · ${m.verdict} · 已 approve：${
+          m.approved_by.join(', ') || '无'
+        }</div></div><div style="white-space:nowrap">${mrButtons(m)}</div></div>${
+          mrBanner(m)
+        }
+          ${
+          m.discussions.length
+            ? `<details id="det-bdisc-${
+              keyOf(m)
+            }"><summary class="muted">讨论区 ${m.discussions.length} 条</summary>${
+              m.discussions.map((n) =>
+                `<div class="note"><div class="muted">${n.author} · ${n.at}</div>${
+                  md(n.body)
+                }</div>`
+              ).join('')
+            }</details>`
+            : ''
+        }
+          <details id="det-brep-${
+          keyOf(m)
+        }"><summary class="muted">reviewer 完整报告</summary><div class="note">${
+          md(m.report)
+        }</div></details>${files}${mrComment(m)}</section>`;
+      };
+      return `<div class="B"><div class="top"><b>gitlab-inbox · ${
+        esc(D.built_at.slice(0, 10))
+      }</b>${pollBar()}<span class="muted">跳到：</span>${
+        D.mrs.map((m) =>
+          `<a href="#mr-${m.project.replace(/\W/g, '-')}-${m.iid}">${
+            m.project.split('/').pop()
+          }!${m.iid}</a>`
+        ).join(' ')
+      }</div>
+        ${D.mrs.map(sec).join('')}
+        <section><div class="mrh"><b>执行计划 ${
+        S.submitted ? `<span class="muted">${esc(S.submitted)}</span>` : ''
+      }</b><button onclick="copyPlan()">提交决定</button></div><div class="note plan">${
+        esc(plan())
+      }</div></section></div>`;
+    }
+
+    // ===== Variant C =====
+    function C() {
+      const steps = [...D.findings.map((f) => ({ f })), { bulk: true }, {
+        done: true,
+      }];
+      const i = Math.min(S.idxC, steps.length - 1), st = steps[i];
+      const bar = `<div class="bar"><b>${
+        i + 1
+      } / ${steps.length}</b><div class="prog"><i style="width:${
+        (i / (steps.length - 1)) * 100
+      }%"></i></div>${pollBar()}<span class="muted"><kbd>J</kbd>下一条 <kbd>K</kbd>上一条 <kbd>S</kbd>发送 <kbd>D</kbd>丢弃 <kbd>E</kbd>编辑 <kbd>A</kbd>切换 MR 动作 <kbd>/</kbd>追问</span></div>`;
+      if (st.bulk) {
+        const noF = D.mrs.filter((m) => !fsOf(m).length);
+        return `<div class="C">${bar}<div class="sum"><h3>没有评论的 MR</h3>${
+          noF.map((m) =>
+            `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)"><span><a href="${m.url}" target="_blank">!${m.iid}</a> ${
+              esc(m.title)
+            } <span class="muted">${m.author}</span></span><span>${
+              mrButtons(m)
+            }</span></div>${mrBanner(m)}`
+          ).join('')
+        }</div></div>`;
+      }
+      if (st.done) {
+        return `<div class="C">${bar}<div class="sum"><h3>执行计划</h3><p class="muted">提交后回终端说一声，由 agent 执行；发布评论那一步仍由你按一次回车。${
+          S.submitted ? ' ' + esc(S.submitted) : ''
+        }</p><div class="plan" style="background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px">${
+          esc(plan())
+        }</div><p><button onclick="copyPlan()">提交决定</button></p></div></div>`;
+      }
+      const f = st.f, m = mrOf(f);
+      return `<div class="C">${bar}<div class="body">
+        <div class="lp"><div><a href="${m.url}" target="_blank"><b>${m.project}!${m.iid}</b></a> ${
+        esc(m.title)
+      } <span class="muted">· ${m.author}</span></div><div style="margin:6px 0 12px"><b style="font-size:18px">${
+        label(f.id)
+      }</b> ${tags(f)}</div>${mrBanner(m)}${staleBox(f)}
+          ${code(f)}${related(f)}
+          ${
+        m.discussions.length
+          ? `<details id="det-cdisc-${
+            keyOf(m)
+          }" style="margin-top:12px"><summary class="muted">讨论区 ${m.discussions.length} 条</summary>${
+            m.discussions.map((n) =>
+              `<div class="msg"><div class="who">${n.author} · ${n.at}</div>${
+                md(n.body)
+              }</div>`
+            ).join('')
+          }</details>`
+          : ''
+      }</div>
+        <div class="rp"><div class="dec">${
+        S.inputs['editC'] ? editor(f, 8) : md(S.body[f.id])
+      }
+          <div class="big"><button class="${S.dec[f.id] === 'send' ? 'on' : ''} ${
+        !S.dec[f.id] && sugF(f) === 'send' ? 'hint' : ''
+      }" onclick="setDec('${f.id}','send')">发送<kbd>S</kbd></button><button class="danger ${
+        S.dec[f.id] === 'drop' ? 'on' : ''
+      }" onclick="setDec('${f.id}','drop')">丢弃<kbd>D</kbd></button><button onclick="S.inputs.editC=!S.inputs.editC;render()">${
+        S.inputs.editC ? '完成' : '编辑'
+      }<kbd>E</kbd></button></div>
+          <div class="muted" style="font-size:12px">这个 MR：${
+        mrButtons(m)
+      } <kbd>A</kbd></div></div>
+          <div class="chat">${chatLog(f.id)}</div><div class="ask">${
+        askBox(f.id)
+      }</div></div></div></div>`;
+    }
+    document.addEventListener('keydown', (e) => {
+      if (
+        variant() !== 'C' || e.target.matches('input,textarea') || e.metaKey ||
+        e.ctrlKey
+      ) return;
+      const steps = D.findings.length + 2, f = D.findings[S.idxC];
+      const k = e.key.toLowerCase();
+      if (k === 'j') S.idxC = Math.min(S.idxC + 1, steps - 1);
+      else if (k === 'k') S.idxC = Math.max(S.idxC - 1, 0);
+      else if (f && k === 's') S.dec[f.id] = 'send';
+      else if (f && k === 'd') S.dec[f.id] = 'drop';
+      else if (f && k === 'e') S.inputs.editC = !S.inputs.editC;
+      else if (f && k === 'a') {
+        const ks = Object.keys(MRACT);
+        S.mr[keyOf(f)] = ks[(ks.indexOf(S.mr[keyOf(f)]) + 1) % ks.length];
+      } else if (f && k === '/') {
+        e.preventDefault();
+        $('#q-' + f.id)?.focus();
+        return;
+      } else return;
+      S.inputs.editC = k === 'e' ? S.inputs.editC : false;
+      render();
+    });
+
+    // ---- render + switcher ----
+    // Re-rendering replaces the DOM, so carry over what the user set by hand:
+    // focus, <details> open state, and scroll of [data-keep] panes whose key is unchanged.
+    let lastVariant = null;
+    function render() {
+      const a = document.activeElement, id = a?.id, pos = a?.selectionStart;
+      const opened = {}, scrolls = {};
+      document.querySelectorAll('details[id]').forEach((d) =>
+        opened[d.id] = d.open
+      );
+      document.querySelectorAll('[data-keep]').forEach((el) =>
+        scrolls[el.id] = { k: el.dataset.keep, top: el.scrollTop }
+      );
+      const winY = window.scrollY, sameVariant = lastVariant === variant();
+      $('#app').innerHTML = ({ A, B, C }[variant()] || A)();
+      document.querySelectorAll('details[id]').forEach((d) => {
+        if (d.id in opened) d.open = opened[d.id];
+      });
+      document.querySelectorAll('[data-keep]').forEach((el) => {
+        const s = scrolls[el.id];
+        if (s && s.k === el.dataset.keep) el.scrollTop = s.top;
+        else if (el.dataset.stick === 'bottom') el.scrollTop = el.scrollHeight;
+      });
+      if (sameVariant) window.scrollTo(0, winY);
+      lastVariant = variant();
+      if (id && document.getElementById(id)) {
+        const el = document.getElementById(id);
+        el.focus({ preventScroll: true });
+        try {
+          el.setSelectionRange(pos, pos);
+        } catch {}
+      }
+      $('#swl').textContent = `${variant()} · ${VARIANTS[variant()]}`;
+      save();
+    }
+    function go(d) {
+      const ks = Object.keys(VARIANTS);
+      const v = ks[(ks.indexOf(variant()) + d + ks.length) % ks.length];
+      history.replaceState(null, '', '?variant=' + v);
+      render();
+    }
+    $('#prev').onclick = () => go(-1);
+    $('#next').onclick = () => go(1);
+    document.addEventListener('keydown', (e) => {
+      if (e.target.matches('input,textarea,[contenteditable]')) return;
+      if (e.key === 'ArrowLeft') go(-1);
+      if (e.key === 'ArrowRight') go(1);
+    });
+    // No saved state yet: take only rewritten draft text from a previous submit, never its decisions.
+    async function importBodies() {
+      if (localStorage.getItem(storeKey())) return;
+      const prev = await fetch('/decisions.json').then((r) => r.json()).catch(() =>
+        null
+      );
+      for (const m of prev?.mrs || []) {
+        for (const f of m.findings || []) {
+          const orig = D.findings.find((x) => x.id === f.id && keyOf(x) === m.key);
+          if (orig && f.body && f.body !== orig.body) S.body[f.id] = f.body;
+        }
+        if (m.comment?.body) S.mrc[m.key] = m.comment.body;
+      }
+    }
+    fetch('/data.json').then((r) => r.json()).then(async (d) => {
+      D = d;
+      defaults();
+      await importBodies();
+      render();
+      poll();
+    });
+    </script>
+  </body>
+</html>

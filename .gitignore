@@ -43,6 +43,7 @@ agents/.agents/.private-skills
 # about any skill that is in neither the Skillfile nor git.
 agents/.agents/skills/*
 !agents/.agents/skills/commit/
+!agents/.agents/skills/gitlab-inbox/
 !agents/.agents/skills/gitlab-mr-description/
 !agents/.agents/skills/gitlab-mr-review/
 !agents/.agents/skills/gitlab-review-followup/
@@ -50,3 +51,5 @@ agents/.agents/skills/*
 !agents/.agents/skills/ship/
 !agents/.agents/skills/squash-branch/
 !agents/.agents/skills/web-to-epub/
+# Machine-local notes inside a versioned skill (company repo names, paths).
+agents/.agents/skills/*/local.md
