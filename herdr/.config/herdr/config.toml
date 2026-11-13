@@ -18,6 +18,9 @@ prefix = "ctrl+q"
 split_vertical = ["prefix+v", "cmd+n"]
 zoom = ["prefix+z", "cmd+a"]
 switch_tab = ["prefix+1..9", "cmd+1..9"]
+# The terminal may report cmd+shift+[ as cmd+{; bind both
+previous_tab = ["prefix+p", "cmd+shift+[", "cmd+{"]
+next_tab = ["prefix+n", "cmd+shift+]", "cmd+}"]
 new_tab = ["prefix+c", "cmd+t"]
 goto = ["prefix+g", "cmd+shift+u"]
 
