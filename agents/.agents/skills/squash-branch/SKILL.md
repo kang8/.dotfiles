@@ -53,10 +53,12 @@ Run in parallel:
 - Use the original commit messages as input — especially the first commit's
   framing of the feature — but do not concatenate them. Carry forward only the
   parts still true of the final diff.
-- Match the wording, capitalization, and trailing-period (or not) of the last
-  ~10 commits on the base branch.
-- 1–2 sentences for the subject. Add a body paragraph or two only when the
-  change is non-trivial and the _why_ is non-obvious.
+- Take the prefix, capitalization, verb tense, and trailing period from the last
+  ~10 commits on the base branch; take the length from the next rule.
+- The subject is a **headline**: one clause naming the change, at most 72
+  characters. It becomes the MR title, so it has to read at a glance.
+- Add a body paragraph or two for the _why_, lists, and before → after mappings
+  when the change is non-trivial.
 - Do **not** mention agents, AI, or Claude. Do **not** add `Co-Authored-By`
   lines unless the user asks.
 

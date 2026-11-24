@@ -91,11 +91,13 @@ progress. Leave the upstream unset — `git push -u` is the user's to run.
 
 ## Step 4 — Draft the commit message
 
-- Match the wording, capitalization, and verb tense of the last ~10 commits on
-  this repo, down to whether they end with a period.
-- Lead with **what changed and why** — `git show` already lists the files.
-- 1-2 sentences for the subject. For a non-trivial change, add a blank line and
-  a body covering the _why_ and any non-obvious tradeoffs.
+- Take the prefix, capitalization, verb tense, and trailing period from the last
+  ~10 commits on this repo; take the length from the next rule.
+- The subject is a **headline**: one clause naming the change, at most 72
+  characters. It becomes the MR title, so it has to read at a glance.
+- The body carries the rest — the _why_, the list of items, before → after
+  mappings, non-obvious tradeoffs — after a blank line. `git show` already lists
+  the files.
 - Describe only what is staged.
 - Write it as the user would: no mention of agents, AI, or Claude, and no
   `Co-Authored-By` line unless they ask for one.
