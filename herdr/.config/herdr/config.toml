@@ -43,6 +43,14 @@ type = "shell"
 command = '$HOME/.config/herdr/send-text.sh "\033[107;11u"'
 description = "send Claude Code status in nvim"
 
+# kitty's ctrl+shift+e reads the whole herdr screen; this hints the focused
+# pane. Run `herdr plugin link ~/.config/herdr/link-hints` once.
+[[keys.command]]
+key = "ctrl+shift+e"
+type = "plugin_action"
+command = "dotfiles.link-hints.open"
+description = "open a link in the focused pane"
+
 # alt+h/j/k/l: same keys as kitty's neighboring_window; see navigate.sh
 [[keys.command]]
 key = "alt+h"

@@ -1,0 +1,18 @@
+id = "dotfiles.link-hints"
+name = "Link hints"
+version = "0.1.0"
+min_herdr_version = "0.9.5"
+description = "Pick a link in the focused pane with kitty's hints kitten"
+platforms = ["macos", "linux"]
+
+[[actions]]
+id = "open"
+title = "Open a link in the focused pane"
+contexts = ["pane"]
+command = ["python3", "link_hints.py"]
+
+[[panes]]
+id = "picker"
+title = "Links"
+placement = "overlay"
+command = ["sh", "picker.sh"]
