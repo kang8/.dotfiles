@@ -10,12 +10,24 @@
   "crossSessionInbound": "accept",
   "editorMode": "normal",
   "effortLevel": "medium",
+  "enabledPlugins": {
+    "inline-images@inline-images": true
+  },
   "env": {
+    "CLAUDE_CODE_FORCE_TERMINAL_IMAGES": "1",
     "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/branch-copy-id",
     "CLAUDE_CODE_SCROLL_SPEED": "2",
     "DISABLE_ERROR_REPORTING": "1",
     "DISABLE_TELEMETRY": "1",
     "npm_config_manage_package_manager_versions": "false"
+  },
+  "extraKnownMarketplaces": {
+    "inline-images": {
+      "source": {
+        "repo": "alexjsp/claude-inline-images",
+        "source": "github"
+      }
+    }
   },
   "hooks": {
     "Notification": [
