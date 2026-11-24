@@ -7,7 +7,7 @@
 0 10 * * * /bin/zsh -c 'eval "$($HOME/.local/bin/brew-shellenv)" && brew update && HOMEBREW_NO_UPGRADE_AUTO_UPDATES_CASKS=1 brew upgrade --no-quit'
 
 # Run at 10:05 every day
-5 10 * * * ~/.local/bin/cleanup-merged-branches.sh
+5 10 * * * ~/.local/bin/cleanup-merged.sh
 
 # Run at 11:00 every day
 0 11 * * * /bin/zsh -c 'eval "$($HOME/.local/bin/brew-shellenv)" && cd ~/.dotfiles && brew bundle dump --no-restart --no-vscode --no-go --no-npm --no-describe --force && make format'

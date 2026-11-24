@@ -23,9 +23,24 @@ for element in "${paths[@]}"; do
 
         cd $dir
 
+        # Drop records of worktrees whose directory is already gone.
+        git worktree prune
+
         # git only calls a branch merged when it is an ancestor, so squashed and
         # rebased merge requests slip through. Ask GitLab about those first.
         if [ ! -z "$gitlab_host" ] && git remote --verbose | command grep -q "$gitlab_host"; then
+            # glab cannot delete a branch checked out in a worktree; remove those worktrees first.
+            if [ "$(git worktree list | command wc -l)" -gt 1 ]; then
+                merged=$(glab repo prune --dry-run --exclude "$(echo "$protected_branches" | command tr '|' ',')" 2>/dev/null | command awk '$1 == "✓" {print $2}')
+                git worktree list --porcelain \
+                    | command awk '/^worktree /{n++; path=substr($0, 10)} /^branch refs\/heads\// && n > 1 {print substr($0, 19) "\t" path}' \
+                    | while IFS=$'\t' read -r branch worktree; do
+                        echo "$merged" | command grep -qxF "$branch" || continue
+                        # git refuses a worktree with modified or untracked files and leaves it in place.
+                        git worktree remove "$worktree" && echo "Removed worktree $worktree ($branch)"
+                    done
+            fi
+
             branches_before=$(git branch --no-color --format='%(refname:short)')
             glab repo prune --yes --exclude "$(echo "$protected_branches" | command tr '|' ',')" > /dev/null 2>&1
             branches_after=$(git branch --no-color --format='%(refname:short)')
