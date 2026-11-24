@@ -2,6 +2,9 @@ onboarding = false
 [theme]
 name = "catppuccin-latte"
 
+[terminal]
+new_cwd = "~/Projects/main"
+
 [ui]
 agent_panel_sort = "priority"
 status_indicators = "symbols"
