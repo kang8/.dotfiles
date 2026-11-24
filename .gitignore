@@ -50,6 +50,7 @@ agents/.agents/skills/*
 !agents/.agents/skills/rebase/
 !agents/.agents/skills/ship/
 !agents/.agents/skills/squash-branch/
+!agents/.agents/skills/sync-master/
 !agents/.agents/skills/web-to-epub/
 # Machine-local notes inside a versioned skill (company repo names, paths).
 agents/.agents/skills/*/local.md
