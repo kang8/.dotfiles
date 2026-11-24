@@ -7,7 +7,8 @@ Reads  <session>/reviewers.json         {name: {"session": id, "cwd": dir, "mrs"
        <session>/reviews/<slug>.json    one per MR, schema in review-brief.md
        <session>/reviews/<slug>.md      the reviewer's prose report (optional)
 Code windows come from the head the reviewer read, so line numbers match the drafts.
-A review whose head state.json already records is left out, so a second round the same day shows only new work.
+A review whose head state.json already records, decided after the review was written, is left out,
+so a second round the same day shows only new work.
 """
 
 import datetime as dt
@@ -34,6 +35,13 @@ def file_slice(repo, sha, path, start, end):
     return [{"new": i, "kind": "ctx", "text": lines[i - 1]} for i in range(start, end + 1)]
 
 
+def reviewed_before_decision(review_path, reviewed_at):
+    if not reviewed_at:
+        return True
+    decided_at = dt.datetime.fromisoformat(reviewed_at.replace("Z", "+00:00")).timestamp()
+    return review_path.stat().st_mtime <= decided_at
+
+
 def main():
     session = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else today_dir()
     reviewers = json.loads((session / "reviewers.json").read_text())
@@ -55,8 +63,9 @@ def main():
         rv = json.loads(path.read_text())
         project, iid = rv["project"], int(rv["iid"])
         key = f"{project}!{iid}"
-        if decided.get(key, {}).get("reviewed_sha") == rv["reviewed_sha"]:
-            continue  # decided in an earlier round today
+        prev = decided.get(key, {})
+        if prev.get("reviewed_sha") == rv["reviewed_sha"] and reviewed_before_decision(path, prev.get("reviewed_at")):
+            continue  # decided after this review; same-head re-reviews (updated_notes) stay in
         repo = local_repo(project)
         if repo is None:
             print(f"skip {key}: no local checkout at ~/Projects/{project.split('/')[-1]}", file=sys.stderr)
