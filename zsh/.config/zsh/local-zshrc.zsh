@@ -12,9 +12,17 @@ chpwd_load_local_zshrc() {
   done
 
   # If .zsh-local is not found, restore global default behavior
-  setopt nomatch
+  # Claude Code passes globs like `--include=*.ts` unquoted; nomatch aborts the command.
+  if [[ -n $CLAUDECODE ]]; then
+    setopt nonomatch
+  else
+    setopt nomatch
+  fi
 }
 
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd chpwd_load_local_zshrc
 chpwd_load_local_zshrc
+
+# Agents expect stock commands; aliases like `s`, `g`, `grep`, `ls` break their scripts.
+[[ -n $CLAUDECODE ]] && unalias -m '*'
