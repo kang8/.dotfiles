@@ -28,7 +28,7 @@ Run in parallel:
 
 - `git status --short --branch`
 - `glab mr view [iid] -F json | jq '{iid, web_url, target_branch, sha, source_branch}'`
-  (the description stays out of context until Step 5)
+  (the description stays out of context until Step 6)
 - `git rev-parse HEAD`
 
 `source_branch` must equal the current branch; a mismatch means the iid came
@@ -36,7 +36,7 @@ from some other MR in the conversation (one under review, a linked one), so drop
 it and resolve from the branch. No MR either way → the branch has none yet: take
 the project's default branch as the target
 (`glab api projects/:fullpath | jq -r .default_branch`) unless the user named
-another, skip the `sha` check below, and open the MR in Step 4.
+another, skip the `sha` check below, and open the MR in Step 5.
 
 Then fetch the target as its own command and read `origin/<target>` only after
 it exits 0: `git fetch origin <target>`.
@@ -78,7 +78,23 @@ probe flagged, since it leaves a half-written tree.
 
 Done when `git merge-base --is-ancestor origin/<target> HEAD` exits 0.
 
-## Step 4 — Push
+## Step 4 — Verify
+
+Run the repo's checks on the rebased tree: the check command its `AGENTS.md` or
+`CLAUDE.md` names, else the lint, typecheck and test scripts of its
+`package.json`, `Makefile` or `pyproject.toml`. A failure → fix it, fold the fix
+in with `git commit --amend`, re-run.
+
+On an MR's first ship (no MR in Step 1), also run the changed code for real
+once: trigger the function, script, job or page against a local or dev target
+and observe what it does. A path that needs prod or a credential you lack goes
+to the report as unverified, with the reason.
+
+Done when every check exits 0 and each real run is noted with its command and
+observed result. These notes are the only source for verification lines in the
+MR description.
+
+## Step 5 — Push
 
 `git push --force-with-lease origin <branch>`.
 
@@ -95,12 +111,12 @@ push hook, a teammate): continue with the iid in that error.
 Done when the MR's `sha` (`glab mr view <iid> -F json | jq -r .sha`) equals
 `git rev-parse HEAD`.
 
-## Step 5 — Rewrite the MR description
+## Step 6 — Rewrite the MR description
 
 Follow Steps 2–5 of `~/.agents/skills/gitlab-mr-description/SKILL.md` against
 the pushed commit.
 
-## Step 6 — Draft replies
+## Step 7 — Draft replies
 
 `glab api "projects/:fullpath/merge_requests/<iid>/draft_notes"` lists the
 user's pending drafts.
@@ -119,6 +135,7 @@ reviewer.
 
 - MR link; old → new HEAD; upstream commits picked up
 - The files staged in Step 1, if any
+- Step 4: checks run, real runs and what they showed, paths left unverified
 - One line on what the rewritten description and message changed
 - Drafts updated and posted
 - Anything handed to the user, with the exact `!` command

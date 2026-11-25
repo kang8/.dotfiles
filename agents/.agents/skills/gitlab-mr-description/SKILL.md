@@ -63,6 +63,8 @@ Keep what survives it:
   expression, the final SQL, the rendered payload — as a before/after
 - **silent-failure traps**: what breaks with no error if someone changes it back
 - deliberately unchanged, where the reviewer would otherwise expect a change
+- verification you ran this session, as command → observed result; a check
+  nobody ran is left out, or listed as not verified with the reason
 
 Cut:
 
