@@ -113,6 +113,22 @@ for harness in "${HOME}/.claude/skills" "${HOME}/.codex/skills"; do
     done
 done
 
+# Third-party copies are replaced on every run, so a hand-added
+# disable-model-invocation would not survive; re-apply it from the tracked list.
+USER_INVOCABLE_ONLY="$(dirname "$(readlink -f "$SKILLFILE")")/user-invocable-only"
+if [[ -f $USER_INVOCABLE_ONLY ]]; then
+    while read -r name; do
+        skill="${SKILLS}/${name}/SKILL.md"
+        [[ -f $skill ]] || { echo "  user-invocable-only: no skill ${name}"; continue; }
+        # Insert after the opening --- only when the frontmatter lacks the key.
+        awk 'NR == 1 && $0 == "---" { print; fm = 1; next }
+             fm && /^disable-model-invocation:/ { found = 1 }
+             fm && $0 == "---" && !found { print "disable-model-invocation: true"; fm = 0 }
+             fm && $0 == "---" { fm = 0 }
+             { print }' "$skill" >"${skill}.tmp" && mv "${skill}.tmp" "$skill"
+    done < <(awk 'NF && $1 !~ /^#/ { print $1 }' "$USER_INVOCABLE_ONLY")
+fi
+
 # A skill in neither the Skillfile nor git exists on this machine only. That
 # is fine for a scratch skill and a silent loss for one meant to be versioned.
 echo

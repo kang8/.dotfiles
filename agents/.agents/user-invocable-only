@@ -1,0 +1,16 @@
+# Skills the model may not invoke on its own; the user still runs them as
+# /<name>. One skill directory name per line. restore-skills.sh adds
+# `disable-model-invocation: true` to each one's SKILL.md after every
+# reinstall, since third-party copies are replaced on each run.
+alma-send-file
+alma-swarm
+codebase-design
+dd-docs
+diagnosing-bugs
+find-skills
+git-guardrails-claude-code
+migrate-to-shoehorn
+scaffold-exercises
+setup-pre-commit
+tdd
+wizard
