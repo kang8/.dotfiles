@@ -62,6 +62,7 @@ export HOMEBREW_NO_UPGRADE_AUTO_UPDATES_CASKS=1
 # python
 [[ -d $HOMEBREW_PREFIX/opt/python/libexec/bin ]] && export PATH="$HOMEBREW_PREFIX/opt/python/libexec/bin:$PATH"
 export PYTHON_AUTO_VRUN=true
+export PYTHON_AUTO_VRUN_RECURSIVE=true
 export PYTHON_VENV_NAME=venv
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 # ruby
