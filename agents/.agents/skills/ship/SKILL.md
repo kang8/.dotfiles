@@ -1,7 +1,6 @@
 ---
 name: ship
 description: Bring the current branch's MR up to date in one pass — one commit on a fresh target, pushed, with the commit message, MR description and draft replies rewritten for the final code.
-disable-model-invocation: true
 ---
 
 You are shipping the current branch's MR. Done means: the branch is one commit
