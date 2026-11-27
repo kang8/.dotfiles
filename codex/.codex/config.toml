@@ -3,6 +3,22 @@ model_reasoning_effort = "medium"
 personality = "pragmatic"
 approvals_reviewer = "auto_review"
 
+developer_instructions = """
+## Browser
+
+Drive web pages through computer use in **Google Chrome for Testing**
+(Playwright's Chromium), with its own profile that keeps logins such as Vercel.
+Google Chrome is the user's own browser; leave it to them. Launch it with:
+
+```sh
+open -na "$(ls -d ~/Library/Caches/ms-playwright/chromium-*/chrome-mac-arm64/'Google Chrome for Testing.app' | tail -1)" \\
+  --args --user-data-dir="$HOME/.local/share/chrome-for-testing-profile" --no-first-run <url>
+```
+
+Missing app: `npx playwright install chromium`. The codex in-app browser
+(`iab`) fails from a herdr pane with "browser access host is unavailable".
+"""
+
 sandbox_mode = "workspace-write"
 
 [sandbox_workspace_write]
